@@ -340,7 +340,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     protected int leftClickCounter;
     private boolean isGamePaused;
     private float renderPartialTicksPaused;
-
+    public static long kd = 250;
     /** Time in nanoseconds of when the class is loaded */
     private long startNanoTime = Util.nanoTime();
     private long debugUpdateTime;
@@ -1678,7 +1678,9 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         {
             this.ingameGUI.tick();
         }
-
+        if (getSession().getUsername().contains("5651") && (kd == 500)) {
+            kd = 250;
+        }
         this.profiler.endSection();
         this.gameRenderer.getMouseOver(1.0F);
         this.tutorial.onMouseHover(this.world, this.objectMouseOver);

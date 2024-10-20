@@ -127,7 +127,7 @@ public abstract class Screen extends FocusableGui implements IScreen, IRenderabl
         return listener;
     }
 
-    protected void renderTooltip(MatrixStack matrixStack, ItemStack itemStack, int mouseX, int mouseY)
+    public void renderTooltip(MatrixStack matrixStack, ItemStack itemStack, int mouseX, int mouseY)
     {
         this.func_243308_b(matrixStack, this.getTooltipFromItem(itemStack), mouseX, mouseY);
     }

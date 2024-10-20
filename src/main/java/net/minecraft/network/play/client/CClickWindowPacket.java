@@ -10,6 +10,9 @@ import net.minecraft.network.play.IServerPlayNetHandler;
 public class CClickWindowPacket implements IPacket<IServerPlayNetHandler>
 {
     /** The id of the window which was clicked. 0 for player inventory. */
+
+    public int id;
+
     private int windowId;
 
     /** Id of the clicked slot */

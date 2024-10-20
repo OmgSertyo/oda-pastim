@@ -1361,6 +1361,9 @@ public class RenderUtil implements Utility {
         public static void drawRoundedRect(float x, float y, float x2, float y2, float round, int color) {
             drawRoundedGradientRect(x, y, x2, y2, round, 1.0F, color, color, color, color);
         }
+        public static void drawRoundedRect(double x, double y, double x2, double y2, float round, Color color) {
+            drawRoundedGradientRect((float) x, (float) y, (float) x2, (float) y2, round * 2, 1.0F, color.getRGB(), color.getRGB(), color.getRGB(), color.getRGB());
+        }
         public static void drawRoundedGradientRect(float x, float y, float x2, float y2, float round, float value, int color1, int color2, int color3, int color4) {
             float[] c1 = ColorUtil.getRGBAf(color1);
             float[] c2 = ColorUtil.getRGBAf(color2);

@@ -204,7 +204,15 @@ public class PlayerController
             return true;
         }
     }
-
+    public ItemStack windowClick(int windowId, int slotId, int mouseButton, ClickType type, PlayerEntity player, int id)
+    {
+        short short1 = player.openContainer.getNextTransactionID(player.inventory);
+        ItemStack itemstack = player.openContainer.slotClick(slotId, mouseButton, type, player);
+        CClickWindowPacket clickWindowPacket = new CClickWindowPacket(windowId, slotId, mouseButton, type, itemstack, short1);
+        clickWindowPacket.id = id;
+        this.connection.sendPacket(clickWindowPacket);
+        return itemstack;
+    }
     /**
      * Resets current block damage
      */

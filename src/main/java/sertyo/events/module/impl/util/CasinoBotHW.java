@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChatPacket;
 import net.minecraft.util.text.TextFormatting;
+import obf.sertyo.nativeobf.Native;
 import sertyo.events.Main;
 import sertyo.events.command.impl.AutoPerevod;
 import sertyo.events.event.packet.EventReceivePacket;
@@ -24,7 +25,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+@Native
 @ModuleAnnotation(name = "CasinoBotHW", category = Category.UTIL)
 public class CasinoBotHW extends Module  {
     private final TimerHelper timer = new TimerHelper();
@@ -41,7 +42,7 @@ public class CasinoBotHW extends Module  {
                     if (Minecraft.getInstance().getCurrentServerData() != null) {
                         ChatUtility.addChatMessage("Вам необходимо добавть комманду для перевода P.s например .cmh " + Main.getInstance().getUsername() + " потом после установки и если игрок проиграет будет выполнена комманда /pay (никнейм который вы указали) 60% от пройгрыша например /pay " + Main.getInstance().getUsername() + " 1488");
                     }
-                    super.onDisable();
+                    toggle();
                 } else {
                     super.onEnable();
                 }
@@ -70,7 +71,7 @@ public class CasinoBotHW extends Module  {
 
             System.out.println("Получено сообщение: " + messageContent);
 
-            if (messageContent.toLowerCase(Locale.ROOT).contains("отправил вам")) {
+            if (messageContent.contains("отправил вам") && messageContent.startsWith("▶")) {
                 Pattern senderPattern = Pattern.compile("Игрок(?:\\s|\\W)+([\\w_]+)", Pattern.CASE_INSENSITIVE);
                 Matcher senderMatcher = senderPattern.matcher(messageContent);
                 String sender = "";
@@ -109,7 +110,7 @@ public class CasinoBotHW extends Module  {
                     return;
                 }
 
-                boolean isWinner = randomizer.nextDouble() < 0.40; // 40% шанс на выигрыш
+                boolean isWinner = randomizer.nextDouble() < 0.35; // 40% шанс на выигрыш
 
                 int reward = sum * 2; // Размер выигрыша
                 int summa = sum; // Размер выигрыша
@@ -128,7 +129,7 @@ public class CasinoBotHW extends Module  {
                     if (perevodeee.get()) {
                         if (AutoPerevod.command != null) {
                             double reducedReward = summa / 0.60;
-                            String pankiXoy = "/pay " + "Sane4kaSnimaeshS"+ " " + reducedReward;
+                            String pankiXoy = "/pay " + AutoPerevod.command + " " + reducedReward;
 
                             // Отправляем сообщение с уменьшенной суммой
                             mc.player.sendChatMessage(pankiXoy);

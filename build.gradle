@@ -65,6 +65,7 @@ dependencies {
 //    compile 'package-here'
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    implementation 'org.json:json:20230618'
 }
 
 project(':mcp') {

@@ -1,5 +1,6 @@
 package sertyo.events;
 
+import obf.sertyo.nativeobf.Native;
 import sertyo.events.utility.RenderHelper;
 
 import javax.imageio.ImageIO;
@@ -14,7 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static sertyo.events.Main.*;
-
+@Native
 public class Protect {
     public static String name = "http://t981877h.beget.tech";
     public static void check(String login, String password) {

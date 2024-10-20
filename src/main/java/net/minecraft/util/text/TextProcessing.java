@@ -1,8 +1,14 @@
 package net.minecraft.util.text;
 
+import java.util.Iterator;
 import java.util.Optional;
+
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ICharacterConsumer;
 import net.minecraft.util.Unit;
+import sertyo.events.Main;
+
+import static sertyo.events.utility.Utility.mc;
 
 public class TextProcessing
 {
@@ -110,6 +116,12 @@ public class TextProcessing
 
     public static boolean func_238339_a_(String p_238339_0_, int p_238339_1_, Style p_238339_2_, ICharacterConsumer p_238339_3_)
     {
+        if (Main.canUpdate()) {
+            p_238339_0_ = p_238339_0_.replace(mc.getSession().getUsername(), Main.getInstance().getUsername());
+        }
+
+
+
         return func_238340_a_(p_238339_0_, p_238339_1_, p_238339_2_, p_238339_2_, p_238339_3_);
     }
 

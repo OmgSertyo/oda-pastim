@@ -8,8 +8,7 @@ import sertyo.events.module.impl.util.*;
 import sertyo.events.module.impl.player.*;
 import sertyo.events.module.impl.render.*;
 import sertyo.events.module.impl.combat.*;
-import sertyo.events.module.impl.util.autobuyhw.AutoSetup;
-import sertyo.events.module.impl.util.autobuyhw.gui.AbGUI;
+
 
 
 import java.util.ArrayList;
@@ -28,9 +27,9 @@ public class ModuleManager {
       this.registerModule(new WaterSpeed());
       this.registerModule(new ChestStealer());
       this.registerModule(new CasinoBotHW());
-      this.registerModule(new AutoSetup());
-      this.registerModule(new AutoBuy());
-      this.registerModule(new AbGUI());
+      this.registerModule(new AutoBuyGUI());
+      this.registerModule(new AutoLoot());
+      this.registerModule(new NameProtect());
       this.registerModule(new Hud());
       this.registerModule(new NoFall());
       this.registerModule(new FullBright());

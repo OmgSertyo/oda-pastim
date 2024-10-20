@@ -778,7 +778,7 @@ public class CreativeScreen extends DisplayEffectsScreen<CreativeScreen.Creative
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
-    protected void renderTooltip(MatrixStack matrixStack, ItemStack itemStack, int mouseX, int mouseY)
+    public void renderTooltip(MatrixStack matrixStack, ItemStack itemStack, int mouseX, int mouseY)
     {
         if (selectedTabIndex == ItemGroup.SEARCH.getIndex())
         {

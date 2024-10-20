@@ -2,9 +2,12 @@ package sertyo.events;
 
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
+import com.jagrosh.discordipc.entities.User;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.util.Session;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import obf.sertyo.nativeobf.Native;
 import org.lwjgl.glfw.GLFW;
 import sertyo.events.command.CommandManager;
 import sertyo.events.event.input.EventInputKey;
@@ -20,6 +23,11 @@ import sertyo.events.module.impl.player.GlowESP;
 import sertyo.events.ui.csgui.CsGui;
 import sertyo.events.ui.menu.main.NeironMainMenu;
 import sertyo.events.utility.DiscordPresence;
+import sertyo.events.utility.ab.AutoBuy;
+import sertyo.events.utility.ab.AutoBuyGui;
+import sertyo.events.utility.ab.font.main.IFont;
+import sertyo.events.utility.ab.manager.AutoBuyManager;
+import sertyo.events.utility.ab.manager.IgnoreManager;
 import sertyo.events.utility.render.RenderUtil;
 import sertyo.events.utility.render.ScaleMath;
 import sertyo.events.utility.render.ShaderUtil;
@@ -29,7 +37,7 @@ import java.util.Iterator;
 
 import static sertyo.events.Protect.*;
 import static sertyo.events.utility.Utility.mc;
-
+@Native
 public class Main {
     public static String name = "Neiron";
     public static String version = "1.16.5 edition";
@@ -48,17 +56,22 @@ public class Main {
     private NeironMainMenu mainMenu;
     private ThemeManager themeManager;
     private CsGui csGui;
+    public static AutoBuyGui abGui;
+    public static AutoBuy autoBuy = new AutoBuy();
+    public static User me;
+
     public static boolean unhooked = false;
     private DragManager dragManager;
     public void startprotect() {
         try {
             // getServer();
             username = "Sertyo";
-            password = "ZalupaBebra";
+            password = "X123456ll";
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-      //  check(username, password);
+
+        check(username, password);
           getUID2();
         setrole();
        /* try {
@@ -78,8 +91,9 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        new AutoBuy();
 
-        mc.session = new Session("twink_voremommy_", "", "", "mojang");
+        mc.session = new Session("Sane4kaSnimaeshS", "", "", "mojang");
         ShaderUtil.init();
         System.out.println("Event inited");
         EventManager.register(this);
@@ -91,10 +105,15 @@ public class Main {
         this.mainMenu = new NeironMainMenu();
         csGui = new CsGui(new StringTextComponent("A"));
         this.friendManager = new FriendManager();
-       // this.configManager.loadConfig("autocfg");
+        this.configManager.loadConfig("autocfg");
+        this.abGui = new AutoBuyGui();
 
+        AutoBuyManager.init();
 
+        AutoBuyManager.load();
+        IgnoreManager.load();
 
+        IFont.init();
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
     public void shutdown() {
@@ -103,6 +122,8 @@ public class Main {
         }
         this.dragManager.save();
         this.configManager.saveConfig("autocfg");
+        AutoBuyManager.save();
+        IgnoreManager.save();
     }
     public DragManager getDragManager() {
         return this.dragManager;
@@ -130,6 +151,10 @@ public class Main {
     }
     public NeironMainMenu getMainMenu() {
         return this.mainMenu;
+    }
+    public static boolean canUpdate() {
+        if (mc == null) return false;
+        return mc.player != null && mc.world != null;
     }
     @EventTarget
     public void onInputKey(EventInputKey eventInputKey) {

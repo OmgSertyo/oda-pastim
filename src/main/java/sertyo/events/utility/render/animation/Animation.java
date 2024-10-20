@@ -1,5 +1,7 @@
 package sertyo.events.utility.render.animation;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.MathHelper;
 import sertyo.events.utility.misc.TimerHelper;
 
 public abstract class Animation {
@@ -7,7 +9,28 @@ public abstract class Animation {
    protected int duration;
    protected float endPoint;
    protected Direction direction;
+   public static float fast(float end, float start) {
+      return (1 - MathHelper.clamp((float) (deltaTime() * (float) 6), 0, 1)) * end
+              + MathHelper.clamp((float) (deltaTime() * (float) 6), 0, 1) * start;
+   }
 
+   public static double fast(double end, double start) {
+      return (1 - MathHelper.clamp((float) (deltaTime() * (float) 6), 0, 1)) * end
+              + MathHelper.clamp((float) (deltaTime() * (float) 6), 0, 1) * start;
+   }
+
+   public static float fast(float end, float start, float multiple) {
+      return (1 - MathHelper.clamp((float) (deltaTime() * multiple), 0, 1)) * end
+              + MathHelper.clamp((float) (deltaTime() * multiple), 0, 1) * start;
+   }
+
+   public static double fast(double end, double start, double multiple) {
+      return (1 - MathHelper.clamp((float) (deltaTime() * multiple), 0, 1)) * end
+              + MathHelper.clamp((float) (deltaTime() * multiple), 0, 1) * start;
+   }
+   public static double deltaTime() {
+      return Minecraft.debugFPS > 0 ? (1.0000 / Minecraft.debugFPS) : 1;
+   }
    public Animation(int ms, float endPoint) {
       this.duration = ms;
       this.endPoint = endPoint;

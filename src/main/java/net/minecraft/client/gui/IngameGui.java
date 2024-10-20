@@ -82,6 +82,7 @@ import net.optifine.reflect.Reflector;
 import sertyo.events.Main;
 import sertyo.events.event.render.EventOverlay;
 import sertyo.events.event.render.EventRender2D;
+import sertyo.events.utility.ab.AutoBuy;
 
 public class IngameGui extends AbstractGui
 {
@@ -906,7 +907,33 @@ public class IngameGui extends AbstractGui
             fill(p_238447_1_, l2 - 2, k1, l1, k1 + 9, i1);
             this.getFontRenderer().func_243248_b(p_238447_1_, itextcomponent2, (float)l2, (float)k1, -1);
             this.getFontRenderer().drawString(p_238447_1_, s, (float)(l1 - this.getFontRenderer().getStringWidth(s)), (float)k1, -1);
-
+            try {
+                if (isHolyWorld()) {
+                    if (itextcomponent2.getString().contains("Монеток:")) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        String parse = itextcomponent2.getString().replace("¤", "").replace(",", "").replace(" ", "");
+                        boolean skip = false;
+                        for (char c : parse.toCharArray()) {
+                            if (skip) {
+                                skip = false;
+                                continue;
+                            }
+                            if (c == '§') {
+                                skip = true;
+                                continue;
+                            }
+                            if (c >= '0' && c <= '9') {
+                                stringBuilder.append(c);
+                            }
+                        }
+                        try {
+                            AutoBuy.balance = Integer.parseInt(stringBuilder.toString());
+                        } catch (Exception ignore) {
+                        }
+                    }
+                }
+            } catch (Exception ignore) {
+            }
             if (l == collection.size())
             {
                 fill(p_238447_1_, l2 - 2, k1 - 9 - 1, l1, k1 - 1, j1);
@@ -916,6 +943,10 @@ public class IngameGui extends AbstractGui
         }
     }
 
+    public boolean isHolyWorld() {
+        if (mc.isSingleplayer()) return false;
+        return mc.getCurrentServerData().serverIP.contains("holyworld");
+    }
     private PlayerEntity getRenderViewPlayer()
     {
         return !(this.mc.getRenderViewEntity() instanceof PlayerEntity) ? null : (PlayerEntity)this.mc.getRenderViewEntity();
