@@ -30,12 +30,12 @@ public class CFont {
    private NativeImage convertToNativeImage(BufferedImage bufferedImage) {
       int width = bufferedImage.getWidth();
       int height = bufferedImage.getHeight();
-      NativeImage nativeImage = new NativeImage(width, height, true); // true for transparency
+      NativeImage nativeImage = new NativeImage(width, height, true);
 
       for (int x = 0; x < width; x++) {
          for (int y = 0; y < height; y++) {
             int rgba = bufferedImage.getRGB(x, y);
-            nativeImage.setPixelRGBA(x, y, rgba);  // Directly copy the pixel data
+            nativeImage.setPixelRGBA(x, y, rgba);
          }
       }
 

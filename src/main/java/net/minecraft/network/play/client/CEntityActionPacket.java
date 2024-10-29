@@ -11,6 +11,7 @@ public class CEntityActionPacket implements IPacket<IServerPlayNetHandler>
     private int entityID;
     private CEntityActionPacket.Action action;
     private int auxData;
+    public static boolean lastUpdatedSprint;
 
     public CEntityActionPacket()
     {
@@ -21,11 +22,16 @@ public class CEntityActionPacket implements IPacket<IServerPlayNetHandler>
         this(entityIn, actionIn, 0);
     }
 
-    public CEntityActionPacket(Entity entityIn, CEntityActionPacket.Action actionIn, int auxDataIn)
+    public CEntityActionPacket(Entity entityIn, Action actionIn, int auxDataIn)
     {
         this.entityID = entityIn.getEntityId();
         this.action = actionIn;
         this.auxData = auxDataIn;
+        if (actionIn == Action.START_SPRINTING) {
+            lastUpdatedSprint = true;
+        } else if (actionIn == Action.STOP_SPRINTING) {
+            lastUpdatedSprint = false;
+        }
     }
 
     /**

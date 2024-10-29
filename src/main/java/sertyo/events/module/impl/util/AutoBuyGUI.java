@@ -7,7 +7,7 @@ import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.utility.Utility;
-import sertyo.events.utility.ab.AutoBuyGui;
+import sertyo.events.ui.ab.AutoBuyGui;
 
 @ModuleAnnotation(
    name = "AutoBuyGUI",

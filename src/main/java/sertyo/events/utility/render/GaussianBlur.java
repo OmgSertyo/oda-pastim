@@ -11,22 +11,28 @@ import static sertyo.events.utility.render.StencilUtility.mc;
 
 
 /**
- * @author cedo
- * @since 05/13/2022
+ * @author sertyo
+ * @since 10/20/2024
  */
 public class GaussianBlur  {
 
     private static final ShaderUtil gaussianBlur = new ShaderUtil("blur");
 
     private static Framebuffer framebuffer = new Framebuffer(1, 1, false, false);
-
+    private static FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
     private static void setupUniforms(float dir1, float dir2, float radius) {
         gaussianBlur.setUniform("textureIn", 0);
         gaussianBlur.setUniformf("texelSize", 1.0F / (float) mc.getMainWindow().getWidth(), 1.0F / (float) mc.getMainWindow().getHeight());
         gaussianBlur.setUniformf("direction", dir1, dir2);
         gaussianBlur.setUniformf("radius", radius);
 
-        final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
+        // Предварительно вычисленный weightBuffer
+        if (weightBuffer.capacity() < radius + 1) {
+            weightBuffer = BufferUtils.createFloatBuffer((int) radius + 1);
+        } else {
+            weightBuffer.clear();
+        }
+
         for (int i = 0; i <= radius; i++) {
             weightBuffer.put(calculateGaussianValue(i, radius / 2));
         }

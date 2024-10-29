@@ -98,4 +98,8 @@ public class MathUtility implements Utility {
    public static double interpolate(double current, double old, double scale) {
       return old + (current - old) * scale;
    }
+
+   public static float clamp01(float x) {
+      return (float) clamp(0, 1, x);
+   }
 }

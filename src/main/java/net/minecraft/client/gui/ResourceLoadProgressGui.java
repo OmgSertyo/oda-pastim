@@ -54,7 +54,7 @@ public class ResourceLoadProgressGui extends LoadingGui
 
     public static void loadLogoTexture(Minecraft mc)
     {
-        mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
+      //  mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)

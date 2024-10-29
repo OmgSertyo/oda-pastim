@@ -191,8 +191,7 @@ public class CrashReportCategory
 
     public void appendToStringBuilder(StringBuilder builder)
     {
-        builder.append("-- ").append(this.name).append(" --\n");
-        builder.append("Details:");
+        builder.append("Детали:");
 
         for (CrashReportCategory.Entry crashreportcategory$entry : this.children)
         {

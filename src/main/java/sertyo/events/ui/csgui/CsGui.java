@@ -36,6 +36,7 @@ import sertyo.events.utility.font.Fonts;
 
 
 public class CsGui extends Screen {
+   public static boolean spotifymenu;
    public int x;
    public int y;
    public static Category selected;
@@ -85,7 +86,7 @@ public class CsGui extends Screen {
    }
    @Override
    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-      scrollY += (float) (delta * 35.5f);
+      scrollY += (float) (delta * 85.5f);
       return super.mouseScrolled(mouseX, mouseY, delta);
    }
    public void init() {

@@ -336,7 +336,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     public Entity pointedEntity;
     @Nullable
     public RayTraceResult objectMouseOver;
-    private int rightClickDelayTimer;
+    public int rightClickDelayTimer;
     protected int leftClickCounter;
     private boolean isGamePaused;
     private float renderPartialTicksPaused;
@@ -524,6 +524,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         this.mainWindow.setLogOnGlError();
         this.updateWindowSize();
         Main.getInstance().start();
+
         if (s != null)
         {
             this.displayGuiScreen(new ConnectingScreen(new NeironMainMenu(), this, s, i));
@@ -544,6 +545,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
                 }
             });
         }, false));
+
     }
 
     public void setDefaultMinecraftTitle()
@@ -2648,23 +2650,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         crashreportcategory.addDetail("Backend library", RenderSystem::getBackendDescription);
         crashreportcategory.addDetail("Backend API", RenderSystem::getApiDescription);
         crashreportcategory.addDetail("GL Caps", RenderSystem::getCapsString);
-        crashreportcategory.addDetail("Using VBOs", () ->
-        {
-            return "Yes";
-        });
-        crashreportcategory.addDetail("Is Modded", () ->
-        {
-            String s1 = ClientBrandRetriever.getClientModName();
 
-            if (!"vanilla".equals(s1))
-            {
-                return "Definitely; Client brand changed to '" + s1 + "'";
-            }
-            else {
-                return Minecraft.class.getSigners() == null ? "Very likely; Jar signature invalidated" : "Probably not. Jar signature remains and client brand is untouched.";
-            }
-        });
-        crashreportcategory.addDetail("Type", "Client (map_client.txt)");
 
         if (settingsIn != null)
         {

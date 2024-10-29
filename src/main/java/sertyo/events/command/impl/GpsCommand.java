@@ -53,7 +53,6 @@ public class GpsCommand extends CommandAbstract {
         drawTriangle(-4, -1F, 4F, 7F, new Color(0, 0, 0, 32));
         drawTriangle(-3F, 0F, 3F, 5F, new Color(clr.getRGB()));
         GlStateManager.rotatef(90, 0, 0, 1);
-        Fonts.gilroy[14].drawCenteredStringWithOutline(stack, "Навигатор", 0, 7, -1);
 
         Fonts.gilroy[14].drawCenteredStringWithOutline(stack, (int) dst + "m", 0, 15, -1);
 

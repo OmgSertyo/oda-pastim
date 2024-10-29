@@ -1,5 +1,8 @@
 package sertyo.events.manager.theme;
 
+import sertyo.events.Main;
+import sertyo.events.utility.render.ColorUtil;
+
 import java.awt.*;
 
 public class Theme {
@@ -12,6 +15,7 @@ public class Theme {
       this.type = type;
       this.colors = colors;
    }
+
 
    public String getName() {
       return this.name;

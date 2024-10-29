@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer.entity;
 
+import com.darkmagician6.eventapi.EventManager;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -51,6 +52,8 @@ import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.player.PlayerItemsLayer;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
+import sertyo.events.Main;
+import sertyo.events.event.misc.EntityRenderMatrixEvent;
 
 public class EntityRendererManager
 {
@@ -268,37 +271,28 @@ public class EntityRendererManager
         return entityrenderer.shouldRender(entityIn, frustumIn, camX, camY, camZ);
     }
 
-    public <E extends Entity> void renderEntityStatic(E entityIn, double xIn, double yIn, double zIn, float rotationYawIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
-    {
-        if (this.info != null)
-        {
-            EntityRenderer <? super E > entityrenderer = this.getRenderer(entityIn);
+    public <E extends Entity> void renderEntityStatic(E entityIn, double xIn, double yIn, double zIn, float rotationYawIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        if (this.info != null) {
+            EntityRenderer<? super E> entityrenderer = this.getRenderer(entityIn);
 
-            try
-            {
+            try {
                 Vector3d vector3d = entityrenderer.getRenderOffset(entityIn, partialTicks);
                 double d2 = xIn + vector3d.getX();
                 double d3 = yIn + vector3d.getY();
                 double d0 = zIn + vector3d.getZ();
                 matrixStackIn.push();
                 matrixStackIn.translate(d2, d3, d0);
-
-                if (CustomEntityModels.isActive())
-                {
+                EventManager.call(new EntityRenderMatrixEvent(matrixStackIn, entityIn));
+                if (CustomEntityModels.isActive()) {
                     this.renderRender = entityrenderer;
                 }
 
-                if (EmissiveTextures.isActive())
-                {
+                if (EmissiveTextures.isActive()) {
                     EmissiveTextures.beginRender();
                 }
-
                 entityrenderer.render(entityIn, rotationYawIn, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-
-                if (EmissiveTextures.isActive())
-                {
-                    if (EmissiveTextures.hasEmissive())
-                    {
+                if (EmissiveTextures.isActive()) {
+                    if (EmissiveTextures.hasEmissive()) {
                         EmissiveTextures.beginRenderEmissive();
                         entityrenderer.render(entityIn, rotationYawIn, partialTicks, matrixStackIn, bufferIn, LightTexture.MAX_BRIGHTNESS);
                         EmissiveTextures.endRenderEmissive();
@@ -307,33 +301,25 @@ public class EntityRendererManager
                     EmissiveTextures.endRender();
                 }
 
-                if (entityIn.canRenderOnFire())
-                {
+                if (entityIn.canRenderOnFire()) {
                     this.renderFire(matrixStackIn, bufferIn, entityIn);
                 }
 
                 matrixStackIn.translate(-vector3d.getX(), -vector3d.getY(), -vector3d.getZ());
-
-                if (this.options.entityShadows && this.renderShadow && entityrenderer.shadowSize > 0.0F && !entityIn.isInvisible())
-                {
+                if (!this.options.entityShadows && this.renderShadow && entityrenderer.shadowSize > 0.0F && !entityIn.isInvisible()) {
                     double d1 = this.getDistanceToCamera(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ());
-                    float f = (float)((1.0D - d1 / 256.0D) * (double)entityrenderer.shadowOpaque);
+                    float f = (float) ((1.0D - d1 / 256.0D) * (double) entityrenderer.shadowOpaque);
 
-                    if (f > 0.0F)
-                    {
+                    if (f > 0.0F) {
                         renderShadow(matrixStackIn, bufferIn, entityIn, f, partialTicks, this.world, entityrenderer.shadowSize);
                     }
                 }
 
-                if (this.debugBoundingBox && !entityIn.isInvisible() && !Minecraft.getInstance().isReducedDebug())
-                {
+                if (this.debugBoundingBox && !entityIn.isInvisible() && !Minecraft.getInstance().isReducedDebug()) {
                     this.renderDebugBoundingBox(matrixStackIn, bufferIn.getBuffer(RenderType.getLines()), entityIn, partialTicks);
                 }
-
                 matrixStackIn.pop();
-            }
-            catch (Throwable throwable1)
-            {
+            } catch (Throwable throwable1) {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable1, "Rendering entity in world");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being rendered");
                 entityIn.fillCrashReport(crashreportcategory);
@@ -346,6 +332,7 @@ public class EntityRendererManager
             }
         }
     }
+
 
     private void renderDebugBoundingBox(MatrixStack matrixStackIn, IVertexBuilder bufferIn, Entity entityIn, float partialTicks)
     {

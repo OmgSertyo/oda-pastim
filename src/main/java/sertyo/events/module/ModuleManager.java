@@ -3,6 +3,8 @@ package sertyo.events.module;
 
 
 
+import sertyo.events.module.impl.movement.AutoSprint;
+import sertyo.events.module.impl.movement.NoSlow;
 import sertyo.events.module.impl.movement.WaterSpeed;
 import sertyo.events.module.impl.util.*;
 import sertyo.events.module.impl.player.*;
@@ -21,12 +23,32 @@ public class ModuleManager {
    public ModuleManager() {
       this.registerModule(new ClickGuiModule());
       this.registerModule(new EventConverter());
-      this.registerModule(new Notifications());
+      this.registerModule(new AntiAFK());
+      this.registerModule(new AutoRespawn());
+      this.registerModule(new FastBreak());
+      this.registerModule(new FreeCam());
+      this.registerModule(new InventoryMove());
+      this.registerModule(new ItemScroller());
+      this.registerModule(new ItemSwapFix());
+      this.registerModule(new MiddleClick());
+      this.registerModule(new NoDelay());
+      this.registerModule(new NoPush());
+      this.registerModule(new NoSlow());
+      this.registerModule(new AutoSprint());
+      this.registerModule(new Phase());
+      this.registerModule(new PasswordHider());
+      this.registerModule(new NoServerRotations());
+      this.registerModule(new SamoKill());
+      this.registerModule(new XCarry());
       this.registerModule(new TriggerBot());
       this.registerModule(new VulcanESP());
       this.registerModule(new WaterSpeed());
       this.registerModule(new ChestStealer());
+      this.registerModule(new SpotifyMENU());
       this.registerModule(new CasinoBotHW());
+      this.registerModule(new KillAura());
+      this.registerModule(new BadTrip());
+      this.registerModule(new Optimization());
       this.registerModule(new AutoBuyGUI());
       this.registerModule(new AutoLoot());
       this.registerModule(new NameProtect());

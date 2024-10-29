@@ -55,9 +55,9 @@ public class PlayerController
     private final ClientPlayNetHandler connection;
     private BlockPos currentBlock = new BlockPos(-1, -1, -1);
     private ItemStack currentItemHittingBlock = ItemStack.EMPTY;
-    private float curBlockDamageMP;
+    public float curBlockDamageMP;
     private float stepSoundTickCounter;
-    private int blockHitDelay;
+    public int blockHitDelay;
     private boolean isHittingBlock;
     private GameType currentGameType = GameType.SURVIVAL;
     private GameType field_239166_k_ = GameType.NOT_SET;

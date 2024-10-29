@@ -36,6 +36,9 @@ public class ModeSetting extends Setting {
    public String get() {
       return this.currentMode;
    }
+   public int getIndexs() {
+      return this.index;
+   }
 
    public void set(String selected) {
       this.currentMode = selected;

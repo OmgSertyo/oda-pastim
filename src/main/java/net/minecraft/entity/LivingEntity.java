@@ -28,6 +28,7 @@ import net.minecraft.block.HoneyBlock;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.TrapDoorBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -84,6 +85,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
@@ -113,7 +115,9 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
+import sertyo.events.Main;
 import sertyo.events.event.player.EventDamage;
+import sertyo.events.module.impl.player.NoPush;
 
 public abstract class LivingEntity extends Entity
 {
@@ -170,7 +174,19 @@ public abstract class LivingEntity extends Entity
 
     /**
      * Damage taken in the last hit. Mobs are resistant to damage less than this for a short time after taking damage.
-     */
+     */    public boolean isActiveItemStackBlocking(int ticks) {
+        if (this.isHandActive() && !this.activeItemStack.isEmpty()) {
+            Item item = this.activeItemStack.getItem();
+
+            if (item.getUseAction(this.activeItemStack) != UseAction.BLOCK) {
+                return false;
+            } else {
+                return item.getUseDuration(this.activeItemStack) - this.activeItemStackUseCount >= ticks;
+            }
+        } else {
+            return false;
+        }
+    }
     protected float lastDamage;
     protected boolean isJumping;
     public float moveStrafing;
@@ -193,7 +209,7 @@ public abstract class LivingEntity extends Entity
     /** Holds the value of ticksExisted when setLastAttacker was last called. */
     private int lastAttackedEntityTime;
     private float landMovementFactor;
-    private int jumpTicks;
+    public int jumpTicks;
     private float absorptionAmount;
     protected ItemStack activeItemStack = ItemStack.EMPTY;
     protected int activeItemStackUseCount;
@@ -243,6 +259,7 @@ public abstract class LivingEntity extends Entity
      */
     public void onKillCommand()
     {
+        //мощня сделат самя ккилл
         this.attackEntityFrom(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
     }
 
@@ -1173,10 +1190,18 @@ public abstract class LivingEntity extends Entity
             this.setHealth(f + healAmount);
         }
     }
+    //FUNTIME BYPASSSS
+    public float getHealth() {
+        float hp = this.dataManager.get(HEALTH);
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.getCurrentServerData() != null && mc.getCurrentServerData().serverIP.contains("funtime") && mc.world.getScoreboard().getObjectiveInDisplaySlot(2) != null) {
+            Score score = mc.world.getScoreboard().getOrCreateScore(this.getScoreboardName(), mc.world.getScoreboard().getObjectiveInDisplaySlot(2));
 
-    public float getHealth()
-    {
-        return this.dataManager.get(HEALTH);
+            if (score.getScorePoints() != 0) {
+                hp = score.getScorePoints();
+            }
+        }
+        return hp;
     }
 
     public void setHealth(float health)
@@ -3530,11 +3555,14 @@ public abstract class LivingEntity extends Entity
     /**
      * Returns true if this entity should push and be pushed by other entities when colliding.
      */
-    public boolean canBePushed()
-    {
-        return this.isAlive() && !this.isSpectator() && !this.isOnLadder();
-    }
 
+    public boolean canBePushed() {
+        if (Main.getInstance().getModuleManager().getModule(NoPush.class).isEnabled()) {
+            return false;
+        } else {
+            return this.isAlive() && !this.isSpectator() && !this.isOnLadder();
+        }
+    }
     /**
      * Marks this entity's velocity as changed, so that it can be re-synced with the client later
      */

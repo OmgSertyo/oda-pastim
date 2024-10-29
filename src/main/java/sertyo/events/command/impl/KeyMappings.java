@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author dedinside
+ * @author sertyo
  * @since 25.06.2023
  */
 public class KeyMappings {

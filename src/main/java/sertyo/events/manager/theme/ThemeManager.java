@@ -1,6 +1,7 @@
 package sertyo.events.manager.theme;
 
 import sertyo.events.Main;
+import sertyo.events.utility.render.ColorUtil;
 
 import java.awt.*;
 
@@ -14,11 +15,8 @@ public class ThemeManager {
       this.currentGuiTheme = Themes.DARK.getTheme();
       this.currentStyleTheme = Themes.LOLLIPOP.getTheme();
    }
-   public static Color getColor(int index) {
-      Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
-      Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
-      return gradient((int)(10.0F - 6), index, color, color2);
-   }
+
+
    public Theme getCurrentGuiTheme() {
       return this.currentGuiTheme;
    }

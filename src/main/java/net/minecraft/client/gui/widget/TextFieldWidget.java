@@ -31,7 +31,7 @@ public class TextFieldWidget extends Widget implements IRenderable, IGuiEventLis
     private final FontRenderer fontRenderer;
 
     /** Has the current text being edited on the textbox. */
-    private String text = "";
+    public String text = "";
     private int maxStringLength = 32;
     private int cursorCounter;
     private boolean enableBackgroundDrawing = true;

@@ -1127,6 +1127,8 @@ public class ClientWorld extends World
         return this.field_239130_d_;
     }
 
+
+
     public static class ClientWorldInfo implements ISpawnWorldInfo
     {
         private final boolean hardcore;

@@ -8,9 +8,9 @@ import net.minecraft.util.math.MathHelper;
 public class Vector3d implements IPosition
 {
     public static final Vector3d ZERO = new Vector3d(0.0D, 0.0D, 0.0D);
-    public final double x;
-    public final double y;
-    public final double z;
+    public double x;
+    public double y;
+    public double z;
 
     public static Vector3d unpack(int packed)
     {

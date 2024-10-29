@@ -6,6 +6,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import java.util.Set;
 import javax.annotation.Nullable;
+
+import net.java.games.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,6 +23,11 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.glfw.GLFW;
+import sertyo.events.Main;
+import sertyo.events.module.impl.player.ItemScroller;
+import sertyo.events.utility.Utility;
+import sertyo.events.utility.misc.TimerHelper;
 
 public abstract class ContainerScreen<T extends Container> extends Screen implements IHasContainer<T>
 {
@@ -87,12 +94,15 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
     private int lastClickButton;
     private boolean doubleClick;
     private ItemStack shiftClickedSlot = ItemStack.EMPTY;
+    private final TimerHelper timer;
 
     public ContainerScreen(T screenContainer, PlayerInventory inv, ITextComponent titleIn)
     {
         super(titleIn);
         this.container = screenContainer;
         this.playerInventory = inv;
+        this.timer = new TimerHelper();
+
         this.ignoreMouseUp = true;
         this.titleX = 8;
         this.titleY = 6;
@@ -105,6 +115,7 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
         super.init();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
+
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
@@ -136,6 +147,17 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
 
             if (this.isSlotSelected(slot, (double)mouseX, (double)mouseY) && slot.isEnabled())
             {
+
+                if (Main.getInstance().getModuleManager().getModule(ItemScroller.class).isEnabled()) {
+                    if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
+                            && GLFW.glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS
+                            && Minecraft.getInstance().currentScreen != null) {
+                        if (this.timer.hasReached((double)ItemScroller.delay.get())) {
+                            handleMouseClick(slot, slot.slotNumber, 1, ClickType.QUICK_MOVE);
+                            timer.reset();
+                        }
+                    }
+                }
                 this.hoveredSlot = slot;
                 RenderSystem.disableDepthTest();
                 int j1 = slot.xPos;

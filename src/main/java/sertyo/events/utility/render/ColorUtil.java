@@ -35,6 +35,13 @@ public class ColorUtil implements Utility {
     public static Color injectAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
+    public static int[] penis(int var0) {
+        return new int[]{var0 >> 16 & 255, var0 >> 8 & 255, var0 & 255, var0 >> 24 & 255};
+    }
+
+    public static float[] penis2(int var1) {
+        return new float[]{(float)(var1 >> 16 & 255) / 255.0F, (float)(var1 >> 8 & 255) / 255.0F, (float)(var1 & 255) / 255.0F, (float)(var1 >> 24 & 255) / 255.0F};
+    }
     public static int setAlpha(int color, int alpha) {
         Color c = new Color(color);
         return (new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha)).getRGB();
@@ -169,8 +176,28 @@ public class ColorUtil implements Utility {
             return ColorUtil.gradient((int)(16.0F - colorSpeed.get()), index * 2, new Color[]{color, color2}).getRGB();
 
     }
+
     public static int getColor(int red, int green, int blue) {
         return new Color(red,green,blue).getRGB();
+    }
+    public static int getColor(int var0, float var1) {
+        int[] var2 = new int[]{proguard3(var0)};
+        return proguard((double)(var2[0] * 255.0F), (double)(var2[1] * 255.0F), (double)(var2[2] * 255.0F), (double)var1);
+    }
+    public static int proguard2 = proguard3(255.0D);
+    public static int proguard3(double var0) {
+        return proguard(var0, 255.0D);
+    }
+    public static int proguard(double var0, double var2) {
+        return proguard(var0, var0, var0, var2);
+    }
+    public static int proguard(int var0, int var1, int var2, int var3) {
+        var3 = (int)(proguard2 != -1.0F && var3 != 0 ? proguard2 : (float)var3);
+        return var3 << 24 | var0 << 16 | var1 << 8 | var2;
+    }
+
+    public static int proguard(double var0, double var2, double var4, double var6) {
+        return proguard((int)var0, (int)var2, (int)var4, (int)var6);
     }
     public static StringTextComponent gradient(String message, int first, int end) {
 
@@ -204,6 +231,17 @@ public class ColorUtil implements Utility {
         }
         int color1 = colors[colorIndex];
         int color2 = colors[colorIndex == colors.length - 1 ? 0 : colorIndex + 1];
+        return interpolateColor(color1, color2, angle / 360f * colors.length - colorIndex);
+    }
+    public static int gradient2(int speed, int index, Color... colors) {
+        int angle = (int) ((System.currentTimeMillis() / speed + index) % 360);
+        angle = (angle > 180 ? 360 - angle : angle) + 180;
+        int colorIndex = (int) (angle / 360f * colors.length);
+        if (colorIndex == colors.length) {
+            colorIndex--;
+        }
+        int color1 = colors[colorIndex].getRGB();
+        int color2 = colors[colorIndex == colors.length - 1 ? 0 : colorIndex + 1].getRGB();
         return interpolateColor(color1, color2, angle / 360f * colors.length - colorIndex);
     }
 

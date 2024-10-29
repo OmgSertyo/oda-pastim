@@ -31,7 +31,6 @@ repositories {
     }
 }
 dependencies {
-    implementation name: 'joml-1.10.5' // Укажите имя JAR-файла без расширения
     implementation name: 'lombok' // Укажите имя JAR-файла без расширения
     implementation name: 'annotations' // Укажите имя JAR-файла без расширения
 }
@@ -91,6 +90,12 @@ jar {
             exclude 'META-INF', 'META-INF/**'
         }
     }
+    from('src/main/resources') {
+        include '**/*'
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
 }
 
 task runclient(type: JavaExec) {

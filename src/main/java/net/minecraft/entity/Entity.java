@@ -108,8 +108,10 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.TicketType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sertyo.events.Main;
 import sertyo.events.event.player.EventMove;
 import sertyo.events.event.player.EventPostMove;
+import sertyo.events.module.impl.player.NoPush;
 
 public abstract class Entity implements INameable, ICommandSource
 {
@@ -132,13 +134,13 @@ public abstract class Entity implements INameable, ICommandSource
     public double prevPosZ;
     private Vector3d positionVec;
     private BlockPos position;
-    private Vector3d motion = Vector3d.ZERO;
+    public Vector3d motion = Vector3d.ZERO;
     public float rotationYaw;
     public float rotationPitch;
     public float prevRotationYaw;
     public float prevRotationPitch;
     private AxisAlignedBB boundingBox = ZERO_AABB;
-    protected boolean onGround;
+    public boolean onGround;
     public boolean collidedHorizontally;
     public boolean collidedVertically;
     public boolean velocityChanged;
@@ -1492,6 +1494,7 @@ public abstract class Entity implements INameable, ICommandSource
         return !this.firstUpdate && this.eyesFluidLevel.getDouble(FluidTags.LAVA) > 0.0D;
     }
 
+
     public void moveRelative(float p_213309_1_, Vector3d relative)
     {
         Vector3d vector3d = getAbsoluteMotion(relative, p_213309_1_, this.rotationYaw);
@@ -2811,48 +2814,42 @@ public abstract class Entity implements INameable, ICommandSource
     {
     }
 
-    protected void pushOutOfBlocks(double x, double y, double z)
-    {
-        BlockPos blockpos = new BlockPos(x, y, z);
-        Vector3d vector3d = new Vector3d(x - (double)blockpos.getX(), y - (double)blockpos.getY(), z - (double)blockpos.getZ());
-        BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-        Direction direction = Direction.UP;
-        double d0 = Double.MAX_VALUE;
+    protected void pushOutOfBlocks(double x, double y, double z) {
+        if (Main.getInstance().getModuleManager().getModule(NoPush.class).isEnabled()) {
+        } else if (this.noClip) {
+        } else {
+            BlockPos blockpos = new BlockPos(x, y, z);
+            Vector3d vector3d = new Vector3d(x - (double) blockpos.getX(), y - (double) blockpos.getY(), z - (double) blockpos.getZ());
+            BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+            Direction direction = Direction.UP;
+            double d0 = Double.MAX_VALUE;
 
-        for (Direction direction1 : new Direction[] {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, Direction.UP})
-        {
-            blockpos$mutable.setAndMove(blockpos, direction1);
+            for (Direction direction1 : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, Direction.UP}) {
+                blockpos$mutable.setAndMove(blockpos, direction1);
 
-            if (!this.world.getBlockState(blockpos$mutable).hasOpaqueCollisionShape(this.world, blockpos$mutable))
-            {
-                double d1 = vector3d.getCoordinate(direction1.getAxis());
-                double d2 = direction1.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1.0D - d1 : d1;
+                if (!this.world.getBlockState(blockpos$mutable).hasOpaqueCollisionShape(this.world, blockpos$mutable)) {
+                    double d1 = vector3d.getCoordinate(direction1.getAxis());
+                    double d2 = direction1.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1.0D - d1 : d1;
 
-                if (d2 < d0)
-                {
-                    d0 = d2;
-                    direction = direction1;
+                    if (d2 < d0) {
+                        d0 = d2;
+                        direction = direction1;
+                    }
                 }
             }
-        }
-        float f = this.rand.nextFloat() * 0.2F + 0.1F;
-        float f1 = (float)direction.getAxisDirection().getOffset();
-        Vector3d vector3d1 = this.getMotion().scale(0.75D);
+            float f = this.rand.nextFloat() * 0.2F + 0.1F;
+            float f1 = (float) direction.getAxisDirection().getOffset();
+            Vector3d vector3d1 = this.getMotion().scale(0.75D);
 
-        if (direction.getAxis() == Direction.Axis.X)
-        {
-            this.setMotion((double)(f1 * f), vector3d1.y, vector3d1.z);
-        }
-        else if (direction.getAxis() == Direction.Axis.Y)
-        {
-            this.setMotion(vector3d1.x, (double)(f1 * f), vector3d1.z);
-        }
-        else if (direction.getAxis() == Direction.Axis.Z)
-        {
-            this.setMotion(vector3d1.x, vector3d1.y, (double)(f1 * f));
+            if (direction.getAxis() == Direction.Axis.X) {
+                this.setMotion((double) (f1 * f), vector3d1.y, vector3d1.z);
+            } else if (direction.getAxis() == Direction.Axis.Y) {
+                this.setMotion(vector3d1.x, (double) (f1 * f), vector3d1.z);
+            } else if (direction.getAxis() == Direction.Axis.Z) {
+                this.setMotion(vector3d1.x, vector3d1.y, (double) (f1 * f));
+            }
         }
     }
-
     public void setMotionMultiplier(BlockState state, Vector3d motionMultiplierIn)
     {
         this.fallDistance = 0.0F;

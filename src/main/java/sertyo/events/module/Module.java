@@ -72,7 +72,7 @@ public class Module implements Utility {
    public void onEnable() {
       EventManager.register(this);
       if (!(this instanceof ClickGuiModule)) {
-         NotificationManager.notify(NotificationType.SUCCESS, "Module was " + TextFormatting.GREEN + "enabled", TextFormatting.GRAY + this.name, 1000.0F);
+         //NotificationManager.notify(NotificationType.SUCCESS, "Module was " + TextFormatting.GREEN + "enabled", TextFormatting.GRAY + this.name, 1000.0F);
       }
 
    }
@@ -80,7 +80,7 @@ public class Module implements Utility {
    public void onDisable() {
       EventManager.unregister(this);
       if (!(this instanceof ClickGuiModule)) {
-         NotificationManager.notify(NotificationType.ERROR, "Module was " + TextFormatting.RED + "disabled", TextFormatting.GRAY + this.name, 1000.0F);
+     //    NotificationManager.notify(NotificationType.ERROR, "Module was " + TextFormatting.RED + "disabled", TextFormatting.GRAY + this.name, 1000.0F);
       }
 
    }

@@ -26,6 +26,7 @@ public class Fonts {
    public static FontRenderer mntsb17 = new FontRenderer(getFontFromTTF("mntsb", 17.0F, 0), true, true);
    public static FontRenderer nunito14 = new FontRenderer(getFontFromTTF("nunito", 14.0F, 0), true, true);
    public static FontRenderer nunito12 = new FontRenderer(getFontFromTTF("nunito", 12.0F, 0), true, true);
+   public static FontRenderer icons16 = new FontRenderer(getFontFromTTF("icons", 16.0F, 0), true, true);
 
    public static Font getFontFromTTF(String name, float fontSize, int fontType) {
       Font output = null;

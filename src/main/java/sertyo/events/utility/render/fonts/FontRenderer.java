@@ -12,6 +12,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
 import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.Shader;
 
 public class FontRenderer extends CFont {
@@ -830,4 +831,27 @@ public class FontRenderer extends CFont {
       }
 
    }
+
+   public void drawClientColoredString(String text, double x, double y, float alphaPC, boolean shadow) {
+      x -= (double) this.getStringWidth(text);
+      float index = 0.0F;
+      char[] var9 = text.toCharArray();
+      int var10 = var9.length;
+
+      for (int var11 = 0; var11 < var10; ++var11) {
+         char c = var9[var11];
+         int col1 = ColorUtility.getOverallColorFrom(ColorUtility.getColor((int) index * 5).getRGB(), ColorUtility.getColor((int) index * 5).getRGB(), index / (float) this.getStringWidth(text));
+         col1 = ColorUtility.swapAlpha(col1, (float) ColorUtility.getAlphaFromColor(col1) * alphaPC);
+         if (ColorUtility.getAlphaFromColor(col1) >= 32) {
+            if (shadow) {
+               this.drawString(String.valueOf(c), (double) ((float) this.getStringWidth(text) + index) + x + 0.5, y + 0.5, ColorUtility.swapDark(col1, ColorUtility.getBrightnessFromColor(col1) / 3.0F));
+            }
+
+            this.drawString(String.valueOf(c), (double) ((float) this.getStringWidth(text) + index) + x, y, col1);
+         }
+
+         index += (float) this.getStringWidth(String.valueOf(c));
+      }
+   }
+
 }

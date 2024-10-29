@@ -108,6 +108,48 @@ public class ShaderUtil implements Utility {
                                      gl_FragColor = vec4(innerAlpha.rgb / innerAlpha.a, mix(innerAlpha.a, 1.0 - exp(-innerAlpha.a * exposure), step(0.0, direction.y)));
                                  }
                                 """.getBytes()), GL_FRAGMENT_SHADER);
+                case "kawaseUp" ->
+                        createShader(new ByteArrayInputStream("""
+                #version 120
+                uniform sampler2D image;
+                uniform float offset;
+                uniform vec2 resolution;
+                
+                void main()
+                {
+                    vec2 uv = gl_TexCoord[0].xy / 2.0;
+                    vec2 halfpixel = resolution / 2.0;
+                    vec3 sum = texture2D(image, uv + vec2(-halfpixel.x * 2.0, 0.0) * offset).rgb;
+                    sum += texture2D(image, uv + vec2(-halfpixel.x, halfpixel.y) * offset).rgb * 2.0;
+                    sum += texture2D(image, uv + vec2(0.0, halfpixel.y * 2.0) * offset).rgb;   
+                    sum += texture2D(image, uv + vec2(halfpixel.x, halfpixel.y) * offset).rgb * 2.0;
+                    sum += texture2D(image, uv + vec2(halfpixel.x * 2.0, 0.0) * offset).rgb;
+                    sum += texture2D(image, uv + vec2(halfpixel.x, -halfpixel.y) * offset).rgb * 2.0; 
+                    sum += texture2D(image, uv + vec2(0.0, -halfpixel.y * 2.0) * offset).rgb;  
+                    sum += texture2D(image, uv + vec2(-halfpixel.x, -halfpixel.y) * offset).rgb * 2.0; 
+                    gl_FragColor = vec4(sum / 12.0, 1);
+                }
+                """.getBytes()), GL_FRAGMENT_SHADER);
+                case "kawaseDown" ->
+                        createShader(new ByteArrayInputStream("""
+                                #version 120
+                                
+                                uniform sampler2D image;
+                                uniform float offset;
+                                uniform vec2 resolution;
+                                
+                                void main() 
+                                {
+                                    vec2 uv = gl_TexCoord[0].xy * 2.0;
+                                    vec2 halfpixel = resolution * 2.0;
+                                    vec3 sum = texture2D(image, uv).rgb * 4.0;
+                                    sum += texture2D(image, uv - halfpixel.xy * offset).rgb;
+                                    sum += texture2D(image, uv + halfpixel.xy * offset).rgb;
+                                    sum += texture2D(image, uv + vec2(halfpixel.x, -halfpixel.y) * offset).rgb;
+                                    sum += texture2D(image, uv - vec2(halfpixel.x, -halfpixel.y) * offset).rgb;
+                                    gl_FragColor = vec4(sum / 8.0, 1);
+                                }
+                                """.getBytes()), GL_FRAGMENT_SHADER);
 
                 case "blur2c" ->
                         createShader(new ByteArrayInputStream("""

@@ -32,7 +32,6 @@ public class CrashReporter
                 return;
             }
 
-            extendCrashReport(category);
             GameSettings gamesettings = Config.getGameSettings();
 
             if (gamesettings == null)
@@ -101,24 +100,5 @@ public class CrashReporter
         }
     }
 
-    public static void extendCrashReport(CrashReportCategory cat)
-    {
-        cat.addDetail("OptiFine Version", Config.getVersion());
-        cat.addDetail("OptiFine Build", Config.getBuild());
 
-        if (Config.getGameSettings() != null)
-        {
-            cat.addDetail("Render Distance Chunks", "" + Config.getChunkViewDistance());
-            cat.addDetail("Mipmaps", "" + Config.getMipmapLevels());
-            cat.addDetail("Anisotropic Filtering", "" + Config.getAnisotropicFilterLevel());
-            cat.addDetail("Antialiasing", "" + Config.getAntialiasingLevel());
-            cat.addDetail("Multitexture", "" + Config.isMultiTexture());
-        }
-
-        cat.addDetail("Shaders", "" + Shaders.getShaderPackName());
-        cat.addDetail("OpenGlVersion", "" + Config.openGlVersion);
-        cat.addDetail("OpenGlRenderer", "" + Config.openGlRenderer);
-        cat.addDetail("OpenGlVendor", "" + Config.openGlVendor);
-        cat.addDetail("CpuCount", "" + Config.getAvailableProcessors());
-    }
 }

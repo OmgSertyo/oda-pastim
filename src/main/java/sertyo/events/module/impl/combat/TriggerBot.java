@@ -1,10 +1,13 @@
 package sertyo.events.module.impl.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
+import lombok.Getter;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.math.RayTraceResult;
+import sertyo.events.Main;
 import sertyo.events.event.player.EventUpdate;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
@@ -15,7 +18,8 @@ import sertyo.events.module.setting.impl.BooleanSetting;
 public class TriggerBot extends Module {
 
     private BooleanSetting onlyCrits = new BooleanSetting("Только криты", true);
-
+    @Getter
+    public static LivingEntity target = null;
     public TriggerBot() {
     }
 
@@ -25,7 +29,10 @@ public class TriggerBot extends Module {
             if (entity == mc.player) continue;
 
             if (mc.objectMouseOver.getType() == RayTraceResult.Type.ENTITY && canAttack()) {
-                mc.clickMouse();
+                if (!Main.getInstance().getFriendManager().isFriend(entity.getName().getString())) {
+                    target = entity;
+                    mc.clickMouse();
+                }
             }
         }
     }

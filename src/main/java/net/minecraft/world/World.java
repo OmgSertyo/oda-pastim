@@ -1420,4 +1420,20 @@ public abstract class World implements IWorld, AutoCloseable
     {
         return this.isDebug;
     }
+
+    @Nullable
+
+    /**
+     * Find a player by name in this world.
+     */ public PlayerEntity getPlayerEntityByName(String name) {
+        for (int j2 = 0; j2 < this.getPlayers().size(); ++j2) {
+            PlayerEntity entityplayer = this.getPlayers().get(j2);
+
+            if (name.equals(entityplayer.getName())) {
+                return entityplayer;
+            }
+        }
+
+        return null;
+    }
 }

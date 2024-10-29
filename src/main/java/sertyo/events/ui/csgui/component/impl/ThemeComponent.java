@@ -6,7 +6,6 @@
 package sertyo.events.ui.csgui.component.impl;
 
 import net.minecraft.util.math.vector.Vector4f;
-import org.joml.Vector4i;
 import sertyo.events.Main;
 import sertyo.events.manager.theme.Theme;
 import sertyo.events.manager.theme.Themes;
@@ -33,9 +32,9 @@ public class ThemeComponent extends Component {
 
       RenderUtil.Render2D.drawRoundedRect(this.x, this.y, this.width, this.height, 3.5f, isDark ? (new Color(34, 34, 34)).getRGB() : (new Color(210, 210, 210)).getRGB());
       if (this.theme.getType().equals(Theme.ThemeType.GUI)) {
-         RenderUtil.Render2D.drawRoundedCorner(this.x, this.y, this.width, this.height - 10, new Vector4f(4, 0, 4, 0), new Vector4i(this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB()));
+         RenderUtil.Render2D.drawRoundedGradientRect(this.x, this.y, this.width, this.height - 12.0F, 7.0F, 0.0F, 7.0F, 0.0F, 1.0F, this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB());
       } else {
-         RenderUtil.Render2D.drawRoundedCorner(this.x, this.y, this.width, this.height - 10, new Vector4f(4, 0, 4, 0), new Vector4i(this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB(), this.theme.getColors()[1].getRGB(), this.theme.getColors()[1].getRGB()));
+         RenderUtil.Render2D.drawRoundedGradientRect(this.x, this.y, this.width, this.height - 12.0F, 7.0F, 0.0F, 7.0F, 0.0F, 1.0F, this.theme.getColors()[0].getRGB(), this.theme.getColors()[0].getRGB(), this.theme.getColors()[1].getRGB(), this.theme.getColors()[1].getRGB());
       }
 
       Fonts.msBold[14].drawCenteredString(this.theme.getName(), this.x + this.width / 2.0F, this.y + 22.0F, isDark ? Color.WHITE.getRGB() : (new Color(65, 65, 65)).getRGB());

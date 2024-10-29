@@ -2,6 +2,7 @@ package sertyo.events.command;
 
 import com.darkmagician6.eventapi.EventManager;
 import sertyo.events.command.impl.*;
+import sertyo.events.manager.staff.Staff;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ public class CommandManager {
       this.commands.add(new ConfigCommand());
       this.commands.add(new FriendCommand());
       this.commands.add(new GpsCommand());
+      this.commands.add(new StaffCommand());
       this.commands.add(new BindCommand());
       this.commands.add(new AutoPerevod());
       this.commands.add(new AbCommand());

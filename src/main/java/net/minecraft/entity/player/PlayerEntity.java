@@ -107,8 +107,10 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import sertyo.events.Main;
 import sertyo.events.event.player.EventDamageEntityItem;
 import sertyo.events.event.player.EventLivingUpdate;
+import sertyo.events.module.impl.player.NoPush;
 
 public abstract class PlayerEntity extends LivingEntity
 {
@@ -120,7 +122,9 @@ public abstract class PlayerEntity extends LivingEntity
     protected static final DataParameter<Byte> MAIN_HAND = EntityDataManager.createKey(PlayerEntity.class, DataSerializers.BYTE);
     protected static final DataParameter<CompoundNBT> LEFT_SHOULDER_ENTITY = EntityDataManager.createKey(PlayerEntity.class, DataSerializers.COMPOUND_NBT);
     protected static final DataParameter<CompoundNBT> RIGHT_SHOULDER_ENTITY = EntityDataManager.createKey(PlayerEntity.class, DataSerializers.COMPOUND_NBT);
+    public float rotationPitchHead;
     private long timeEntitySatOnShoulder;
+    public boolean isBot;
     public final PlayerInventory inventory = new PlayerInventory(this);
     protected EnderChestInventory enterChestInventory = new EnderChestInventory();
     public final PlayerContainer container;
@@ -580,6 +584,8 @@ public abstract class PlayerEntity extends LivingEntity
         super.updateEntityActionState();
         this.updateArmSwingProgress();
         this.rotationYawHead = this.rotationYaw;
+        this.rotationPitchHead = this.rotationPitch;
+
     }
 
     /**
@@ -2364,9 +2370,12 @@ public abstract class PlayerEntity extends LivingEntity
 
     public abstract boolean isCreative();
 
-    public boolean isPushedByWater()
-    {
-        return !this.abilities.isFlying;
+    public boolean isPushedByWater() {
+        if (Main.getInstance().getModuleManager().getModule(NoPush.class).isEnabled()) {
+            return false;
+        } else {
+            return !this.abilities.isFlying;
+        }
     }
 
     public Scoreboard getWorldScoreboard()

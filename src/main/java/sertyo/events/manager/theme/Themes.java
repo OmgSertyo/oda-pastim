@@ -115,11 +115,8 @@ public enum Themes {
       return this.theme;
    }
 
-   public static int getColor(int index) {
-      int color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0].getRGB();
-      int color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1].getRGB();
-      return gradient((int)(10.0F - 6), index, color, color2);
-   }
+
+
    static {
       Themes[] var0 = values();
       int var1 = var0.length;

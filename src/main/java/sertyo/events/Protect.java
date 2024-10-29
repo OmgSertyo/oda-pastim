@@ -17,6 +17,31 @@ import java.security.NoSuchAlgorithmException;
 import static sertyo.events.Main.*;
 @Native
 public class Protect {
+    public static String checkServerStatus() {
+        String urlString = "http://t981877h.beget.tech/client/free.txt";
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+            conn.connect();
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            in.close();
+            conn.disconnect();
+
+            return content.toString().trim(); // Вернуть содержимое файла
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public static String name = "http://t981877h.beget.tech";
     public static void check(String login, String password) {
         try {
@@ -402,7 +427,7 @@ public class Protect {
         int roleEnd = response.indexOf("\"", roleStart);
         return response.substring(roleStart, roleEnd);
     }
-    private static void getServer() {
+    public static void getServer() {
         Socket socket = null;
         BufferedReader in = null;
 

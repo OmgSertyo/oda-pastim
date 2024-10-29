@@ -21,13 +21,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sertyo.events.Main;
 
 public class CrashReport
 {
     private static final Logger LOGGER = LogManager.getLogger();
     private final String description;
     private final Throwable cause;
-    private final CrashReportCategory systemDetailsCategory = new CrashReportCategory(this, "System Details");
+    private final CrashReportCategory systemDetailsCategory = new CrashReportCategory(this, "Доп информация");
     private final List<CrashReportCategory> crashReportSections = Lists.newArrayList();
     private File crashReportFile;
     private boolean firstCategoryInCrashReport = true;
@@ -47,27 +48,24 @@ public class CrashReport
      */
     private void populateEnvironment()
     {
-        this.systemDetailsCategory.addDetail("Minecraft Version", () ->
+        this.systemDetailsCategory.addDetail("Версия майнкрафта", () ->
         {
             return SharedConstants.getVersion().getName();
         });
-        this.systemDetailsCategory.addDetail("Minecraft Version ID", () ->
-        {
-            return SharedConstants.getVersion().getId();
-        });
-        this.systemDetailsCategory.addDetail("Operating System", () ->
+
+        this.systemDetailsCategory.addDetail("Ос", () ->
         {
             return System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ") version " + System.getProperty("os.version");
         });
-        this.systemDetailsCategory.addDetail("Java Version", () ->
+        this.systemDetailsCategory.addDetail("Версия джавы", () ->
         {
             return System.getProperty("java.version") + ", " + System.getProperty("java.vendor");
         });
-        this.systemDetailsCategory.addDetail("Java VM Version", () ->
+        this.systemDetailsCategory.addDetail("Версия вм джавы", () ->
         {
             return System.getProperty("java.vm.name") + " (" + System.getProperty("java.vm.info") + "), " + System.getProperty("java.vm.vendor");
         });
-        this.systemDetailsCategory.addDetail("Memory", () ->
+        this.systemDetailsCategory.addDetail("Памчти", () ->
         {
             Runtime runtime = Runtime.getRuntime();
             long i = runtime.maxMemory();
@@ -78,12 +76,7 @@ public class CrashReport
             long j1 = k / 1024L / 1024L;
             return k + " bytes (" + j1 + " MB) / " + j + " bytes (" + i1 + " MB) up to " + i + " bytes (" + l + " MB)";
         });
-        this.systemDetailsCategory.addDetail("CPUs", Runtime.getRuntime().availableProcessors());
-        this.systemDetailsCategory.addDetail("JVM Flags", () ->
-        {
-            List<String> list = Util.getJvmFlags().collect(Collectors.toList());
-            return String.format("%d total; %s", list.size(), list.stream().collect(Collectors.joining(" ")));
-        });
+
 
         if (Reflector.CrashReportExtender_enhanceCrashReport != null)
         {
@@ -214,7 +207,7 @@ public class CrashReport
         }
 
         StringBuilder stringbuilder = new StringBuilder();
-        stringbuilder.append("---- Minecraft Crash Report ----\n");
+        stringbuilder.append("---- Neiron crash info ----\n");
 
         if (Reflector.CrashReportExtender_addCrashReportHeader != null && Reflector.CrashReportExtender_addCrashReportHeader.exists())
         {
@@ -224,10 +217,10 @@ public class CrashReport
         stringbuilder.append("// ");
         stringbuilder.append(getWittyComment());
         stringbuilder.append("\n\n");
-        stringbuilder.append("Time: ");
+        stringbuilder.append("Время краша: ");
         stringbuilder.append((new SimpleDateFormat()).format(new Date()));
         stringbuilder.append("\n");
-        stringbuilder.append("Description: ");
+        stringbuilder.append("Причина: ");
         stringbuilder.append(this.description);
         stringbuilder.append("\n\n");
         stringbuilder.append(this.getCauseStackTraceOrString());
@@ -368,11 +361,10 @@ public class CrashReport
      */
     private static String getWittyComment()
     {
-        String[] astring = new String[] {"Who set us up the TNT?", "Everything's going to plan. No, really, that was supposed to happen.", "Uh... Did I do that?", "Oops.", "Why did you do that?", "I feel sad now :(", "My bad.", "I'm sorry, Dave.", "I let you down. Sorry :(", "On the bright side, I bought you a teddy bear!", "Daisy, daisy...", "Oh - I know what I did wrong!", "Hey, that tickles! Hehehe!", "I blame Dinnerbone.", "You should try our sister game, Minceraft!", "Don't be sad. I'll do better next time, I promise!", "Don't be sad, have a hug! <3", "I just don't know what went wrong :(", "Shall we play a game?", "Quite honestly, I wouldn't worry myself about that.", "I bet Cylons wouldn't have this problem.", "Sorry :(", "Surprise! Haha. Well, this is awkward.", "Would you like a cupcake?", "Hi. I'm Minecraft, and I'm a crashaholic.", "Ooh. Shiny.", "This doesn't make any sense!", "Why is it breaking :(", "Don't do that.", "Ouch. That hurt :(", "You're mean.", "This is a token for 1 free hug. Redeem at your nearest Mojangsta: [~~HUG~~]", "There are four lights!", "But it works on my machine."};
 
         try
         {
-            return astring[(int)(Util.nanoTime() % (long)astring.length)];
+            return "Neironclient has been crashed:(";
         }
         catch (Throwable throwable)
         {

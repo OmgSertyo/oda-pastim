@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.GameSettings;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.chat.IChatListener;
 import net.minecraft.client.gui.chat.NarratorChatListener;
@@ -79,10 +78,9 @@ import net.optifine.CustomColors;
 import net.optifine.CustomItems;
 import net.optifine.TextureAnimations;
 import net.optifine.reflect.Reflector;
-import sertyo.events.Main;
 import sertyo.events.event.render.EventOverlay;
 import sertyo.events.event.render.EventRender2D;
-import sertyo.events.utility.ab.AutoBuy;
+import sertyo.events.ui.ab.AutoBuy;
 
 public class IngameGui extends AbstractGui
 {
@@ -287,7 +285,6 @@ public class IngameGui extends AbstractGui
             this.func_238455_c_(matrixStack);
         }
 
-        this.renderPotionIcons(matrixStack);
 
         if (this.mc.gameSettings.showDebugInfo)
         {

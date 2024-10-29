@@ -1,6 +1,7 @@
 package sertyo.events.module.impl.render;
 
 
+import org.lwjgl.glfw.GLFW;
 import sertyo.events.Main;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
@@ -18,7 +19,7 @@ public class ClickGuiModule extends Module {
    public static NumberSetting blurRadius;
 
    public ClickGuiModule() {
-      this.bind = 54;
+      this.bind = GLFW.GLFW_KEY_RIGHT_SHIFT;
    }
 
    public void onEnable() {
