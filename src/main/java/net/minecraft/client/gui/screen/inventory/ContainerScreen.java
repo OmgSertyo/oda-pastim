@@ -25,9 +25,12 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.glfw.GLFW;
 import sertyo.events.Main;
+import sertyo.events.module.ModuleManager;
 import sertyo.events.module.impl.player.ItemScroller;
+import sertyo.events.module.impl.render.AhHelper;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.misc.TimerHelper;
+import sertyo.events.utility.render.ColorUtil;
 
 public abstract class ContainerScreen<T extends Container> extends Screen implements IHasContainer<T>
 {
@@ -323,6 +326,29 @@ public abstract class ContainerScreen<T extends Container> extends Screen implem
 
         this.itemRenderer.zLevel = 0.0F;
         this.setBlitOffset(0);
+        /* Вместо FullMyst свой основной класс (к примеру Expensive)*/
+        ModuleManager functionRegistry = Main.getInstance().getModuleManager();
+        AhHelper helper = (AhHelper) functionRegistry.getModule(AhHelper.class);
+        if(helper.isEnabled()) {
+            if (helper.getX() != 0) {
+                int x = (int) helper.getX();
+                int y = (int) helper.getY();
+                /* Самый дешёвый*/
+                fill(matrixStack, x, y, x + 16, y + 16, ColorUtil.rgba(64, 255, 64, (int)3.75f));
+                /* Второй по цене*/
+                if (helper.getX2() != 0) {
+                    int x2 = (int) helper.getX2();
+                    int y2 = (int) helper.getY2();
+                    fill(matrixStack, x2, y2, x2 + 16, y2 + 16, ColorUtil.rgba(255, 255, 64, (int) 3.75f));
+                }
+                /* и ластовый красный */
+                if (helper.getX3() != 0) {
+                    int x3 = (int) helper.getX3();
+                    int y3 = (int) helper.getY3();
+                    fill(matrixStack, x3, y3, x3 + 16, y3 + 16, ColorUtil.rgba(255, 64, 64, (int) 3.75f));
+                }
+            }
+        }
     }
 
     private void updateDragSplitting()

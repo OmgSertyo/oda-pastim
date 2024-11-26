@@ -1,18 +1,14 @@
 package sertyo.events.utility.bots.ai;
 
-import lombok.Getter;
-import obf.sertyo.nativeobf.Native;
+import me.sertyo.j2c.J2c;
 
-
-import java.io.IOException;
-
-@Native
+@J2c
 public class NeironSolver {
 
   //  @Getter
   //  private static BotPlayerSendPacket bot;
 
-    @Native
+    @J2c
     public void NNStart(String ip, String port, String key, String hwid) {
 
     }

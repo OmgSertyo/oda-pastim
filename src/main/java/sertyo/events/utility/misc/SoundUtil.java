@@ -2,6 +2,7 @@ package sertyo.events.utility.misc;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import sertyo.events.Main;
 
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
@@ -23,7 +24,7 @@ public class SoundUtil {
         mutableClips.stream().filter(Objects::nonNull).filter(clip -> !(clip.isOpen() && clip.isRunning())).forEach(Clip::stop);
         mutableClips.removeIf(clip -> !clip.isRunning());
         try {
-            stream = AudioSystem.getAudioInputStream(new BufferedInputStream(SoundUtil.class.getResourceAsStream("/assets/minecraft/" + "neiron" + "/sound/" + location)));
+            stream = AudioSystem.getAudioInputStream(new BufferedInputStream(SoundUtil.class.getResourceAsStream("/assets/minecraft/" + "neiron"+ "/sound/" + location)));
         } catch (final Exception ignored) {
         }
         assert stream != null;

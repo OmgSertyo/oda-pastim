@@ -5,7 +5,21 @@ public class Component {
    public float y;
    public float width;
    public float height;
+   public boolean isHovered(int mouseX, int mouseY, float width, float height) {
+      return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+   }
 
+   public boolean isHovered(int mouseX, int mouseY, float x,float y, float width, float height) {
+      return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+   }
+
+   public boolean isHovered(int mouseX, int mouseY) {
+      return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
+   }
+
+   public boolean isHovered(int mouseX, int mouseY, float height) {
+      return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
+   }
    public Component(float x, float y, float width, float height) {
       this.x = x;
       this.y = y;
@@ -22,9 +36,9 @@ public class Component {
    public void mouseReleased(double mouseX, double mouseY, int state) {
    }
 
-   public void keyTyped(int keyCode) {
-   }
+   public void keyTypedd(int keyCode, int scanCode, int modifiers) {
 
+   }
    public boolean isVisible() {
       return true;
    }

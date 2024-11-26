@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.*;
 
@@ -180,14 +181,14 @@ public class KillAura extends Module {
                 if (shouldAttack(target)) {
                     if (!mc.player.isElytraFlying()) {
                         ticksUntilNextAttack = 0.3f;
-                        attackTarget(target);
-                        attackTarget(target);
+                        attackTarget();
+                        attackTarget();
                     }
                     if (mc.player.isElytraFlying()) {
                         if ((getDistance(target) - distance.get() - 0.3) <= 0.0 && distance.get() >= 3.4) {
                             ticksUntilNextAttack = 0.4f;
-                            attackTarget(target);
-                            attackTarget(target);
+                            attackTarget();
+                            attackTarget();
                         }
                     }
                 }
@@ -205,7 +206,7 @@ public class KillAura extends Module {
                 hasRotated = false;
                 if (shouldAttack(target) && RayTraceUtil.getMouseOver(target, rotate.x, rotate.y, distance.get()) == target
                         ) {
-                    attackTarget(target);
+                    attackTarget();
                 }
                 if (!hasRotated)
                     setRotation(target, false);
@@ -213,7 +214,7 @@ public class KillAura extends Module {
 
             case 1 -> {
                 if (shouldAttack(target)) {
-                    attackTarget(target);
+                    attackTarget();
                     ticksUntilNextAttack = 2.1f;
                 }
 
@@ -231,35 +232,46 @@ public class KillAura extends Module {
         }
     }
 
-    private void attackTarget(final LivingEntity targetEntity) {
-        if (settings.get(2) && mc.player.isActiveItemStackBlocking()) {
-            mc.playerController.onStoppedUsingItem(mc.player);
-        }
+    private void attackTarget() {
+            if (mc.player.isHandActive() && onlySpaceCritical.get()) return;
 
-        boolean sprint = false;
-        if (CEntityActionPacket.lastUpdatedSprint && !mc.player.isInWater()) {
-            mc.player.connection.sendPacket(new CEntityActionPacket(mc.player, CEntityActionPacket.Action.STOP_SPRINTING));
-            sprint = true;
-        }
-
-        if (cooldown.get()) {
-            cpsLimit = System.currentTimeMillis() + 550;
-        }
-        if (!cooldown.get()) {
-            cpsLimit = System.currentTimeMillis() + 25;
-        }
-
-        mc.playerController.attackEntity(mc.player, targetEntity);
-        mc.player.swingArm(Hand.MAIN_HAND);
+            if (settings.get(2) && mc.player.isActiveItemStackBlocking()) {
+                mc.playerController.onStoppedUsingItem(mc.player);
+            }
 
 
-        if (settings.get(3)) {
-            breakShieldAndSwapSlot();
-        }
+            long lastAttackTime = 0;
+            int attackCycleStep = 0;
+            int[] cpsIntervals = {500, 520, 494, 498};
+            int[] cpsCycles = {3, 2, 2, 4};
 
-        if (sprint) {
-            mc.player.connection.sendPacket(new CEntityActionPacket(mc.player, CEntityActionPacket.Action.START_SPRINTING));
-        }
+
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime >= lastAttackTime + cpsIntervals[attackCycleStep]) {
+
+                lastAttackTime = currentTime;
+
+
+                cpsLimit = System.currentTimeMillis() + cpsIntervals[attackCycleStep];
+                mc.playerController.attackEntity(mc.player, target);
+                mc.player.swingArm(Hand.MAIN_HAND);
+
+
+                if (--cpsCycles[attackCycleStep] <= 0) {
+
+                    attackCycleStep = (attackCycleStep + 1) % cpsIntervals.length; // Цикличность
+
+                    cpsCycles[attackCycleStep] = attackCycleStep == 0 ? 3 : (attackCycleStep == 1 ? 2 : (attackCycleStep == 2 ? 2 : 4));
+                }
+
+                if (target instanceof PlayerEntity playerEntity && settings.get(3)) {
+                    breakShieldAndSwapSlot();
+
+                }
+            }
+
+
     }
 
     private void breakShieldAndSwapSlot() {

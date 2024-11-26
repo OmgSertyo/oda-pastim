@@ -1,22 +1,25 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package sertyo.events.ui.csgui.component.impl;
+
+import org.lwjgl.glfw.GLFW;
+import sertyo.events.module.setting.Setting;
+import sertyo.events.module.setting.impl.*;
+import sertyo.events.ui.csgui.CsGui;
+import sertyo.events.ui.csgui.component.Component;
+import sertyo.events.module.Module;
+import sertyo.events.utility.font.Fonts;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
+import sertyo.events.utility.render.animation.AnimationMath;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.lwjgl.glfw.GLFW;
-import sertyo.events.Main;
-import sertyo.events.manager.theme.Themes;
-import sertyo.events.module.setting.Setting;
-import sertyo.events.module.Module;
-import sertyo.events.module.setting.impl.*;
-import sertyo.events.ui.csgui.CsGui;
-import sertyo.events.ui.csgui.component.Component;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
-import sertyo.events.utility.render.animation.AnimationMath;
-import sertyo.events.utility.font.Fonts;
 
 public class ModuleComponent extends Component {
    private final Module module;
@@ -41,6 +44,8 @@ public class ModuleComponent extends Component {
             this.elements.add(new MultiBoolComponent(this, (MultiBooleanSetting)setting));
          } else if (setting instanceof ColorSetting) {
             this.elements.add(new ColorComponent(this, (ColorSetting)setting));
+         } else if (setting instanceof KeySetting) {
+            this.elements.add(new KeyComponent(this, (KeySetting) setting));
          }
       }
 
@@ -57,39 +62,27 @@ public class ModuleComponent extends Component {
          }
       }
 
-      float normalHeight = this.height + (float)offset + 2;
-      Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
-      Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
-      boolean isDark = Main.getInstance().getThemeManager().getCurrentGuiTheme().equals(Themes.DARK.getTheme());
-      Color moduleColor = isDark ? new Color(34, 34, 34) : new Color(210, 210, 210);
-      RenderUtil.Render2D.drawShadow(this.x + 1.0F, this.y + normalHeight - 1.0F, (float)((int)this.width - 2), 2.0F, 4, color, color2);
-      RenderUtil.Render2D.drawRoundedGradientRect(this.x + 0.5F, this.y + normalHeight - 8.0F, this.width - 1.0F, 9.0F, 5.0F, 1, color.getRGB(), color.getRGB(), color2.getRGB(), color2.getRGB());
-      RenderUtil.Render2D.drawRoundedRect(this.x, this.y, this.width, normalHeight, 5.0F, moduleColor.getRGB());
-      Fonts.msBold[14].drawString(this.binding ? "Press a key... " : this.module.getName(), this.x + 5.0F, this.y + 6.0F, isDark ? Color.WHITE.getRGB() : (new Color(40, 40, 40)).getRGB());
-      if (this.binding) {
-         String bindText = this.module.bind < 0 ? "MOUSE " + this.module.getMouseBind() : GLFW.glfwGetKeyName(this.module.getBind(), -1);
-         if (bindText != null) {
-            RenderUtil.Render2D.drawRoundedRect(this.x + this.width - 10.0F - (float)Fonts.msBold[14].getWidth(this.module.bind == 0 ? "R" : bindText), this.y + 2.0F, this.module.bind == 0 ? (float)(Fonts.msBold[14].getWidth("R") + 5) : (float)(Fonts.msBold[14].getWidth(bindText) + 5), 10.0F, 4.0F, isDark ? (new Color(27, 27, 27)).getRGB() : (new Color(180, 180, 180)).getRGB());
-         if (this.module.bind != 0) {
-               Fonts.msBold[14].drawString(bindText, this.x + this.width - 10.0F - (float) Fonts.msBold[14].getWidth(bindText) + 2.4F, this.y + 5.0F, isDark ? Color.WHITE.getRGB() : (new Color(40, 40, 40)).getRGB());
-            }
-         }
-      }
-
-      RenderUtil.Render2D.drawRect(this.x + 5.0F, this.y + 5.0F + (float)Fonts.msBold[14].getFontHeight() + 3.0F, this.width - 10.0F, 1.0F, isDark ? (new Color(54, 54, 54)).getRGB() : (new Color(170, 170, 170)).getRGB());
-      Fonts.msBold[14].drawString("Enabled", this.x + 5.0F, this.y + 5.0F + (float)Fonts.msBold[14].getFontHeight() + 9.0F, isDark ? Color.WHITE.getRGB() : (new Color(55, 55, 55)).getRGB());
+      float normalHeight = this.height + (float)offset;
+      int elementsColor = Color.decode("#1E1F30").getRGB();
+      Color glowColor = ColorUtility.applyOpacity(Color.BLACK, 0.2F);
+      RenderUtility.drawShadow(this.x, this.y, this.width, normalHeight, 5, glowColor, glowColor);
+      RenderUtility.drawRoundedRect(this.x, this.y, this.width, normalHeight, 10.0F, elementsColor);
+      String var10000 = this.module.bind < 0 ? "MOUSE " + this.module.getMouseBind() : GLFW.glfwGetKeyName(this.module.getBind(), -1);
+      String bindText = "[" + var10000 + "]";
+      Fonts.msBold[14].drawString(this.binding ? "Press a key... " + (this.module.getBind() != 0 ? bindText : "") : this.module.getName(), this.x + 5.0F, this.y + 9.0F, -1);
       this.enableAnimation = AnimationMath.fast(this.enableAnimation, this.module.enabled ? -1.0F : 0.0F, 15.0F);
-      RenderUtil.Render2D.drawRoundedRect(this.x + this.width - 25.0F, this.y + 5.0F + (float)Fonts.msBold[14].getFontHeight() + 6.0F, 20.0F, 10.0F, 6.0F, isDark ? (new Color(25, 25, 25)).getRGB() : (new Color(160, 160, 160)).getRGB());
-      Color c = ColorUtil.interpolateColorC(isDark ? (new Color(34, 34, 34)).getRGB() : Color.WHITE.getRGB(), isDark ? Color.WHITE.getRGB() : (new Color(100, 100, 100)).getRGB(), Math.abs(this.enableAnimation));
-      RenderUtil.Render2D.drawRoundedRect(this.x + this.width - 23.5F - this.enableAnimation * 10.0F, this.y + 6.5F + (float)Fonts.msBold[14].getFontHeight() + 6.0F, 7.0F, 7.0F, 6.0F, c.getRGB());
+      RenderUtility.drawShadow(this.x + this.width - 25.0F, this.y + 6.0F, 17.5F, 10.0F, 5, glowColor, glowColor);
+      RenderUtility.drawRoundedRect(this.x + this.width - 25.0F, this.y + 6.0F, 17.5F, 10.0F, 8.0F, Color.decode("#2B2C44").getRGB());
+      Color c = ColorUtility.interpolateColorC((new Color(78, 79, 98)).getRGB(), (new Color(202, 202, 208)).getRGB(), Math.abs(this.enableAnimation));
+      RenderUtility.drawRoundedRect(this.x + this.width - 23.0F - this.enableAnimation * 7.0F, this.y + 8.0F, 6.0F, 6.0F, 5.0F, c.getRGB());
       offset = 0;
-      Iterator var10 = this.elements.iterator();
+      Iterator var9 = this.elements.iterator();
 
-      while(var10.hasNext()) {
-         Component element = (Component)var10.next();
+      while(var9.hasNext()) {
+         Component element = (Component)var9.next();
          if (element.isVisible()) {
             element.x = this.x;
-            element.y = this.y + 29.0F + (float)offset;
+            element.y = this.y + 18.0F + (float)offset;
             element.width = this.width;
             element.render(mouseX, mouseY);
             offset = (int)((float)offset + element.height);
@@ -105,8 +98,8 @@ public class ModuleComponent extends Component {
          this.binding = false;
       }
 
-      boolean enableButtonHovered = RenderUtil.isHovered(mouseX, mouseY, (double)(this.x + this.width - 25.0F), (double)(this.y + 5.0F + (float)Fonts.msBold[14].getFontHeight() + 6.0F), 20.0D, 10.0D);
-      boolean isTitleHovered = RenderUtil.isHovered(mouseX, mouseY, (double)this.x, (double)this.y, (double)this.width, (double)(Fonts.msBold[14].getFontHeight() + 8));
+      boolean enableButtonHovered = RenderUtility.isHovered(mouseX, mouseY, (double)(this.x + this.width - 25.0F), (double)(this.y + 6.0F), 17.5, 10.0);
+      boolean isTitleHovered = RenderUtility.isHovered(mouseX, mouseY, (double)this.x, (double)this.y, (double)this.width, 20.0);
       if (enableButtonHovered && mouseButton == 0) {
          this.module.toggle();
       } else if (isTitleHovered && mouseButton == 2) {
@@ -122,13 +115,14 @@ public class ModuleComponent extends Component {
 
    }
 
-   public void keyTyped(int keyCode) {
-      super.keyTyped(keyCode);
+   public void keyTypedd(int keyCode, int scanCode, int modifiers) {
+      for (Component element : elements) {
+         element.keyTypedd(keyCode, scanCode, modifiers);
+      }
       if (this.binding) {
          if (keyCode == 1) {
             CsGui.escapeInUse = true;
             this.binding = false;
-            return;
          }
 
          if (keyCode == 211) {
@@ -139,7 +133,6 @@ public class ModuleComponent extends Component {
 
          this.binding = false;
       }
-
    }
 
    public Module getModule() {

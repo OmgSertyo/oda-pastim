@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.sertyo.cheat.CheatAvatar;
 import jhlabs.image.GaussianFilter;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
@@ -13,9 +13,7 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -31,10 +29,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import sertyo.events.Main;
-import sertyo.events.manager.theme.Theme;
-import sertyo.events.manager.theme.Themes;
 import sertyo.events.utility.Utility;
-import sertyo.events.utility.font.Fonts;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -56,10 +51,9 @@ import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.*;
 import static org.lwjgl.opengl.GL11.*;
 import static sertyo.events.utility.render.ColorUtil.injectAlpha;
 import static sertyo.events.utility.render.RenderUtil.IntColor.*;
-import static sertyo.events.utility.render.RenderUtil.IntColor.*;
+import static sertyo.events.utility.render.RenderUtility.Render2D.drawMcRect;
 import static sertyo.events.utility.render.RenderUtility.Render2D.shadowCache;
-import static sertyo.events.utility.render.ShaderUtil.CORNER_ROUND_SHADER_TEXTURE;
-import static sertyo.events.utility.render.ShaderUtil.GRADIENT_MASK_SHADER;
+import static sertyo.events.utility.render.ShaderUtil.*;
 
 
 public class RenderUtility implements Utility {
@@ -69,6 +63,35 @@ public class RenderUtility implements Utility {
     private static final Shader ROUNDED_GRADIENT;
     private static final Shader GRADIENT_MASK;
     private static final Shader BLUR;
+    private static final Shader ROUNDED_TEXTURE;
+    public static void drawGradientRoundShader2(float x, float y, float width, float height, float radius) {
+        Color color1 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
+
+        drawRoundedGradientRect(x, y, width, height,radius, 1.0f, color1.getRGB(), color1.getRGB(), color1.darker().darker().getRGB(), color1.darker().darker().getRGB());
+
+    }
+    public static void drawImage(ResourceLocation image, double x, double y, double width, double height, int color) {
+        Minecraft minecraft = Minecraft.getInstance();
+        enableBlend();
+        RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        RenderSystem.enableDepthTest();
+        minecraft.getTextureManager().bindTexture(image);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP);
+        bufferBuilder.pos(x, y + height, 0).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, color >>> 24).tex(0, 1 - 0.01f).lightmap(0, 240).endVertex();
+        bufferBuilder.pos(x + width, y + height, 0).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, color >>> 24).tex(1, 1 - 0.01f).lightmap(0, 240).endVertex();
+        bufferBuilder.pos(x + width, y, 0).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, color >>> 24).tex(1, 0).lightmap(0, 240).endVertex();
+        bufferBuilder.pos(x, y, 0).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, color >>> 24).tex(0, 0).lightmap(0, 240).endVertex();
+
+        tessellator.draw();
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
+    }
+    public static void drawProfile(float x, float y, float x2, float y2) {
+        drawImage(CheatAvatar.getAvatarResource(), x, y, x2, y2, 1);
+    }
     public static void scale(float f, float f2, double d, Runnable runnable) {
         GL11.glPushMatrix();
         GL11.glTranslatef(f, f2, 0.0f);
@@ -76,6 +99,91 @@ public class RenderUtility implements Utility {
         GL11.glTranslatef(-f, -f2, 0.0f);
         runnable.run();
         GL11.glPopMatrix();
+    }
+    public static void applyRound(float width, float height, float round, float alpha, Runnable runnable) {
+        GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableAlphaTest();
+        ROUNDED_TEXTURE.useProgram();
+        ROUNDED_TEXTURE.setupUniform2f("size", (width - round) * 2.0F, (height - round) * 2.0F);
+        ROUNDED_TEXTURE.setupUniform1f("round", round);
+        ROUNDED_TEXTURE.setupUniform1f("alpha", alpha);
+        runnable.run();
+        ROUNDED_TEXTURE.unloadProgram();
+        GlStateManager.disableBlend();
+    }
+    public static void drawRect(float x,
+                                float y,
+                                float width,
+                                float height,
+                                int color) {
+
+        drawMcRect(x, y, x + width, y + height, color);
+    }
+    public static void drawGradientRect(float x, float y, float width, float height, int color1, int color2, int color3, int color4) {
+        float[] c1 = ColorUtility.getRGBAf(color1);
+        float[] c2 = ColorUtility.getRGBAf(color2);
+        float[] c3 = ColorUtility.getRGBAf(color3);
+        float[] c4 = ColorUtility.getRGBAf(color4);
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.shadeModel(7425);
+        BUILDER.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        BUILDER.pos((double)x, (double)(height + y), 0.0).color(c1[0], c1[1], c1[2], c1[3]).endVertex();
+        BUILDER.pos((double)(width + x), (double)(height + y), 0.0).color(c2[0], c2[1], c2[2], c2[3]).endVertex();
+        BUILDER.pos((double)(width + x), (double)y, 0.0).color(c3[0], c3[1], c3[2], c3[3]).endVertex();
+        BUILDER.pos((double)x, (double)y, 0.0).color(c4[0], c4[1], c4[2], c4[3]).endVertex();
+        TESSELLATOR.draw();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.enableTexture();
+        GlStateManager.disableBlend();
+    }
+    public static void drawBlockBox(BlockPos blockPos, int color) {
+        drawBox(new AxisAlignedBB(blockPos).offset(-mc.getRenderManager().info.getProjectedView().x, -mc.getRenderManager().info.getProjectedView().y, -mc.getRenderManager().info.getProjectedView().z), color);
+    }
+
+    public static void drawBox(AxisAlignedBB bb, int color) {
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL_DEPTH_TEST);
+        GL11.glEnable(GL_LINE_SMOOTH);
+        GL11.glLineWidth(1);
+        float[] rgb = IntColor.rgb(color);
+        GlStateManager.color4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(3, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos(bb.minX, bb.minY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.minY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.minY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.minY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.minY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        tessellator.draw();
+        vertexbuffer.begin(3, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos(bb.minX, bb.maxY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.maxY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.maxY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.maxY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.maxY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        tessellator.draw();
+        vertexbuffer.begin(1, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos(bb.minX, bb.minY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.maxY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.minY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.maxY, bb.minZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.minY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.maxX, bb.maxY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.minY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        vertexbuffer.pos(bb.minX, bb.maxY, bb.maxZ).color(rgb[0], rgb[1], rgb[2], rgb[3]).endVertex();
+        tessellator.draw();
+        GlStateManager.color4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL_DEPTH_TEST);
+        GL11.glDisable(GL_LINE_SMOOTH);
+        GL11.glPopMatrix();
+
     }
 
     public static void scale(float f, float f2, float f3, float f4, float f5, Runnable runnable) {
@@ -104,7 +212,7 @@ public class RenderUtility implements Utility {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
     }
 
-    public static void drawBlur(Runnable data, float radius) {
+    public static void drawBlur(float radius, Runnable data) {
         StencilUtility.initStencilToWrite();
         data.run();
         StencilUtility.readStencilBuffer(1);
@@ -548,6 +656,9 @@ public class RenderUtility implements Utility {
     public static void drawRoundedRect(float x, float y, float x2, float y2, float round, int color) {
         drawRoundedGradientRect(x, y, x2, y2, round, 1.0F, color, color, color, color);
     }
+    public static void drawRoundedRect(float x, float y, float x2, float y2, float round1, float round2, float round3, float round4, int color) {
+        drawRoundedGradientRect(x, y, x2, y2, round1, round2, round3, round4, 1.0F, color, color, color, color);
+    }
     public static void drawRoundedRect(double x, double y, double x2, double y2, float round, Color color) {
         drawRoundedGradientRect((float) x, (float) y, (float) x2, (float) y2, round * 2, 1.0F, color.getRGB(), color.getRGB(), color.getRGB(), color.getRGB());
     }
@@ -570,23 +681,6 @@ public class RenderUtility implements Utility {
         ROUNDED_GRADIENT.setupUniform4f("color4", c4[0], c4[1], c4[2], c4[3]);
         allocTextureRectangle(x, y, x2, y2);
         ROUNDED_GRADIENT.unloadProgram();
-        GlStateManager.disableBlend();
-    }
-    public static void drawRoundedRect(float x, float y, float x2, float y2, float round, float swapX, float swapY, int firstColor, int secondColor) {
-        float[] c = ColorUtil.getRGBAf(firstColor);
-        float[] c1 = ColorUtil.getRGBAf(secondColor);
-        GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
-        GlStateManager.enableBlend();
-        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        ROUNDED.useProgram();
-        ROUNDED.setupUniform2f("size", (x2 - round) * 2.0F, (y2 - round) * 2.0F);
-        ROUNDED.setupUniform1f("round", round);
-        ROUNDED.setupUniform2f("smoothness", 0.0F, 1.5F);
-        ROUNDED.setupUniform2f("swap", swapX, swapY);
-        ROUNDED.setupUniform4f("firstColor", c[0], c[1], c[2], c[3]);
-        ROUNDED.setupUniform4f("secondColor", c1[0], c1[1], c1[2], c[3]);
-        allocTextureRectangle(x, y, x2, y2);
-        ROUNDED.unloadProgram();
         GlStateManager.disableBlend();
     }
     public static class Render2D {
@@ -799,6 +893,7 @@ public class RenderUtility implements Utility {
             }
             return texId;
         }
+
 
 
         private static HashMap<Integer, Integer> shadowCache2 = new HashMap<Integer, Integer>();
@@ -1238,14 +1333,7 @@ public class RenderUtility implements Utility {
             return getRenderHurtTime(hurt) / (float) 10;
         }
 
-        public static void drawRect(float x,
-                                    float y,
-                                    float width,
-                                    float height,
-                                    int color) {
 
-            drawMcRect(x, y, x + width, y + height, color);
-        }
 
         public static void drawRoundCircle(float x,
                                            float y,
@@ -1397,7 +1485,14 @@ public class RenderUtility implements Utility {
             drawMcRectBuilding(x + size, height - size, width - size, height, color);
         }
 
+        public static void drawRect(float x,
+                                    float y,
+                                    float width,
+                                    float height,
+                                    int color) {
 
+            drawMcRect(x, y, x + width, y + height, color);
+        }
 
         public static void drawMCHorizontal(double x,
                                             double y,
@@ -1801,6 +1896,7 @@ public class RenderUtility implements Utility {
             GlStateManager.disableBlend();
         }
 
+
         public static void drawHud(float x, float y, float width, float height, float radius, float softness, float blur) {
            /* int clr1 = injectAlpha(ColorUtil.getColor(270), 75);
             int clr2 = injectAlpha(ColorUtil.getColor(0), 75);
@@ -1814,33 +1910,6 @@ public class RenderUtility implements Utility {
             // drawShadow(x, y, width, height, (int) radius, ColorUtil.getColor(270), ColorUtil.getColor(0), ColorUtil.getColor(180), ColorUtil.getColor(90));
             //     drawRoundedGradientRect(x, y, width, height, radius,1, clr1, clr2, clr3, clr4);
             //   drawRoundedBlur(new MatrixStack(), x, y, width, height, radius, Color.BLACK, blur, 0.5F);
-        }
-        public static void drawBlur(float x, float y, float x2, float y2, float round, int color, float blurStrenth, float blurOpacity) {
-            // Получение цвета в формате RGBA
-
-            // Установка начального цвета
-
-            // Включение блендинга
-            GlStateManager.enableBlend();
-            float i = (float)mc.getMainWindow().getGuiScaleFactor();
-            // Использование шейдера
-            BLUR.useProgram();
-
-            // Установка юниформов для шейдера
-            BLUR.setupUniform2f("uSize", x2 * i, y2 * i);  // Размер области
-            BLUR.setupUniform2f("uLocation", x * i, -y * i + mc.getMainWindow().getScaledHeight() * i - y2 * i);  // Позиция
-            BLUR.setupUniform1f("radius", round);  // Радиус размытия
-            BLUR.setupUniform1f("brightness", blurStrenth);  // Яркость (настроить при необходимости)
-            BLUR.setupUniform1f("quality", blurOpacity);  // Качество размытия (может быть увеличено для сильного размытия)
-            BLUR.setupUniform1f("color1", color);  // Основной цвет
-
-            // Отрисовка прямоугольника с размытой областью
-
-            // Отключение программы шейдера
-            BLUR.unloadProgram();
-
-            // Отключение блендинга
-            GlStateManager.disableBlend();
         }
         public static void drawRoundedBlur(MatrixStack matrices, float x, float y, float width, float height, float radius, Color c1, float blurStrength, float blurOpacity) {
             setupRender();
@@ -2292,6 +2361,7 @@ public class RenderUtility implements Utility {
         ROUNDED = new Shader("rounded.fsh", true);
         BLUR = new Shader("blur.fsh", true);
         GRADIENT_MASK = new Shader("gradient_mask.fsh", true);
+        ROUNDED_TEXTURE = new Shader("neiron/shaders/rounded_texture.fsh", true);
 
         ROUNDED_GRADIENT = new Shader("rounded_gradient.fsh", true);
 

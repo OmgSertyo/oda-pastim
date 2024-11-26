@@ -16,6 +16,7 @@ import net.optifine.Config;
 import net.optifine.CustomColors;
 import net.optifine.reflect.Reflector;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,7 +25,9 @@ public class BossOverlayGui extends AbstractGui {
     private final Minecraft client;
     @Getter
     private final Map<UUID, ClientBossInfo> mapBossInfos = Maps.newLinkedHashMap();
-
+    public Collection<ClientBossInfo> getActiveBossBars() {
+        return mapBossInfos.values();
+    }
 
 
     public BossOverlayGui(Minecraft clientIn) {

@@ -1,13 +1,8 @@
 package sertyo.events.module.impl.util;
 
 import com.darkmagician6.eventapi.EventTarget;
-import com.google.common.eventbus.Subscribe;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.ClickType;
@@ -15,25 +10,17 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.play.client.CClickWindowPacket;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import obf.sertyo.nativeobf.Native;
-import org.apache.commons.lang3.time.StopWatch;
+import me.sertyo.j2c.J2c;
 import sertyo.events.event.player.EventUpdate;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
-import sertyo.events.module.setting.impl.BooleanSetting;
-import sertyo.events.module.setting.impl.ModeSetting;
-import sertyo.events.module.setting.impl.NumberSetting;
-import sertyo.events.utility.misc.PlayerUtil;
-import sertyo.events.utility.misc.TimerHelper;
 
 import java.util.*;
 
-import static sertyo.events.utility.Utility.mc;
-@Native
+@J2c
 @ModuleAnnotation(name = "AutoMyst", category = Category.PLAYER)
 public class ChestStealer extends Module {
     public long delay;

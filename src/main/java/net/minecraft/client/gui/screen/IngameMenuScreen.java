@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.realms.RealmsBridgeScreen;
 import net.minecraft.util.SharedConstants;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import sertyo.events.ui.menu.main.NeironMainMenu;
 
@@ -44,28 +45,16 @@ public class IngameMenuScreen extends Screen
         {
             this.minecraft.displayGuiScreen(new StatsScreen(this, this.minecraft.player.getStats()));
         }));
-        String s = SharedConstants.getVersion().isStable() ? "https://aka.ms/javafeedback?ref=game" : "https://aka.ms/snapshotfeedback?ref=game";
-        this.addButton(new Button(this.width / 2 - 102, this.height / 4 + 72 + -16, 98, 20, new TranslationTextComponent("menu.sendFeedback"), (button2) ->
+        this.addButton(new Button(this.width / 2 - 102, this.height / 4 + 72 + -16, 98, 20,new StringTextComponent("Telegram"), (button2) ->
         {
-            this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen((open) -> {
-                if (open)
-                {
-                    Util.getOSType().openURI(s);
-                }
 
-                this.minecraft.displayGuiScreen(this);
-            }, s, true));
+                    Util.getOSType().openURI("https://t.me/dlcforminecraft");
+
         }));
-        this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 72 + -16, 98, 20, new TranslationTextComponent("menu.reportBugs"), (button2) ->
+        this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 72 + -16, 98, 20, new StringTextComponent("Помощь"), (button2) ->
         {
-            this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen((open) -> {
-                if (open)
-                {
-                    Util.getOSType().openURI("https://aka.ms/snapshotbugs?ref=game");
-                }
+                    Util.getOSType().openURI("https://t.me/neiron_support_bot");
 
-                this.minecraft.displayGuiScreen(this);
-            }, "https://aka.ms/snapshotbugs?ref=game", true));
         }));
         this.addButton(new Button(this.width / 2 - 102, this.height / 4 + 96 + -16, 98, 20, new TranslationTextComponent("menu.options"), (button2) ->
         {

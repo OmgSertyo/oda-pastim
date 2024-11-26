@@ -9,7 +9,13 @@ import sertyo.events.command.CommandManager;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Objects;
+import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import sertyo.events.manager.config.ConfigManager;
@@ -27,7 +33,17 @@ public class ConfigCommand extends CommandAbstract {
       this.sendMessage(TextFormatting.WHITE + CommandManager.getPrefix() + "cfg list" + TextFormatting.GRAY + " - список конфигов");
       this.sendMessage(TextFormatting.WHITE + CommandManager.getPrefix() + "cfg dir" + TextFormatting.GRAY + " - открыть папку с конфигами");
    }
+   private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz124567890";
 
+   public static String generateRandomName(int length) {
+      StringBuilder builder = new StringBuilder();
+      Random random = new Random();
+      for (int i = 0; i < length; i++) {
+         int index = random.nextInt(ALPHA_NUMERIC_STRING.length());
+         builder.append(ALPHA_NUMERIC_STRING.charAt(index));
+      }
+      return builder.toString();
+   }
    public void execute(String[] args) throws Exception {
       if (args.length >= 2) {
          String var2 = args[1];
@@ -36,6 +52,9 @@ public class ConfigCommand extends CommandAbstract {
             case -1335458389:
                if (var2.equals("delete")) {
                   var3 = 4;
+               }
+               if (var2.equals("сlup")) {
+                  var3 = 5;
                }
                break;
             case 99469:
@@ -91,6 +110,10 @@ public class ConfigCommand extends CommandAbstract {
             case 3:
                Main.getInstance().getConfigManager().saveConfig(args[2]);
                this.sendMessage(TextFormatting.GRAY + "Конфигурация " + TextFormatting.RED + args[2] + TextFormatting.GRAY + " была сохранена.");
+               break;
+               case 5:
+               Main.getInstance().getConfigManager().saveConfig(args[2]);
+               this.sendMessage(TextFormatting.GRAY + "Конфигурация " + TextFormatting.RED + args[2] + TextFormatting.GRAY + " была загружена.");
                break;
             case 4:
                if (Main.getInstance().getConfigManager().deleteConfig(args[2])) {

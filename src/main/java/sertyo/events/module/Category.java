@@ -15,7 +15,7 @@ public enum Category {
    RENDER("Render", "d"),
    UTIL("Util", "e"),
    CONFIGS("Configs", "f", true),
-   PROFILE("PROFILE", "g", true),
+   PROFILE("Profile", "g"),
    THEMES("Themes", "h", true);
 
    private final String name;

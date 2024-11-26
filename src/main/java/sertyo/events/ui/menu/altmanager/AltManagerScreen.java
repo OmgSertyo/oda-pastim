@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.INestedGuiEventHandler;
+import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.AbstractButton;
@@ -35,7 +36,6 @@ public class AltManagerScreen extends Screen implements INestedGuiEventHandler {
     private static final ResourceLocation PANORAMA_OVERLAY_TEXTURES = new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
     private final RenderSkybox panorama = new RenderSkybox(PANORAMA_RESOURCES);
 
-    private final Screen lastScreen;
 
     private long firstRenderTime;
 
@@ -44,9 +44,8 @@ public class AltManagerScreen extends Screen implements INestedGuiEventHandler {
     boolean initbuttons = false;
 
 
-    public AltManagerScreen(Screen parentScreen) {
+    public AltManagerScreen() {
         super(new StringTextComponent(""));
-        this.lastScreen = parentScreen;
     }
 
     float scroll = 0;

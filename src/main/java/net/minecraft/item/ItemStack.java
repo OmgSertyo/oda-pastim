@@ -89,7 +89,7 @@ public final class ItemStack
         p_234699_0_.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
     });
     private static final Style LORE_STYLE = Style.EMPTY.setFormatting(TextFormatting.DARK_PURPLE).setItalic(true);
-    private int count;
+    public int count;
     private int animationsToGo;
     @Deprecated
     private final Item item;

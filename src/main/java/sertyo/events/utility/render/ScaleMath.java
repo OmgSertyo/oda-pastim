@@ -10,7 +10,12 @@ public class ScaleMath {
     private int scale;
 
     public void pushScale() {
-        Minecraft.getInstance().gameRenderer.setupOverlayRendering(2);
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            Minecraft.getInstance().gameRenderer.setupOverlayRendering(2);
+        } else {
+            Minecraft.getInstance().gameRenderer.setupOverlayRendering(2);
+
+        }
     }
 
     public void popScale() {

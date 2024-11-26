@@ -35,7 +35,7 @@ public class ExperienceBottleEntity extends ProjectileItemEntity
     /**
      * Gets the amount of gravity to apply to the thrown entity with each tick.
      */
-    protected float getGravityVelocity()
+    public float getGravityVelocity()
     {
         return 0.07F;
     }

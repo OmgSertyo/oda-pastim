@@ -1,3 +1,8 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package sertyo.events.utility.render.fonts;
 
 
@@ -7,16 +12,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.Main;
+import sertyo.events.module.impl.util.NameProtect;
 import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.Shader;
 
 public class FontRenderer extends CFont {
-   private static final Shader FONT_SUBSTRING = new Shader("font_substring.fsh", true);
+   private static final Shader FONT_SUBSTRING = new Shader("neiron/shaders/font_substring.fsh", true);
    protected CFont.CharData[] boldChars = new CFont.CharData[1104];
    protected CFont.CharData[] italicChars = new CFont.CharData[1104];
    protected CFont.CharData[] boldItalicChars = new CFont.CharData[1104];
@@ -103,12 +110,12 @@ public class FontRenderer extends CFont {
    }
 
    public float drawStringWithShadow(String text, float x, float y, int color) {
-      float shadowWidth = this.drawString(text, (double)x + 0.5D, (double)y + 0.5D, color, true);
+      float shadowWidth = this.drawString(text, (double)x + 0.5, (double)y + 0.5, color, true);
       return Math.max(shadowWidth, this.drawString(text, (double)x, (double)y, color, false));
    }
 
    public float drawStringWithShadow(String text, double x, double y, int color) {
-      float shadowWidth = this.drawString(text, x + 0.5D, y + 0.5D, color, true);
+      float shadowWidth = this.drawString(text, x + 0.5, y + 0.5, color, true);
       return Math.max(shadowWidth, this.drawString(text, x, y, color, false));
    }
 
@@ -125,166 +132,41 @@ public class FontRenderer extends CFont {
    }
 
    public float drawCenteredStringWithShadow(String text, float x, float y, int color) {
-      this.drawString(text, (double)(x - (float)this.getStringWidth(text) / 2.0F) + 0.45D, (double)y + 0.5D, color, true);
+      this.drawString(text, (double)(x - (float)this.getStringWidth(text) / 2.0F) + 0.45, (double)y + 0.5, color, true);
       return this.drawString(text, x - (float)this.getStringWidth(text) / 2.0F, y, color);
    }
 
-  /* public void drawStringWithOutline(String text, double x, double y, int color) {
-      this.drawString(TextFormatting.stripFormatting(text), x - 0.5D, y, 0);
-      this.drawString(TextFormatting.stripFormatting(text), x + 0.5D, y, 0);
-      this.drawString(TextFormatting.stripFormatting(text), x, y - 0.5D, 0);
-      this.drawString(TextFormatting.stripFormatting(text), x, y + 0.5D, 0);
+   public void drawStringWithOutline(String text, double x, double y, int color) {
+      this.drawString(TextFormatting.getTextWithoutFormattingCodes(text), x - 0.5, y, 0);
+      this.drawString(TextFormatting.getTextWithoutFormattingCodes(text), x + 0.5, y, 0);
+      this.drawString(TextFormatting.getTextWithoutFormattingCodes(text), x, y - 0.5, 0);
+      this.drawString(TextFormatting.getTextWithoutFormattingCodes(text), x, y + 0.5, 0);
       this.drawString(text, x, y, color);
    }
 
    public void drawCenteredStringWithOutline(String text, double x, double y, int color) {
-      this.drawCenteredString(ChatFormatting.stripFormatting(text), x - 0.5D, y, 0);
-      this.drawCenteredString(ChatFormatting.stripFormatting(text), x + 0.5D, y, 0);
-      this.drawCenteredString(ChatFormatting.stripFormatting(text), x, y - 0.5D, 0);
-      this.drawCenteredString(ChatFormatting.stripFormatting(text), x, y + 0.5D, 0);
+      this.drawCenteredString(TextFormatting.getTextWithoutFormattingCodes(text), x - 0.5, y, 0);
+      this.drawCenteredString(TextFormatting.getTextWithoutFormattingCodes(text), x + 0.5, y, 0);
+      this.drawCenteredString(TextFormatting.getTextWithoutFormattingCodes(text), x, y - 0.5, 0);
+      this.drawCenteredString(TextFormatting.getTextWithoutFormattingCodes(text), x, y + 0.5, 0);
       this.drawCenteredString(text, x, y, color);
-   } */
+   }
 
    public float drawCenteredStringWithShadow(String text, double x, double y, int color) {
-      this.drawString(text, x - (double)((float)this.getStringWidth(text) / 2.0F) + 0.45D, y + 0.5D, color, true);
+      this.drawString(text, x - (double)((float)this.getStringWidth(text) / 2.0F) + 0.45, y + 0.5, color, true);
       return this.drawString(text, x - (double)((float)this.getStringWidth(text) / 2.0F), y, color);
    }
 
-   public float drawString3(MatrixStack matrixStack, String text2, double x, double y, int color, boolean shadow) {
-      try {
-         --x;
-         if (text2 == null) {
-            return 0.0F;
-         }
-         //ДОБАВИТЬ НЕЙМПРОТЕКТОР ДАААА
-       /*  if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text2.equalsIgnoreCase(Minecraft.getMinecraft().session.getUsername())) {
-            text2 = NameProtect.protectedNick;
-         } */
-
-         if (color == 553648127) {
-            color = 16777215;
-         }
-
-         if ((color & -67108864) == 0) {
-            color |= -16777216;
-         }
-
-         if (shadow) {
-            color = (color & 16579836) >> 2 | color & (new Color(20, 20, 20, 200)).getRGB();
-         }
-
-         CFont.CharData[] currentData = this.charData;
-         float alpha = (float)(color >> 24 & 255) / 255.0F;
-         boolean bold = false;
-         boolean italic = false;
-         boolean strikethrough = false;
-         boolean underline = false;
-         x *= 2.0D;
-         y = (y - 3.0D) * 2.0D;
-         GL11.glPushMatrix();
-         GlStateManager.scaled(0.5D, 0.5D, 0.5D);
-         GlStateManager.enableBlend();
-         GlStateManager.blendFunc(770, 771);
-         GlStateManager.color((int) ((float)(color >> 16 & 255) / 255.0F), (int) ((float)(color >> 8 & 255) / 255.0F), (int) ((float)(color & 255) / 255.0F), (int) alpha);
-         int size = text2.length();
-         GlStateManager.enableTexture();
-         GlStateManager.bindTexture(this.tex.getGlTextureId());
-         GL11.glBindTexture(3553, this.tex.getGlTextureId());
-
-         for(int i = 0; i < size; ++i) {
-            char character = text2.charAt(i);
-            if (String.valueOf(character).equals("§")) {
-               int colorIndex = 21;
-
-               try {
-                  colorIndex = "0123456789abcdefklmnor".indexOf(text2.charAt(i + 1));
-               } catch (Exception var19) {
-                  var19.printStackTrace();
-               }
-
-               if (colorIndex < 16) {
-                  bold = false;
-                  italic = false;
-                  underline = false;
-                  strikethrough = false;
-                  GlStateManager.bindTexture(this.tex.getGlTextureId());
-                  currentData = this.charData;
-                  if (colorIndex < 0) {
-                     colorIndex = 15;
-                  }
-
-                  if (shadow) {
-                     colorIndex += 16;
-                  }
-
-                  int colorcode = this.colorCode[colorIndex];
-                  GlStateManager.color((int) ((float)(colorcode >> 16 & 255) / 255.0F), (int) ((float)(colorcode >> 8 & 255) / 255.0F), (int) ((float)(colorcode & 255) / 255.0F), (int) alpha);
-               } else if (colorIndex == 17) {
-                  bold = true;
-                  if (italic) {
-                     GlStateManager.bindTexture(this.texItalicBold.getGlTextureId());
-                     currentData = this.boldItalicChars;
-                  } else {
-                     GlStateManager.bindTexture(this.texBold.getGlTextureId());
-                     currentData = this.boldChars;
-                  }
-               } else if (colorIndex == 18) {
-                  strikethrough = true;
-               } else if (colorIndex == 19) {
-                  underline = true;
-               } else if (colorIndex == 20) {
-                  italic = true;
-                  if (bold) {
-                     GlStateManager.bindTexture(this.texItalicBold.getGlTextureId());
-                     currentData = this.boldItalicChars;
-                  } else {
-                     GlStateManager.bindTexture(this.texItalic.getGlTextureId());
-                     currentData = this.italicChars;
-                  }
-               } else if (colorIndex == 21) {
-                  bold = false;
-                  italic = false;
-                  underline = false;
-                  strikethrough = false;
-                  GlStateManager.color((int) ((float)(color >> 16 & 255) / 255.0F), (int) ((float)(color >> 8 & 255) / 255.0F), (int) ((float)(color & 255) / 255.0F), (int) alpha);
-                  GlStateManager.bindTexture(this.tex.getGlTextureId());
-                  currentData = this.charData;
-               }
-
-               ++i;
-            } else if (character < currentData.length) {
-               GL11.glBegin(4);
-               this.drawChar(currentData, character, (float)x, (float)y);
-               GL11.glEnd();
-               if (strikethrough) {
-                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0D, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
-               }
-
-               if (underline) {
-                  this.drawLine(x, y + (double)currentData[character].height - 2.0D, x + (double)currentData[character].width - 8.0D, y + (double)currentData[character].height - 2.0D, 1.0F);
-               }
-
-               x += (double)(currentData[character].width - 8 + this.charOffset);
-            }
-         }
-
-         GL11.glPopMatrix();
-      } catch (Exception var20) {
-         var20.printStackTrace();
-      }
-
-      return (float)x / 2.0F;
-   }
    public float drawString(String text2, double x, double y, int color, boolean shadow) {
       try {
          --x;
          if (text2 == null) {
             return 0.0F;
          }
-         //ДОБАВИТЬ НЕЙМПРОТЕКТОР ДАААА
-       /*  if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text2.equalsIgnoreCase(Minecraft.getMinecraft().session.getUsername())) {
-            text2 = NameProtect.protectedNick;
-         } */
+
+         if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text2.equalsIgnoreCase(Minecraft.getInstance().session.getUsername())) {
+            text2 = Main.cheatProfile.getName();
+         }
 
          if (color == 553648127) {
             color = 16777215;
@@ -304,10 +186,10 @@ public class FontRenderer extends CFont {
          boolean italic = false;
          boolean strikethrough = false;
          boolean underline = false;
-         x *= 2.0D;
-         y = (y - 3.0D) * 2.0D;
+         x *= 2.0;
+         y = (y - 3.0) * 2.0;
          GL11.glPushMatrix();
-         GlStateManager.scaled(0.5D, 0.5D, 0.5D);
+         GlStateManager.scaled(0.5, 0.5, 0.5);
          GlStateManager.enableBlend();
          GlStateManager.blendFunc(770, 771);
          GlStateManager.color((int) ((float)(color >> 16 & 255) / 255.0F), (int) ((float)(color >> 8 & 255) / 255.0F), (int) ((float)(color & 255) / 255.0F), (int) alpha);
@@ -382,11 +264,11 @@ public class FontRenderer extends CFont {
                this.drawChar(currentData, character, (float)x, (float)y);
                GL11.glEnd();
                if (strikethrough) {
-                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0D, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
+                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
                }
 
                if (underline) {
-                  this.drawLine(x, y + (double)currentData[character].height - 2.0D, x + (double)currentData[character].width - 8.0D, y + (double)currentData[character].height - 2.0D, 1.0F);
+                  this.drawLine(x, y + (double)currentData[character].height - 2.0, x + (double)currentData[character].width - 8.0, y + (double)currentData[character].height - 2.0, 1.0F);
                }
 
                x += (double)(currentData[character].width - 8 + this.charOffset);
@@ -413,10 +295,10 @@ public class FontRenderer extends CFont {
          boolean italic = false;
          boolean strikethrough = false;
          boolean underline = false;
-         x *= 2.0D;
-         y = (y - 3.0D) * 2.0D;
+         x *= 2.0;
+         y = (y - 3.0) * 2.0;
          GL11.glPushMatrix();
-         GlStateManager.scaled(0.5D, 0.5D, 0.5D);
+         GlStateManager.scaled(0.5, 0.5, 0.5);
          GlStateManager.enableBlend();
          GlStateManager.blendFunc(770, 771);
          int size = text2.length();
@@ -425,8 +307,8 @@ public class FontRenderer extends CFont {
          GL11.glBindTexture(3553, this.tex.getGlTextureId());
 
          for(int i = 0; i < size; ++i) {
-            Color color = ColorUtil.gradient(7, i * -offset, color1, color2);
-            ColorUtil.setColor(color);
+            Color color = ColorUtility.gradient(7, i * -offset, new Color[]{color1, color2});
+            ColorUtility.setColor(color);
             char character = text2.charAt(i);
             if (String.valueOf(character).equals("§")) {
                int colorIndex = 21;
@@ -449,7 +331,7 @@ public class FontRenderer extends CFont {
                   }
 
                   int var10000 = this.colorCode[colorIndex];
-                  ColorUtil.setColor(color);
+                  ColorUtility.setColor(color);
                } else if (colorIndex == 17) {
                   bold = true;
                   if (italic) {
@@ -477,7 +359,7 @@ public class FontRenderer extends CFont {
                   italic = false;
                   underline = false;
                   strikethrough = false;
-                  ColorUtil.setColor(color);
+                  ColorUtility.setColor(color);
                   GlStateManager.bindTexture(this.tex.getGlTextureId());
                   currentData = this.charData;
                }
@@ -488,11 +370,11 @@ public class FontRenderer extends CFont {
                this.drawChar(currentData, character, (float)x, (float)y);
                GL11.glEnd();
                if (strikethrough) {
-                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0D, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
+                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
                }
 
                if (underline) {
-                  this.drawLine(x, y + (double)currentData[character].height - 2.0D, x + (double)currentData[character].width - 8.0D, y + (double)currentData[character].height - 2.0D, 1.0F);
+                  this.drawLine(x, y + (double)currentData[character].height - 2.0, x + (double)currentData[character].width - 8.0, y + (double)currentData[character].height - 2.0, 1.0F);
                }
 
                x += (double)(currentData[character].width - 8 + this.charOffset);
@@ -519,10 +401,10 @@ public class FontRenderer extends CFont {
          boolean italic = false;
          boolean strikethrough = false;
          boolean underline = false;
-         x *= 2.0D;
-         y = (y - 3.0D) * 2.0D;
+         x *= 2.0;
+         y = (y - 3.0) * 2.0;
          GL11.glPushMatrix();
-         GlStateManager.scaled(0.5D, 0.5D, 0.5D);
+         GlStateManager.scaled(0.5, 0.5, 0.5);
          GlStateManager.enableBlend();
          GlStateManager.blendFunc(770, 771);
          int size = text2.length();
@@ -531,8 +413,8 @@ public class FontRenderer extends CFont {
          GL11.glBindTexture(3553, this.tex.getGlTextureId());
 
          for(int i = 0; i < size; ++i) {
-            Color color = ColorUtil.gradient(7, i * -30, color1, color2);
-            ColorUtil.setColor(color);
+            Color color = ColorUtility.gradient(7, i * -30, new Color[]{color1, color2});
+            ColorUtility.setColor(color);
             char character = text2.charAt(i);
             if (String.valueOf(character).equals("§")) {
                int colorIndex = 21;
@@ -555,7 +437,7 @@ public class FontRenderer extends CFont {
                   }
 
                   int var10000 = this.colorCode[colorIndex];
-                  ColorUtil.setColor(color);
+                  ColorUtility.setColor(color);
                } else if (colorIndex == 17) {
                   bold = true;
                   if (italic) {
@@ -583,7 +465,7 @@ public class FontRenderer extends CFont {
                   italic = false;
                   underline = false;
                   strikethrough = false;
-                  ColorUtil.setColor(color);
+                  ColorUtility.setColor(color);
                   GlStateManager.bindTexture(this.tex.getGlTextureId());
                   currentData = this.charData;
                }
@@ -594,11 +476,11 @@ public class FontRenderer extends CFont {
                this.drawChar(currentData, character, (float)x, (float)y);
                GL11.glEnd();
                if (strikethrough) {
-                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0D, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
+                  this.drawLine(x, y + (double)((float)currentData[character].height / 2.0F), x + (double)currentData[character].width - 8.0, y + (double)((float)currentData[character].height / 2.0F), 1.0F);
                }
 
                if (underline) {
-                  this.drawLine(x, y + (double)currentData[character].height - 2.0D, x + (double)currentData[character].width - 8.0D, y + (double)currentData[character].height - 2.0D, 1.0F);
+                  this.drawLine(x, y + (double)currentData[character].height - 2.0, x + (double)currentData[character].width - 8.0, y + (double)currentData[character].height - 2.0, 1.0F);
                }
 
                x += (double)(currentData[character].width - 8 + this.charOffset);
@@ -617,10 +499,9 @@ public class FontRenderer extends CFont {
       if (text == null) {
          return 0;
       } else {
-         /* ДОДЕЛАТЬ НЕЙМ ПРОТЕКТ
-         if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text.equalsIgnoreCase(Minecraft.getMinecraft().session.getUsername())) {
-            text = NameProtect.protectedNick;
-         }*/
+         if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text.equalsIgnoreCase(Minecraft.getInstance().session.getUsername())) {
+            text = Main.cheatProfile.getName();
+         }
 
          int width = 0;
          CFont.CharData[] currentData = this.charData;
@@ -853,5 +734,4 @@ public class FontRenderer extends CFont {
          index += (float) this.getStringWidth(String.valueOf(c));
       }
    }
-
 }

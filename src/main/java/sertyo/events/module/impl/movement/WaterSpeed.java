@@ -2,7 +2,11 @@ package sertyo.events.module.impl.movement;
 
 import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import sertyo.events.event.player.EventUpdate;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
@@ -18,24 +22,23 @@ public class WaterSpeed extends sertyo.events.module.Module {
     private int currentSpeedIndex = 0;
 
 
-
     @EventTarget
     public void onUpdate(EventUpdate event) {
         long currentTime = System.currentTimeMillis();
-        PlayerEntity player = Minecraft.getInstance().player;
+        ClientPlayerEntity player = Minecraft.getInstance().player;
 
         if (player != null && player.isAlive() && player.isInWater()) {
             if (currentTime - lastChangeTime >= TIMECHANGE) {
                 currentSpeedIndex = (currentSpeedIndex + 1) % SPEED.length;
                 lastChangeTime = currentTime;
             }
-
+            player.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 40));
             double speedBoost = SPEED[currentSpeedIndex];
-            player.setMotion(
-                    player.getMotion().x * speedBoost,
-                    player.getMotion().y,
-                    player.getMotion().z * speedBoost
-            );
+          //  player.setMotion(
+          //          player.motion.x * speedBoost,
+           //          player.motion.y,
+           //         player.motion.z
+            //);
         }
     }
 }

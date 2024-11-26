@@ -79,7 +79,7 @@ public class Keybinds {
       RenderUtil.SmartScissor.setFromComponentCoordinates((double)keybindsDraggable.getX(), (double)keybindsDraggable.getY(), (double)width, (double)(19.0F + realOffset));
       offset = 0;
 
-      for(Iterator var9 = sortedBinds.iterator(); var9.hasNext(); offset += 11) {
+      for(Iterator var9 = sortedBinds.iterator(); var9.hasNext(); offset += (int) 11) {
          Module module = (Module)var9.next();
          Fonts.mntssb15.drawString(module.getName(), (float)(keybindsDraggable.getX() + 5), (float)(keybindsDraggable.getY() + 22 + offset), -1);
          String var10000 = module.bind < 0 ? "MOUSE " + module.getMouseBind() : GLFW.glfwGetKeyName(module.getBind(), -1);

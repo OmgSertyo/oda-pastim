@@ -3,9 +3,8 @@ package sertyo.events.module;
 
 
 
-import sertyo.events.module.impl.movement.AutoSprint;
-import sertyo.events.module.impl.movement.NoSlow;
-import sertyo.events.module.impl.movement.WaterSpeed;
+import com.darkmagician6.eventapi.EventTarget;
+import sertyo.events.module.impl.movement.*;
 import sertyo.events.module.impl.util.*;
 import sertyo.events.module.impl.player.*;
 import sertyo.events.module.impl.render.*;
@@ -23,14 +22,22 @@ public class ModuleManager {
    public ModuleManager() {
       this.registerModule(new ClickGuiModule());
       this.registerModule(new EventConverter());
+      this.registerModule(new HWHelper());
+      this.registerModule(new TabCompleteCrasher());
+      this.registerModule(new PostProcessing());
+      this.registerModule(new AhHelper());
+      this.registerModule(new FtFly());
       this.registerModule(new AntiAFK());
+      this.registerModule(new XRay());
       this.registerModule(new AutoRespawn());
       this.registerModule(new FastBreak());
       this.registerModule(new FreeCam());
       this.registerModule(new InventoryMove());
       this.registerModule(new ItemScroller());
+      this.registerModule(new EventHelperFunTime());
       this.registerModule(new ItemSwapFix());
       this.registerModule(new MiddleClick());
+      this.registerModule(new Speed());
       this.registerModule(new NoDelay());
       this.registerModule(new NoPush());
       this.registerModule(new NoSlow());
@@ -49,13 +56,19 @@ public class ModuleManager {
       this.registerModule(new KillAura());
       this.registerModule(new BadTrip());
       this.registerModule(new Optimization());
-      this.registerModule(new AutoBuyGUI());
+      this.registerModule(new BlockESP());
+      this.registerModule(new EntityESP());
+      this.registerModule(new Glint());
+      this.registerModule(new JumpCircle());
+      this.registerModule(new KillEffect());
+      this.registerModule(new Predictions());
       this.registerModule(new AutoLoot());
       this.registerModule(new NameProtect());
       this.registerModule(new Hud());
       this.registerModule(new NoFall());
       this.registerModule(new FullBright());
       this.registerModule(new GlowESP());
+      this.registerModule(new AutoBuyGUI());
       this.registerModule(new NoRender());
       this.registerModule(new Arraylist());
    }

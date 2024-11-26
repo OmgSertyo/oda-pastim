@@ -15,8 +15,7 @@ public class DynamicTexture extends Texture
     private static final Logger field_243504_d = LogManager.getLogger();
     @Nullable
     private NativeImage dynamicTextureData;
-    @Nullable
-    private BufferedImage dynamicTexture;
+
 
     public DynamicTexture(NativeImage nativeImageIn)
     {
@@ -38,33 +37,6 @@ public class DynamicTexture extends Texture
         else
         {
             TextureUtil.prepareImage(this.getGlTextureId(), this.dynamicTextureData.getWidth(), this.dynamicTextureData.getHeight());
-            this.updateDynamicTexture();
-
-            if (Config.isShaders())
-            {
-                ShadersTex.initDynamicTextureNS(this);
-            }
-        }
-    }
-    public DynamicTexture(BufferedImage nativeImageIn) {
-        this.dynamicTexture = nativeImageIn;
-
-        if (!RenderSystem.isOnRenderThread())
-        {
-            RenderSystem.recordRenderCall(() ->
-            {
-                TextureUtil.prepareImage(this.getGlTextureId(), this.dynamicTexture.getWidth(), this.dynamicTexture.getHeight());
-                this.updateDynamicTexture();
-
-                if (Config.isShaders())
-                {
-                    ShadersTex.initDynamicTextureNS(this);
-                }
-            });
-        }
-        else
-        {
-            TextureUtil.prepareImage(this.getGlTextureId(), this.dynamicTexture.getWidth(), this.dynamicTexture.getHeight());
             this.updateDynamicTexture();
 
             if (Config.isShaders())

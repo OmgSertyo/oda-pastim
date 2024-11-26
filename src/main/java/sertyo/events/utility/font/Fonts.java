@@ -1,6 +1,7 @@
 package sertyo.events.utility.font;
 
 import lombok.SneakyThrows;
+import sertyo.events.Main;
 import sertyo.events.utility.font.common.Lang;
 import sertyo.events.utility.font.styled.StyledFont;
 

@@ -11,17 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.play.client.CClickWindowPacket;
 import net.minecraft.util.text.ITextComponent;
-import obf.sertyo.nativeobf.Native;
+import me.sertyo.j2c.J2c;
 import sertyo.events.event.misc.EventMessage;
 import sertyo.events.event.packet.EventPacket;
-import sertyo.events.event.player.EventUpdate;
-import sertyo.events.ui.ab.manager.*;
+import sertyo.events.event.player.EventUpdate;import sertyo.events.ui.ab.manager.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static sertyo.events.utility.Utility.mc;
-@Native
+@J2c
 public class AutoBuy {
     public static long update;
     private long clickUptime;
@@ -137,7 +136,7 @@ public class AutoBuy {
         if (mc.currentScreen == null || !enabled) return;
         Screen screen = mc.currentScreen;
 
-        boolean ah = screen.getTitle().getString().contains("Аукцион");
+        boolean ah = screen.getTitle().getString().contains("Аукционы");
         boolean accept = screen.getTitle().getString().contains("Покупка предмета");
 
         if (ah || accept) {
@@ -188,7 +187,8 @@ public class AutoBuy {
                                         }
                                         packet = true;
                                         idkTime = System.currentTimeMillis() + 1000;
-                                    }                                    if (((CustomAutoBuyItem) item).tryBuy(stack, price) && System.currentTimeMillis() > idkTime) {
+                                    }
+                                    if (((CustomAutoBuyItem) item).tryBuy(stack, price) && System.currentTimeMillis() > idkTime) {
                                         click(i, 1337);
                                         if (lastItem == null) {
                                             lastItem = new HistoryItem(price, stack);
@@ -200,13 +200,13 @@ public class AutoBuy {
 
                             }
                         }
-
-                        if (stack.getItem().equals(Items.EMERALD) && name.equals("Обновить аукцион ↻") && i == 47 && System.currentTimeMillis() > update && !packet && System.currentTimeMillis() > idkTime) {
-                            click(i, 0);
-                            update = System.currentTimeMillis() + Minecraft.kd;
+                            if (stack.getItem().equals(Items.EMERALD) && name.equals("Обновить аукцион ↻") && i == 47 && System.currentTimeMillis() > update && !packet && System.currentTimeMillis() > idkTime) {
+                                click(i, 0);
+                                update = System.currentTimeMillis() + Minecraft.kd;
+                            }
                         }
                     }
-                }
+
                 if (accept) {
                     if (click && System.currentTimeMillis() > clickUptime) {
                         click = false;

@@ -1,14 +1,12 @@
 package sertyo.events.module.impl.util;
 
 import com.darkmagician6.eventapi.EventTarget;
-import com.sun.jdi.BooleanValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChatPacket;
-import net.minecraft.util.text.TextFormatting;
-import obf.sertyo.nativeobf.Native;
+import me.sertyo.j2c.J2c;
 import sertyo.events.Main;
 import sertyo.events.command.impl.AutoPerevod;
 import sertyo.events.event.packet.EventReceivePacket;
@@ -16,7 +14,6 @@ import sertyo.events.event.player.EventUpdate;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
-import sertyo.events.module.impl.player.GlowESP;
 import sertyo.events.module.setting.impl.BooleanSetting;
 import sertyo.events.utility.misc.ChatUtility;
 import sertyo.events.utility.misc.TimerHelper;
@@ -25,7 +22,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-@Native
+@J2c
 @ModuleAnnotation(name = "CasinoBotHW", category = Category.UTIL)
 public class CasinoBotHW extends Module  {
     private final TimerHelper timer = new TimerHelper();
@@ -40,7 +37,7 @@ public class CasinoBotHW extends Module  {
             if (perevodeee.get()) {
                 if (AutoPerevod.command == null) {
                     if (Minecraft.getInstance().getCurrentServerData() != null) {
-                        ChatUtility.addChatMessage("Вам необходимо добавть комманду для перевода P.s например .cmh " + Main.getInstance().getUsername() + " потом после установки и если игрок проиграет будет выполнена комманда /pay (никнейм который вы указали) 60% от пройгрыша например /pay " + Main.getInstance().getUsername() + " 1488");
+                        ChatUtility.addChatMessage("Вам необходимо добавть комманду для перевода P.s например .cmh " + Main.cheatProfile.getName() + " потом после установки и если игрок проиграет будет выполнена комманда /pay (никнейм который вы указали) 60% от пройгрыша например /pay " + Main.cheatProfile.getName() + " 1488");
                     }
                     toggle();
                 } else {

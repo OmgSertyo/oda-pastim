@@ -381,6 +381,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     public Minecraft(GameConfiguration gameConfig)
     {
         super("Client");
+
         Fonts.init();
         instance = this;
         this.gameDir = gameConfig.folderInfo.gameDir;

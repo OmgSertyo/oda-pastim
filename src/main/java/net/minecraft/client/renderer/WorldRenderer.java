@@ -156,6 +156,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import sertyo.events.event.render.EventOverlay;
+import sertyo.events.event.render.EventRender3D;
 
 public class WorldRenderer implements IResourceManagerReloadListener, AutoCloseable
 {
@@ -1919,6 +1920,7 @@ public class WorldRenderer implements IResourceManagerReloadListener, AutoClosea
         GlStateManager.setFogAllowed(true);
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(matrixStackIn.getLast().getMatrix());
+        EventManager.call(new EventRender3D(partialTicks));
 
         if (this.mc.gameSettings.getCloudOption() != CloudOption.OFF)
         {

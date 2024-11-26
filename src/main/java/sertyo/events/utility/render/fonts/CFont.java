@@ -7,9 +7,16 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.ReadOnlyBufferException;
+
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 public class CFont {
    private final float imgSize = 512.0F;
@@ -27,31 +34,48 @@ public class CFont {
       this.fractionalMetrics = fractionalMetrics;
       this.tex = this.setupTexture(font, antiAlias, fractionalMetrics, this.charData);
    }
-   private NativeImage convertToNativeImage(BufferedImage bufferedImage) {
-      int width = bufferedImage.getWidth();
-      int height = bufferedImage.getHeight();
-      NativeImage nativeImage = new NativeImage(width, height, true);
-
-      for (int x = 0; x < width; x++) {
-         for (int y = 0; y < height; y++) {
-            int rgba = bufferedImage.getRGB(x, y);
-            nativeImage.setPixelRGBA(x, y, rgba);
-         }
-      }
-
-      return nativeImage;
-   }
-   protected DynamicTexture setupTexture(Font font, boolean antiAlias, boolean fractionalMetrics, CharData[] chars) {
+   protected DynamicTexture setupTexture(Font font, boolean antiAlias, boolean fractionalMetrics, CFont.CharData[] chars) {
       BufferedImage img = this.generateFontImage(font, antiAlias, fractionalMetrics, chars);
 
       try {
-         NativeImage nativeImage = convertToNativeImage(img);
+         // Создание NativeImage на основе BufferedImage
+         NativeImage nativeImage = new NativeImage(img.getWidth(), img.getHeight(), true);
+         for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+               int rgba = img.getRGB(x, y); // Получаем RGBA пиксель из BufferedImage
+               nativeImage.setPixelRGBA(x, y, rgba); // Устанавливаем пиксель в NativeImage
+            }
+         }
+
          return new DynamicTexture(nativeImage);
       } catch (Exception e) {
          e.printStackTrace();
          return null;
       }
-}
+   }
+   public static int loadTexture(BufferedImage image) {
+      int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+      ByteBuffer buffer = BufferUtils.createByteBuffer(pixels.length * 4);
+
+      try {
+         for (int pixel : pixels) {
+            buffer.put((byte)((pixel >> 16) & 0xFF));
+            buffer.put((byte)((pixel >> 8) & 0xFF));
+            buffer.put((byte)(pixel & 0xFF));
+            buffer.put((byte)((pixel >> 24) & 0xFF));
+         }
+         buffer.flip();
+      } catch (BufferOverflowException | ReadOnlyBufferException ex) {return -1;}
+
+      int textureID = GlStateManager.genTexture();
+      GlStateManager.bindTexture(textureID);
+      GlStateManager.texParameter(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
+      GlStateManager.texParameter(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+      GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE, buffer);
+      GlStateManager.bindTexture(0);
+
+      return textureID;
+   }
    protected BufferedImage generateFontImage(Font font, boolean antiAlias, boolean fractionalMetrics, CharData[] chars) {
       this.getClass();
       int imgSize = 512;

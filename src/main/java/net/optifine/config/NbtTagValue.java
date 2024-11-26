@@ -340,7 +340,7 @@ public class NbtTagValue
         }
     }
 
-    private static String parseString(String text, int pos)
+    public static String parseString(String text, int pos)
     {
         StringBuilder stringbuilder = new StringBuilder();
         boolean flag = false;

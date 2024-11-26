@@ -7,6 +7,7 @@ import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import sertyo.events.Main;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.misc.FileUtil;
 
@@ -273,7 +274,7 @@ public class ShaderUtil implements Utility {
                 case "gradientRoundRect" ->
                         createShader(new ByteArrayInputStream(gradientRoundRect.getBytes()), GL_FRAGMENT_SHADER);
                 default ->
-                        createShader(mc.getResourceManager().getResource(new ResourceLocation("neiron/shader/" + fragmentShaderLoc)).getInputStream(), GL_FRAGMENT_SHADER);
+                        createShader(mc.getResourceManager().getResource(new ResourceLocation( "neiron/shader/" + fragmentShaderLoc)).getInputStream(), GL_FRAGMENT_SHADER);
             };
             ARBShaderObjects.glAttachObjectARB(programID, fragmentShaderID);
 

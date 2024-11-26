@@ -70,7 +70,7 @@ public class NetworkManager extends SimpleChannelInboundHandler < IPacket<? >>
     private final Queue<NetworkManager.QueuedPacket> outboundPacketsQueue = Queues.newConcurrentLinkedQueue();
 
     /** The active channel */
-    private Channel channel;
+    public Channel channel;
 
     /** The address of the remote party */
     private SocketAddress socketAddress;

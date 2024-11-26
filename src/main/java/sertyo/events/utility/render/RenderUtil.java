@@ -74,6 +74,22 @@ public class RenderUtil implements Utility {
         runnable.run();
         GL11.glPopMatrix();
     }
+    public static class FrameBuffer {
+
+        public static Framebuffer createFrameBuffer(Framebuffer framebuffer) {
+            return createFrameBuffer(framebuffer, false);
+        }
+
+        public static Framebuffer createFrameBuffer(Framebuffer framebuffer, boolean depth) {
+            if (framebuffer == null || framebuffer.framebufferWidth != sr.getFramebufferWidth() || framebuffer.framebufferHeight != sr.getFramebufferHeight()) {
+                if (framebuffer != null) framebuffer.deleteFramebuffer();
+
+                return new Framebuffer(sr.getFramebufferWidth(), sr.getFramebufferHeight(), depth, Minecraft.IS_RUNNING_ON_MAC);
+            }
+
+            return framebuffer;
+        }
+    }
 
     public static void scale(float f, float f2, float f3, float f4, float f5, Runnable runnable) {
         GL11.glPushMatrix();

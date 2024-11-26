@@ -2,17 +2,22 @@ package sertyo.events.ui.csgui;
 
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import sertyo.events.Main;
 import sertyo.events.manager.config.Config;
 import sertyo.events.manager.config.ConfigManager;
@@ -22,17 +27,18 @@ import sertyo.events.module.Category;
 import sertyo.events.ui.csgui.component.Component;
 import sertyo.events.ui.csgui.component.impl.ConfigComponent;
 import sertyo.events.ui.csgui.component.impl.ModuleComponent;
+import sertyo.events.ui.csgui.component.impl.ProfileComponent;
 import sertyo.events.ui.csgui.component.impl.ThemeComponent;
 import sertyo.events.ui.csgui.window.ColorPickerWindow;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
-import sertyo.events.utility.render.StencilUtility;
+import sertyo.events.utility.render.*;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.utility.render.animation.AnimationMath;
 import sertyo.events.utility.render.animation.Direction;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
 import sertyo.events.utility.render.animation.impl.EaseInOutQuad;
-import sertyo.events.utility.font.Fonts;
+import sertyo.events.utility.render.fonts.Fonts;
+
+import static sertyo.events.utility.Utility.mc;
 
 
 public class CsGui extends Screen {
@@ -43,31 +49,34 @@ public class CsGui extends Screen {
    public static ColorPickerWindow colorPicker;
    public static List<ModuleComponent> modules;
    public static List<ModuleComponent> modules2;
-   public static List<ThemeComponent> guiThemes;
    public static List<ThemeComponent> themes;
    public static List<ConfigComponent> configs;
+   public static List<ProfileComponent> profile;
    public static List<ConfigComponent> configs2;
-   private Animation openAnimation;
+   private static Animation openAnimation;
    private static final Animation moduleAnimation;
-   Minecraft mc = Minecraft.getInstance();
+  // public static SearchField search;
    public static boolean escapeInUse;
+   private final float maxParticleAmount = 32.0F;
+   private final float particleScale = 32.0F;
    public boolean isClosed;
-   public float scrollY = 35.5f;
-   private float text1Y = 0.0F;
-   private float text2Y = 0.0F;
+   float windowWidth = 350.0F;
+   float windowHeight = 250.0F;
+   public float scrollY = 32.5F;
 
-   public CsGui(ITextComponent titlein) {
-      super(titlein);
-      MainWindow sr = mc.getMainWindow();
-      this.x = sr.getScaledWidth() / 2 - this.width / 2 + 90;
-      this.y = sr.getScaledHeight() / 2 - this.height / 2;
+   public CsGui() {
+       super(ITextComponent.getTextComponentOrEmpty("Babka"));
+       MainWindow sr = mc.getMainWindow();
+      this.x = Main.getInstance().getScaleMath().calc(sr.getScaledWidth()) / 2 - this.width / 2 + 90;
+      this.y = Main.getInstance().getScaleMath().calc(sr.getScaledHeight()) / 2 - this.height / 2;
+    // search = new SearchField(this.eventButton, Fonts.mntsb16, this.x + 15, this.y + 5, 110, 20);
       Main.getInstance().getModuleManager().getModules().forEach((module) -> {
          if (Main.getInstance().getModuleManager().getModules().indexOf(module) % 2 == 0) {
-            modules.add(new ModuleComponent(module, 120.0F, 30.0F));
+            modules.add(new ModuleComponent(module, 155.0F, 23.0F));
          }
 
          if (Main.getInstance().getModuleManager().getModules().indexOf(module) % 2 != 0) {
-            modules2.add(new ModuleComponent(module, 120.0F, 30.0F));
+            modules2.add(new ModuleComponent(module, 155.0F, 23.0F));
          }
 
       });
@@ -76,22 +85,20 @@ public class CsGui extends Screen {
 
       for(int var4 = 0; var4 < var3; ++var4) {
          Themes theme = var2[var4];
-         if (theme.getTheme().getType().equals(Theme.ThemeType.GUI)) {
-            guiThemes.add(new ThemeComponent(theme.getTheme(), 55.0F, 30.0F));
-         } else {
-            themes.add(new ThemeComponent(theme.getTheme(), 55.0F, 30.0F));
+         if (theme.getTheme().getType().equals(Theme.ThemeType.STYLE)) {
+            themes.add(new ThemeComponent(theme.getTheme(), 320.0F, 20.0F));
          }
       }
+      profile.add(new ProfileComponent("Penis", 320.0F, 20.0F));
 
    }
-   @Override
-   public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-      scrollY += (float) (delta * 85.5f);
-      return super.mouseScrolled(mouseX, mouseY, delta);
-   }
+
    public void init() {
       super.init();
-      this.openAnimation = new EaseInOutQuad(250, 1.0F, Direction.FORWARDS);
+
+
+
+      openAnimation = new EaseInOutQuad(250, 1.0F, Direction.FORWARDS);
       if (colorPicker != null) {
          colorPicker.init();
       }
@@ -101,129 +108,149 @@ public class CsGui extends Screen {
 
    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
       super.render(ms, mouseX, mouseY, partialTicks);
-      Color[] guiColors = Main.getInstance().getThemeManager().getCurrentGuiTheme().getColors();
-      boolean isDark = Main.getInstance().getThemeManager().getCurrentGuiTheme().equals(Themes.DARK.getTheme());
+      MainWindow sr = mc.getMainWindow();
 
-      if (this.isClosed && this.openAnimation.isDone()) {
-         this.mc.displayGuiScreen((Screen) null);
+      this.x = Main.getInstance().getScaleMath().calc(sr.getScaledWidth()) / 2 - (int)this.windowWidth / 2;
+      this.y = Main.getInstance().getScaleMath().calc(sr.getScaledHeight()) / 2 - (int)this.windowHeight / 2;
+ /*     search.xPosition = this.x + 15;
+      search.yPosition = this.y + 5;
+      if (ClickGuiModule.blur.get()) {
+         BlurUtility.drawBlurredScreen(ClickGuiModule.blurRadius.get());
+      }*/
+
+      if (this.isClosed && openAnimation.isDone()) {
+         mc.displayGuiScreen((Screen) null);
          this.isClosed = false;
       }
 
-      float scale = this.openAnimation.getOutput();
+      float scale = openAnimation.getOutput();
+      RenderUtility.drawRect(0.0F, 0.0F, (float)mc.getMainWindow().getWidth(), (float)mc.getMainWindow().getHeight(), ColorUtility.setAlpha(Color.BLACK.getRGB(), (int)(150.0F * scale)));
 
-      RenderUtil.Render2D.drawRoundedRect((float)this.x, (float)this.y, 350.0F, 250.0F, 8.0F, 185.0F, 50, guiColors[0].getRGB(), guiColors[1].getRGB());
+     /* GlStateManager.pushMatrix();
+      GlStateManager.translated((float)this.x + this.windowWidth / 2.0F, ((float)this.y + this.windowHeight) / 2.0F, 0.0F);
+      GlStateManager.scaled(scale, scale, 0.0F);
+      GlStateManager.translated(-((float)this.x + this.windowWidth / 2.0F), -(((float)this.y + this.windowHeight) / 2.0F), 0.0F);*/
+      int bgColor = Color.decode("#151521").getRGB();
+      int elementsColor = Color.decode("#1E1F30").getRGB();
+      RenderUtility.drawGlow((float)(this.x - 1), (float)(this.y - 1), this.windowWidth + 2.0F, this.windowHeight + 2.0F, 10, new Color(bgColor).getRGB());
+      RenderUtility.Render2D.drawRoundedRect((float)this.x, (float)this.y, this.windowWidth, this.windowHeight, 10.0F, (float)bgColor, (float)bgColor, bgColor, bgColor);
+      RenderUtility.drawGlow((float)(this.x + 15), (float)(this.y + 5), 110.0F, 20.0F, 5, ColorUtility.applyOpacity(Color.BLACK, 0.1F).getRGB());
+      RenderUtility.drawRoundedRect(x + 15, y+ 5, (float) 110, (float)20, 5.0F, elementsColor);
 
-      Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
-      Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
+         sertyo.events.utility.font.Fonts.icons[21].drawString("f", (float)(this.x + 20), (float)this.y + 12.5F, (new Color(160, 160, 160)).getRGB());
+         sertyo.events.utility.font.Fonts.msBold [16].drawString("Start typing here...", (float)(this.x + 35), (float)this.y + 12.5F, (new Color(160, 160, 160)).getRGB());
 
 
-      Fonts.msBold[24].drawString(ms, ColorUtil.gradient("NEIRON", color.getRGB(), color2.getRGB()), (float)(this.x + 18), (float)(this.y + 12), -1);
-      Category[] var9 = Category.values();
-      int var10 = var9.length;
-
-      for(int var11 = 0; var11 < var10; ++var11) {
-         Category category = var9[var11];
-         category.getAnimation().setDirection(selected.equals(category) ? Direction.FORWARDS : Direction.BACKWARDS);
-         boolean hovered = RenderUtil.isHovered((float)mouseX, (float)mouseY, (float)(this.x + 10), (float)(this.y + 30 + 20 * category.ordinal() + 1 + (category.isBottom() ? 15 : 0)), 75.0F, 17.5F);
-         if (category.equals(Category.CONFIGS)) {
-            Fonts.msBold[14].drawString("OTHER", (float)(this.x + 10), (float)(this.y + 37 + 20 * category.ordinal()), isDark ? Color.WHITE.getRGB() : (new Color(65, 65, 65)).getRGB());
-         }
-
-         if (selected.equals(category)) {
-            RenderUtil.Render2D.drawRoundedRect((float)(this.x + 10), (float)(this.y + 30 + 20 * category.ordinal() + 1 + (category.isBottom() ? 15 : 0)), 75.0F * category.getAnimation().getOutput(), 17.5F, 4.0F, guiColors[4].getRGB());
-         } else if (hovered) {
-           // RenderUtil.Render2D.drawRoundedRect((float)(this.x + 10), (float)(this.y + 20 + 20 * category.ordinal() + 1 + (category.isBottom() ? 15 : 0)), 75.0F, 17.5F, 4.0F, guiColors[5].hashCode());
-         } else {
-            RenderUtil.Render2D.drawRoundedRect((float)(this.x + 10), (float)(this.y + 30 + 20 * category.ordinal() + 1 + (category.isBottom() ? 15 : 0)), 75.0F * category.getAnimation().getOutput(), 17.5F, 4.0F, guiColors[4].getRGB());
-         }
-         RenderUtil.Render2D.drawRoundedRect((float)(this.x + 10), (float)(this.y + 30 + 20 * category.ordinal() + 1 + (category.isBottom() ? 15 : 0)), 75.0F * category.getAnimation().getOutput(), 17.5F, 4.0F, guiColors[4].getRGB());
-
-         Fonts.msBold[16].drawString(category.getName(), (float)this.x + 32.5F, (float)(this.y + 30 + 20 * category.ordinal()) + 7.5F + (float)(category.isBottom() ? 15 : 0), isDark ? Color.WHITE.getRGB() : (new Color(65, 65, 65)).getRGB());
-         Fonts.icons[21].drawString(String.valueOf(category.getIcon()), (float)(this.x + 15), (float)(this.y + 30 + 20 * category.ordinal()) + 7.5F + (float)(category.isBottom() ? 15 : 0), isDark ? Color.WHITE.getRGB() : (new Color(65, 65, 65)).getRGB());
-      }
-
-   //   RenderUtil.Render2D.applyRound(25.0F, 25.0F, 12.0F, 1.0F, () -> {
-   //      RenderUtil.Render2D.drawProfile((float)(this.x + 7), (float)(this.y + 220), 25.0F, 25.0F);
-   //   });
-      Fonts.msBold[16].drawString(Main.getInstance().getUsername(), (float)(this.x + 36), (float)(this.y + 225), isDark ? -1 : (new Color(65, 65, 65)).getRGB());
-      Fonts.msBold[14].drawString("UID: " + Main.getInstance().getUid(), (float)(this.x + 36), (float)(this.y + 235), (new Color(120, 120, 120)).getRGB());
+      RenderUtility.drawGlow((float)(this.x + 130), (float)(this.y + 5), 60.0F, 20.0F, 5, ColorUtility.applyOpacity(Color.BLACK, 0.1F).getRGB());
+      RenderUtility.drawRoundedRect((float)(this.x + 130), (float)(this.y + 5), 60.0F, 20.0F, 5.0F, elementsColor);
+      sertyo.events.utility.font.Fonts.icons[21].drawString("g", (float)(this.x + 135), (float)this.y + 12.5F, (new Color(160, 160, 160)).getRGB());
+      sertyo.events.utility.font.Fonts.msBold[16].drawString("Configs", (float)(this.x + 150), (float)this.y + 12.5F, (new Color(160, 160, 160)).getRGB());
+      RenderUtility.drawGlow((float)(this.x + 195), (float)(this.y + 5), 63.0F, 20.0F, 5, ColorUtility.applyOpacity(Color.BLACK, 0.1F).getRGB());
+      RenderUtility.drawRoundedRect((float)(this.x + 195), (float)(this.y + 5), 63.0F, 20.0F, 5.0F, elementsColor);
+      sertyo.events.utility.font.Fonts.icons[21].drawString("h", (float)(this.x + 200), (float)this.y + 12.5F, (new Color(160, 160, 160)).getRGB());
+      sertyo.events.utility.font.Fonts.msBold[16].drawString("Themes", (float)(this.x + 217), (float)this.y + 12.5F, (new Color(160, 160, 160)).getRGB());
+      RenderUtility.applyRound(25.0F, 25.0F, 12.0F, 1.0F, () -> {
+         RenderUtility.drawProfile((float)this.x + this.windowWidth - 40.0F - 20.0F, (float)this.y + 3.5F, 25, 25);
+      });
+      Fonts.mntsb13.drawString(Main.cheatProfile.getName(), this.x + this.windowWidth - 40.0F + 6, (float)this.y + 10.5F, (new Color(160, 160, 160)).getRGB());
       StencilUtility.initStencilToWrite();
-      RenderUtil.Render2D.drawRect((float)this.x + 92.5F, (float)this.y + 26.5f, 257.5F, 223.5F, -1);
+      RenderUtility.drawRect((float)(this.x + 15), (float)(this.y + 29), 320.0F, this.windowHeight - 29.0F, -1);
       StencilUtility.readStencilBuffer(1);
       if (selected.equals(Category.THEMES)) {
          this.drawThemes(mouseX, mouseY);
+      } else if (selected.equals(Category.PROFILE)){
+         this.drawProfile(mouseX, mouseY);
+
       } else if (selected.equals(Category.CONFIGS)) {
          this.drawConfigs(mouseX, mouseY);
       } else {
-
          this.drawComponents(mouseX, mouseY);
       }
 
-      RenderUtil.Render2D.drawRect((float)(this.x + 99), (float)this.y + 26.5F, 350, 250.0F, (new Color((float)guiColors[1].getRed() / 255.0F, (float)guiColors[1].getGreen() / 255.0F, (float)guiColors[1].getBlue() / 255.0F, moduleAnimation.getOutput())).getRGB());
+      Color trueBgColor = new Color(bgColor);
+      RenderUtility.drawRect((float)(this.x + 15), (float)(this.y + 29), 320.0F, this.windowHeight - 29.0F, (new Color((float)trueBgColor.getRed() / 255.0F, (float)trueBgColor.getGreen() / 255.0F, (float)trueBgColor.getBlue() / 255.0F, moduleAnimation.getOutput())).getRGB());
       StencilUtility.uninitStencilBuffer();
+      int categoryWidth = 165;
+      float catX = (float)this.x + this.windowWidth / 2.0F - (float)categoryWidth / 2.0F;
+      float catY = (float)this.y + this.windowHeight - 30.0F;
+      Color glowColor = Color.decode("#3A3B65").darker();
+      RenderUtility.Render2D.drawShadow(catX, catY, (float)categoryWidth, 25.0F, 10, glowColor.getRGB(), glowColor.getRGB());
+      RenderUtility.drawRoundedRect(catX, catY, (float)categoryWidth, 25.0F, 15.0F, Color.decode("#3A3B65").darker().getRGB());
+      int catIndex = 0;
+      Category[] var14 = Category.values();
+      int var15 = var14.length;
+
+      for(int var16 = 0; var16 < var15; ++var16) {
+         Category category = var14[var16];
+         if (!category.equals(Category.CONFIGS) && !category.equals(Category.THEMES)) {
+            sertyo.events.utility.font.Fonts.icons[21].drawString(String.valueOf(category.getIcon()), catX + 15.0F + (float)catIndex, catY + 9.0F, selected.equals(category) ? Color.decode("#3A3B65").brighter().getRGB() : (new Color(160, 160, 160)).getRGB());
+            catIndex += category.equals(Category.MOVEMENT) ? 30 : (category.equals(Category.PLAYER) ? 22 : 25);
+         }
+      }
+
       if (colorPicker != null) {
          colorPicker.render(mouseX, mouseY);
       }
 
-  //    GlStateManager.popMatrix();
+     // GlStateManager.popMatrix();
    }
 
    private void drawThemes(int mouseX, int mouseY) {
-      boolean isDark = Main.getInstance().getThemeManager().getCurrentGuiTheme().equals(Themes.DARK.getTheme());
-      int xOffset = 0;
-
-      // Сбрасываем накопленное значение после использования
+      GLFW.glfwSetScrollCallback(GLFW.glfwGetCurrentContext(), new GLFWScrollCallback() {
+         @Override
+         public void invoke(long window, double xoffset, double yoffset) {
+            // Обновление scrollY на основе значения прокрутки
+            scrollY += (float) yoffset * 5.0F; // Делите или умножайте по необходимости
+         }
+      });
+      float size = 0.0F;
       float offset = this.scrollY;
-      float sizeOffset1 = 0.0F;
-      float sizeOffset2 = 0.0F;
-      this.text1Y = AnimationMath.fast(this.text1Y, (float)this.y + offset, 15.0F);
-      Fonts.msBold[18].drawString("Interface", (float)(this.x + 100), this.text1Y, isDark ? Color.WHITE.getRGB() : (new Color(65, 65, 65)).getRGB());
 
-      Iterator var8;
       ThemeComponent themeComponent;
-      int index;
-      for(var8 = guiThemes.iterator(); var8.hasNext(); sizeOffset1 += themeComponent.height + 7.0F) {
-         themeComponent = (ThemeComponent)var8.next();
-         index = guiThemes.indexOf(themeComponent);
-         themeComponent.setX((float)(this.x + 100) + (float)xOffset * (themeComponent.width + 8.0F));
-         themeComponent.setY(AnimationMath.fast(themeComponent.y, (float)(this.y + 12) + offset, 15.0F));
+      for(Iterator var5 = themes.iterator(); var5.hasNext(); offset += themeComponent.height + 4.0F) {
+         themeComponent = (ThemeComponent)var5.next();
+         themeComponent.setX((float)(this.x + 15));
+         themeComponent.setY(AnimationMath.fast(themeComponent.y, (float)this.y + offset, 15.0F));
          themeComponent.render(mouseX, mouseY);
-         ++xOffset;
-         if ((index + 1) % 4 == 0) {
-            offset += themeComponent.height + 7.0F;
-            xOffset = 0;
+         size += themeComponent.height + 4.0F;
+      }
+
+      this.scrollY = size > 250.0F ? MathHelper.clamp(this.scrollY, -size + 223.0F, 32.5F) : 32.5F;
+   }
+   private void drawProfile(int mouseX, int mouseY) {
+      GLFW.glfwSetScrollCallback(GLFW.glfwGetCurrentContext(), new GLFWScrollCallback() {
+         @Override
+         public void invoke(long window, double xoffset, double yoffset) {
+            // Обновление scrollY на основе значения прокрутки
+            scrollY += (float) yoffset * 5.0F; // Делите или умножайте по необходимости
          }
+      });
+      float offset = this.scrollY;
+      float offset1 = 32.5F;
+      float offset2 = 32.5F;
+
+
+      Iterator var6;
+      ProfileComponent profileComponent;
+      for(var6 = profile.iterator(); var6.hasNext(); offset += profileComponent.height + 5.0F) {
+         profileComponent = (ProfileComponent)var6.next();
+         profileComponent.setX((float)(this.x + 15));
+         profileComponent.setY(AnimationMath.fast(profileComponent.y, (float)this.y + offset, 15.0F));
+         profileComponent.render(mouseX, mouseY);
+         offset += profileComponent.height + 5.0F;
       }
 
-      this.text2Y = AnimationMath.fast(this.text2Y, (float)(this.y + 49) + offset, 15.0F);
-      Fonts.msBold[18].drawString("Styles", (float)(this.x + 100), this.text2Y, isDark ? Color.WHITE.getRGB() : (new Color(65, 65, 65)).getRGB());
-      xOffset = 0;
-      offset = this.scrollY;
-
-      for(var8 = themes.iterator(); var8.hasNext(); sizeOffset2 += themeComponent.height + 7.0F) {
-         themeComponent = (ThemeComponent)var8.next();
-         index = themes.indexOf(themeComponent);
-         themeComponent.setX((float)(this.x + 100) + (float)xOffset * (themeComponent.width + 8.0F));
-         themeComponent.setY(AnimationMath.fast(themeComponent.y, (float)(this.y + 61) + offset, 15.0F));
-         themeComponent.render(mouseX, mouseY);
-         ++xOffset;
-         if ((index + 1) % 4 == 0) {
-            offset += themeComponent.height + 7.0F;
-            xOffset = 0;
-         }
-      }
-
-      float scrollMax = Math.max(sizeOffset1, sizeOffset2);
-      if (scrollMax > 250.0F) {
-         this.scrollY = MathHelper.clamp(this.scrollY, -scrollMax, 32.5F);
-      } else {
-         this.scrollY = 32.5F;
-      }
-
+      float scrollMax = Math.max(offset1, offset2);
+      this.scrollY = scrollMax > 250.0F ? MathHelper.clamp(this.scrollY, -scrollMax + 253.0F, 32.5F) : 32.5F;
    }
 
    private void drawConfigs(int mouseX, int mouseY) {
-
+      GLFW.glfwSetScrollCallback(GLFW.glfwGetCurrentContext(), new GLFWScrollCallback() {
+         @Override
+         public void invoke(long window, double xoffset, double yoffset) {
+            scrollY += (float) yoffset * 5.0F;
+         }
+      });
       float offset = this.scrollY;
       float offset1 = 32.5F;
       float offset2 = 32.5F;
@@ -232,7 +259,7 @@ public class CsGui extends Screen {
       ConfigComponent configComponent;
       for(var6 = configs.iterator(); var6.hasNext(); offset1 += configComponent.height + 5.0F) {
          configComponent = (ConfigComponent)var6.next();
-         configComponent.setX((float)(this.x + 100));
+         configComponent.setX((float)(this.x + 15));
          configComponent.setY(AnimationMath.fast(configComponent.y, (float)this.y + offset, 15.0F));
          configComponent.render(mouseX, mouseY);
          offset += configComponent.height + 5.0F;
@@ -242,19 +269,14 @@ public class CsGui extends Screen {
 
       for(var6 = configs2.iterator(); var6.hasNext(); offset2 += configComponent.height + 5.0F) {
          configComponent = (ConfigComponent)var6.next();
-         configComponent.setX((float)(this.x + 224));
+         configComponent.setX((float)(this.x + 180));
          configComponent.setY(AnimationMath.fast(configComponent.y, (float)this.y + offset, 15.0F));
          configComponent.render(mouseX, mouseY);
          offset += configComponent.height + 5.0F;
       }
 
       float scrollMax = Math.max(offset1, offset2);
-      if (scrollMax > 250.0F) {
-         this.scrollY = MathHelper.clamp(this.scrollY, -scrollMax + 277.0F, 32.5F);
-      } else {
-         this.scrollY = 32.5F;
-      }
-
+      this.scrollY = scrollMax > 250.0F ? MathHelper.clamp(this.scrollY, -scrollMax + 253.0F, 32.5F) : 32.5F;
    }
 
    private void drawComponents(int mouseX, int mouseY) {
@@ -264,7 +286,13 @@ public class CsGui extends Screen {
       List<ModuleComponent> categoryModules2 = (List)modules2.stream().filter((module) -> {
          return module.getModule().getCategory().equals(selected);
       }).collect(Collectors.toList());
-      this.scrollY += scrollY / 10.0F;
+      GLFW.glfwSetScrollCallback(GLFW.glfwGetCurrentContext(), new GLFWScrollCallback() {
+         @Override
+         public void invoke(long window, double xoffset, double yoffset) {
+            // Обновление scrollY на основе значения прокрутки
+            scrollY += (float) yoffset * 5.0F; // Делите или умножайте по необходимости
+         }
+      });
       float offset = this.scrollY;
       float offset1 = 32.5F;
       float offset2 = 32.5F;
@@ -283,17 +311,12 @@ public class CsGui extends Screen {
                   do {
                      if (!var8.hasNext()) {
                         float scrollMax = Math.max(offset1, offset2);
-                        if (scrollMax > 250.0F) {
-                           this.scrollY = MathHelper.clamp(this.scrollY, -scrollMax + 277.0F, 32.5F);
-                        } else {
-                           this.scrollY = 32.5F;
-                        }
-
+                        this.scrollY = scrollMax > 250.0F ? MathHelper.clamp(this.scrollY, -scrollMax + 253.0F, 32.5F) : 32.5F;
                         return;
                      }
 
                      moduleElement = (ModuleComponent)var8.next();
-                     moduleElement.setX((float)(this.x + 224));
+                     moduleElement.setX((float)(this.x + 180));
                      moduleElement.setY(AnimationMath.fast(moduleElement.y, (float)this.y + offset, 15.0F));
                   } while(!moduleElement.getModule().isSearched());
 
@@ -306,6 +329,7 @@ public class CsGui extends Screen {
                         offset2 += element.height;
                      }
                   }
+
                   moduleElement.render(mouseX, mouseY);
                   offset += moduleElement.height + 5.0F;
                   offset2 += moduleElement.height + 5.0F;
@@ -313,7 +337,7 @@ public class CsGui extends Screen {
             }
 
             moduleElement = (ModuleComponent)var8.next();
-            moduleElement.setX((float)(this.x + 100));
+            moduleElement.setX((float)(this.x + 15));
             moduleElement.setY(AnimationMath.fast(moduleElement.y, (float)this.y + offset, 15.0F));
          } while(!moduleElement.getModule().isSearched());
 
@@ -326,6 +350,7 @@ public class CsGui extends Screen {
                offset1 += element.height;
             }
          }
+
          moduleElement.render(mouseX, mouseY);
          offset += moduleElement.height + 5.0F;
          offset1 += moduleElement.height + 5.0F;
@@ -351,85 +376,101 @@ public class CsGui extends Screen {
    }
    @Override
    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+      super.mouseClicked(mouseX, mouseY, mouseButton);
+      int categoryWidth = 165;
+      float catX = (float)this.x + 175.0F - (float)categoryWidth / 2.0F;
+      float catY = (float)(this.y + 250 - 30);
       if (mouseButton == 0) {
-         Category[] var4 = Category.values();
-         int var5 = var4.length;
+         int catIndex = 0;
+         Category[] var8 = Category.values();
+         int var9 = var8.length;
 
-         for(int var6 = 0; var6 < var5; ++var6) {
-            Category category = var4[var6];
-            boolean hovered = RenderUtil.isHovered((float)mouseX, (float)mouseY, (float)(this.x + 10), (float)(this.y + 30 + 20 * category.ordinal() + 1 + (category.isBottom() ? 15 : 0)), 75.0F, 17.5F);
-            if (hovered && !selected.equals(category)) {
-               selected = category;
-               this.scrollY = 32.5F;
-               moduleAnimation.reset();
+         for(int var10 = 0; var10 < var9; ++var10) {
+            Category category = var8[var10];
+            if (!category.equals(Category.CONFIGS) && !category.equals(Category.THEMES)) {
+               boolean hovered = RenderUtility.isHovered((float)mouseX, (float)mouseY, catX + 15.0F + (float)catIndex, catY + 9.0F, (float)Fonts.icons21.getStringWidth(category.getIcon()), (float)Fonts.icons21.getFontHeight());
+               if (hovered && !selected.equals(category)) {
+                  selected = category;
+                  this.scrollY = 32.5F;
+                  moduleAnimation.reset();
+               }
+
+               catIndex += category.equals(Category.MOVEMENT) ? 30 : (category.equals(Category.PLAYER) ? 22 : 25);
             }
+         }
+
+         if (RenderUtility.isHovered((float)mouseX, (float)mouseY, (float)(this.x + 130), (float)(this.y + 5), 60.0F, 20.0F)) {
+            selected = Category.CONFIGS;
+            this.scrollY = 32.5F;
+            moduleAnimation.reset();
+         }
+
+         if (RenderUtility.isHovered((float)mouseX, (float)mouseY, (float)(this.x + 195), (float)(this.y + 5), 63.0F, 20.0F)) {
+            selected = Category.THEMES;
+            this.scrollY = 32.5F;
+            moduleAnimation.reset();
          }
       }
 
-      if (colorPicker != null) {
-         colorPicker.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
-      } else {
-         Iterator var9 = modules.iterator();
+      if (!RenderUtility.isHovered((float)mouseX, (float)mouseY, catX, catY, (float)categoryWidth, 25.0F)) {
+         //search.mouseClicked(mouseX, mouseY, mouseButton);
+         if (colorPicker != null) {
+            colorPicker.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
+         } else {
+            Iterator var13 = modules.iterator();
 
-         ModuleComponent moduleComponent;
-         while(var9.hasNext()) {
-            moduleComponent = (ModuleComponent)var9.next();
-            if (moduleComponent.getModule().getCategory().equals(selected) && moduleComponent.getModule().isSearched()) {
-               moduleComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
-            }
-         }
-
-         var9 = modules2.iterator();
-
-         while(var9.hasNext()) {
-            moduleComponent = (ModuleComponent)var9.next();
-            if (moduleComponent.getModule().getCategory().equals(selected) && moduleComponent.getModule().isSearched()) {
-               moduleComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
-            }
-         }
-
-         if (selected.equals(Category.THEMES)) {
-            var9 = guiThemes.iterator();
-
-            ThemeComponent themeComponent;
-            while(var9.hasNext()) {
-               themeComponent = (ThemeComponent)var9.next();
-               themeComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
-            }
-
-            var9 = themes.iterator();
-
-            while(var9.hasNext()) {
-               themeComponent = (ThemeComponent)var9.next();
-               themeComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
-            }
-         }
-
-         if (selected.equals(Category.CONFIGS)) {
-            var9 = configs.iterator();
-
-            ConfigComponent configComponent;
-            while(var9.hasNext()) {
-               configComponent = (ConfigComponent)var9.next();
-               if (configComponent.mouseBoolClicked((double)mouseX, (double)mouseY, mouseButton)) {
-                  updateConfigComponents();
-                  break;
+            ModuleComponent moduleComponent;
+            while(var13.hasNext()) {
+               moduleComponent = (ModuleComponent)var13.next();
+               if (moduleComponent.getModule().getCategory().equals(selected) && moduleComponent.getModule().isSearched()) {
+                  moduleComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
                }
             }
 
-            var9 = configs2.iterator();
+            var13 = modules2.iterator();
 
-            while(var9.hasNext()) {
-               configComponent = (ConfigComponent)var9.next();
-               if (configComponent.mouseBoolClicked((double)mouseX, (double)mouseY, mouseButton)) {
-                  updateConfigComponents();
-                  break;
+            while(var13.hasNext()) {
+               moduleComponent = (ModuleComponent)var13.next();
+               if (moduleComponent.getModule().getCategory().equals(selected) && moduleComponent.getModule().isSearched()) {
+                  moduleComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
                }
             }
-         }
 
+            if (selected.equals(Category.THEMES)) {
+               var13 = themes.iterator();
+
+               while(var13.hasNext()) {
+                  ThemeComponent themeComponent = (ThemeComponent)var13.next();
+                  themeComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
+               }
+            }
+
+            if (selected.equals(Category.CONFIGS)) {
+               var13 = configs.iterator();
+
+               ConfigComponent configComponent;
+               while(var13.hasNext()) {
+                  configComponent = (ConfigComponent)var13.next();
+                  if (configComponent.mouseBoolClicked((double)mouseX, (double)mouseY, mouseButton)) {
+                     updateConfigComponents();
+                     break;
+                  }
+               }
+
+               var13 = configs2.iterator();
+
+               while(var13.hasNext()) {
+                  configComponent = (ConfigComponent)var13.next();
+                  if (configComponent.mouseBoolClicked((double)mouseX, (double)mouseY, mouseButton)) {
+                     updateConfigComponents();
+                     break;
+                  }
+               }
+            }
+
+         }
       }
-      return super.mouseClicked(mouseX, mouseY, mouseButton);
+      return this.mouseScrolled(mouseX, mouseY, mouseButton);
    }
 
 
@@ -449,7 +490,7 @@ public class CsGui extends Screen {
       while(var3.hasNext()) {
          moduleComponent = (ModuleComponent)var3.next();
          if (moduleComponent.getModule().getCategory().equals(selected) && moduleComponent.getModule().isSearched()) {
-            moduleComponent.keyTyped(keyCode);
+            moduleComponent.keyTypedd(keyCode, scanCode, modifiers);
          }
       }
 
@@ -458,7 +499,7 @@ public class CsGui extends Screen {
       while(var3.hasNext()) {
          moduleComponent = (ModuleComponent)var3.next();
          if (moduleComponent.getModule().getCategory().equals(selected) && moduleComponent.getModule().isSearched()) {
-            moduleComponent.keyTyped(keyCode);
+            moduleComponent.keyTypedd(keyCode, scanCode, modifiers);
          }
       }
 
@@ -472,21 +513,15 @@ public class CsGui extends Screen {
       return super.keyPressed(keyCode, scanCode, modifiers);
    }
 
-   public boolean doesGuiPauseGame() {
-      return false;
-   }
 
-   public static float getAnimationAlpha() {
-      return moduleAnimation.getOutput();
-   }
 
    static {
-      selected = Category.COMBAT;
+      selected = Category.PROFILE;
       modules = new ArrayList();
       modules2 = new ArrayList();
-      guiThemes = new ArrayList();
       themes = new ArrayList();
       configs = new ArrayList();
+      profile = new ArrayList();
       configs2 = new ArrayList();
       moduleAnimation = new DecelerateAnimation(500, 1.0F, Direction.BACKWARDS);
    }

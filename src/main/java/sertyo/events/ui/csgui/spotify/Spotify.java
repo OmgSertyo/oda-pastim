@@ -4,12 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import obf.sertyo.nativeobf.Native;
+import me.sertyo.j2c.J2c;
 import sertyo.events.ui.csgui.CsGui;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.misc.ChatUtility;
 import sertyo.events.utility.render.ColorUtil;
 import sertyo.events.utility.render.GaussianBlur;
 import sertyo.events.utility.render.RenderUtil;
@@ -23,11 +21,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static sertyo.events.ui.csgui.spotify.SpotifyLocalAPI.accessToken;
 import static sertyo.events.ui.csgui.spotify.SpotifyLocalAPI.getCurrentTrack;
 import static sertyo.events.utility.Utility.mc;
 
-@Native
+@J2c
 public class Spotify extends Screen {
     private Vector2f position = new Vector2f(0, 0);
     public static Vector2f size = new Vector2f(500, 400);

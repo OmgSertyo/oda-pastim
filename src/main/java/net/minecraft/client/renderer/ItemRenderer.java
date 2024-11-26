@@ -56,6 +56,7 @@ import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorForge;
 import net.optifine.render.VertexBuilderWrapper;
 import net.optifine.shaders.Shaders;
+import sertyo.events.Main;
 
 public class ItemRenderer implements IResourceManagerReloadListener
 {

@@ -2,13 +2,17 @@ package sertyo.events;
 
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
-import com.jagrosh.discordipc.entities.User;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.sertyo.api.profile.CheatProfile;
+import lombok.Getter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Session;
-import net.minecraft.util.text.StringTextComponent;
-import obf.sertyo.nativeobf.Native;
+import me.sertyo.j2c.J2c;
+import org.lwjgl.glfw.GLFW;
+
 import sertyo.events.command.CommandManager;
 import sertyo.events.command.impl.GpsCommand;
+import sertyo.events.command.impl.KeyMappings;
 import sertyo.events.event.input.EventInputKey;
 import sertyo.events.event.input.EventMouse;
 import sertyo.events.event.render.EventRender2D;
@@ -20,6 +24,7 @@ import sertyo.events.manager.theme.ThemeManager;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleManager;
 import sertyo.events.module.impl.player.GlowESP;
+
 import sertyo.events.ui.csgui.CsGui;
 import sertyo.events.ui.menu.main.NeironMainMenu;
 import sertyo.events.ui.ab.ActivationLogic;
@@ -28,43 +33,87 @@ import sertyo.events.ui.ab.AutoBuyGui;
 import sertyo.events.ui.ab.font.main.IFont;
 import sertyo.events.ui.ab.manager.AutoBuyManager;
 import sertyo.events.ui.ab.manager.IgnoreManager;
-import sertyo.events.utility.DiscordPresence;
+import sertyo.events.ui.testGUI.Panel;
 import sertyo.events.utility.render.ScaleMath;
 import sertyo.events.utility.render.ShaderUtil;
+import sertyo.events.utility.render.ShaderUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static sertyo.events.Protect.*;
 import static sertyo.events.utility.Utility.mc;
-@Native
+@Getter
+@J2c
 public class Main {
+
     public static String name = "Neiron";
     public static String version = "1.16.5 edition";
     public static String build = "1.0.1";
+    @Getter
     private static final Main instance = new Main();
     private final ConfigManager configManager = new ConfigManager();
     private CommandManager commandManager;
     private FriendManager friendManager;
-    public static Integer uid;
-    public static final int PORT = 6024;
     public static String username;
-    private final ScaleMath scaleMath = new ScaleMath(2);
-    public static String role;
-    public static String password;
+    private ScaleMath scaleMath;
     private ModuleManager moduleManager;
     private NeironMainMenu mainMenu;
     private ThemeManager themeManager;
     private ActivationLogic activationLogic;
     private CsGui csGui;
     public static AutoBuyGui abGui;
-    public static AutoBuy autoBuy = new AutoBuy();
-    public static User me;
     private StaffManager staffManager;
+    public static boolean unhooked = false;
+    private DragManager dragManager;
+    public static long startTime;
+    public static CheatProfile cheatProfile;
+    public static boolean hold_mouse0;
+
+
+    public void start() {
+        cheatProfile = CheatProfile.create();
+        cheatProfile.downloadAvatar(true);
+        addstart();
+        GlowESP.notstarted = false;
+        this.dragManager = new DragManager();
+        try {
+            this.dragManager.init();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        new AutoBuy();
+        this.activationLogic = new ActivationLogic();
+        this.scaleMath = new ScaleMath(2);
+        new ActivationLogic();
+        mc.session = new Session("SVotestVZVZV", "", "", "mojang");
+        ShaderUtil.init();
+        ShaderUtils.init();
+        System.out.println("Event inited");
+        EventManager.register(this);
+        this.moduleManager = new ModuleManager();
+        this.themeManager = new ThemeManager();
+        this.commandManager = new CommandManager();
+        this.mainMenu = new NeironMainMenu();
+        csGui = new CsGui();
+        this.friendManager = new FriendManager();
+        abGui = new AutoBuyGui();
+        AutoBuyManager.init();
+        this.staffManager = new StaffManager();
+        try {
+            this.staffManager.init();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        AutoBuyManager.load();
+        IgnoreManager.load();
+        IFont.init();
+        startTime = System.currentTimeMillis();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    }
+
 
     public void addstart() {
         String urlString = "http://t981877h.beget.tech/api/counter.php"; // URL до вашей PHP страницы
@@ -94,141 +143,33 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-    public static boolean unhooked = false;
-    public static boolean checkking = true;
-    private DragManager dragManager;
-    public void startprotect() {
-        try {
-             //getServer();
-            username = "Sertyo";
-            password = "4oTiLisiyPlakiPlaki";
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-       // check(username, password);
-          getUID2();
-        setrole();
-
-
-    }
-    public void start() {
-        startprotect();
-        GlowESP.notstarted = false;
-
-    //    DiscordPresence.startDiscord();
-        this.dragManager = new DragManager();
-        try {
-            this.dragManager.init();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        new AutoBuy();
-
-        this.activationLogic = new ActivationLogic();
-        new ActivationLogic();
-        mc.session = new Session("Sane4kaSnimaeshS", "", "", "mojang");
-        ShaderUtil.init();
-        System.out.println("Event inited");
-        EventManager.register(this);
-        String status = checkServerStatus();
-        this.moduleManager = new ModuleManager();
-
-        if (checkking) {
-            if ("false".equals(status)) {
-                System.out.println("[!] Фри версия сейчас не доступа.");
-                System.exit(-1488);
-            } else if (!"true".equals(status)) {
-                System.out.println("[!] Панкихой.");
-            }
-        }
-        addstart();
-        this.themeManager = new ThemeManager();
-        this.commandManager = new CommandManager();
-        this.mainMenu = new NeironMainMenu();
-        csGui = new CsGui(new StringTextComponent("A"));
-        this.friendManager = new FriendManager();
-      //  this.configManager.loadConfig("autocfg");
-        this.abGui = new AutoBuyGui();
-
-        AutoBuyManager.init();
-        this.staffManager = new StaffManager();
-        try {
-            this.staffManager.init();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        AutoBuyManager.load();
-        IgnoreManager.load();
-
-        IFont.init();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-    }
-    public StaffManager getStaffManager() {
-        return this.staffManager;
-    }
-
     public void shutdown() {
         this.dragManager.save();
         this.configManager.saveConfig("autocfg");
         AutoBuyManager.save();
         IgnoreManager.save();
     }
-    public DragManager getDragManager() {
-        return this.dragManager;
-    }
-
-    public static Main getInstance() {
-        return instance;
-    }
-    public CsGui getCsGui() {
-        return this.csGui;
-    }
-    public ActivationLogic getActivationLogic() {
-        return this.activationLogic;
-    }
-
-    public FriendManager getFriendManager() {
-        return this.friendManager;
-    }
-
-    public ScaleMath getScaleMath() {
-        return this.scaleMath;
-    }
-    public ModuleManager getModuleManager() {
-        return this.moduleManager;
-    }
-    public ThemeManager getThemeManager() {
-        return this.themeManager;
-    }
-    public NeironMainMenu getMainMenu() {
-        return this.mainMenu;
-    }
     public static boolean canUpdate() {
-        if (mc == null) return false;
         return mc.player != null && mc.world != null;
     }
     @EventTarget
     public void onInputKey(EventInputKey eventInputKey) {
-        Iterator var2 = this.moduleManager.getModules().iterator();
-        while(var2.hasNext()) {
-            Module module = (Module)var2.next();
+        for (Module module : this.moduleManager.getModules()) {
             if (module.getBind() == eventInputKey.getKey()) {
                 module.toggle();
             }
         }
-
+        if (eventInputKey.getKey() == GLFW.GLFW_KEY_F6) {
+            mc.displayGuiScreen(new Panel());
+        }
     }
     @EventTarget
     public void onMouse(EventMouse eventMouse) {
-        Iterator var2 = this.moduleManager.getModules().iterator();
+        if (eventMouse.getButton() == 0) hold_mouse0 = false;
+        if (eventMouse.getButton() == 1) hold_mouse0 = true;
 
-        while(var2.hasNext()) {
-            Module module = (Module)var2.next();
+        for (Module module : this.moduleManager.getModules()) {
             if (module.getMouseBind() == eventMouse.getButton() && eventMouse.getButton() > 2) {
                 module.toggle();
             }
@@ -242,25 +183,16 @@ public class Main {
         }
 
     }
-    public ConfigManager getConfigManager() {
-        return this.configManager;
-    }
-    public CommandManager getCommandManager() {
-        return this.commandManager;
-    }
-
-
-    public int getUid() {
-        return uid;
-    }
-    public static String getRole() {
-        return role;
-    }
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
+    public static String getKey(int integer) {
+        if (integer < 0) {
+            return switch (integer) {
+                case -100 -> I18n.format("key.mouse.left");
+                case -99 -> I18n.format("key.mouse.right");
+                case -98 -> I18n.format("key.mouse.middle");
+                default -> "MOUSE" + (integer + 101);
+            };
+        } else {
+            return (GLFW.glfwGetKeyName(integer, -1) == null ? KeyMappings.reverseKeyMap.get(integer) : GLFW.glfwGetKeyName(integer, -1)) ;
+        }
     }
 }

@@ -7,7 +7,7 @@ buildscript {
             dirs 'lib' // Укажите путь к папке с JAR-файлами
         }
         mavenLocal()
-            maven {
+        maven {
                 url "http://files.minecraftforge.net/maven"
                 allowInsecureProtocol true
         }
@@ -32,7 +32,6 @@ repositories {
 }
 dependencies {
     implementation name: 'lombok' // Укажите имя JAR-файла без расширения
-    implementation name: 'annotations' // Укажите имя JAR-файла без расширения
 }
 
 configurations {
@@ -41,7 +40,7 @@ configurations {
 }
 
 group = 'me.yourname'
-version = '1.0.0'
+version = '1.0.1'
 
 ext {
     minecraft_version = '1.16.5'
@@ -65,6 +64,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     implementation 'org.json:json:20230618'
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
+
 }
 
 project(':mcp') {
@@ -100,10 +101,10 @@ jar {
 
 task runclient(type: JavaExec) {
     group = "MCP"
-    description = "Runs the client"
+    description = "Runs the clients"
     classpath sourceSets.main.runtimeClasspath
     if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-        jvmArgs '-XstartOnFirstThread'
+        jvmArgs '-XstartOnFirstThread', '-Dfml.earlyprogresswindow=false'
     }
     args '--gameDir', '.'
     args '--version', minecraft_version

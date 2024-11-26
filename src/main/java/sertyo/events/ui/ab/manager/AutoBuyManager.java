@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static sertyo.events.utility.Utility.mc;
+
 public class AutoBuyManager {
     @Getter
     private static final List<AutoBuyItem> items = new ArrayList<>();
@@ -265,7 +267,7 @@ public class AutoBuyManager {
     }
 
     public static void load() {
-        File file = new File("\\neiron\\autobuy.txt");
+        File file = new File(mc.gameDir + "\\neiron\\autobuy.txt");
 
         if (!file.exists()) {
             return;
@@ -311,7 +313,7 @@ public class AutoBuyManager {
     }
 
     public static void save() {
-        File file = new File("\\neiron\\autobuy.txt");
+        File file = new File(mc.gameDir + "\\neiron\\autobuy.txt");
 
         if (file.exists()) {
             file.delete();

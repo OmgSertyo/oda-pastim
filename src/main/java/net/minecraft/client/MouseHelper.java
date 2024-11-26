@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.darkmagician6.eventapi.EventManager;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.settings.KeyBinding;
@@ -37,7 +39,9 @@ public class MouseHelper
     public double accumulatedScrollDelta;
     private double lastLookTime = Double.MIN_VALUE;
     private boolean mouseGrabbed;
-
+    @Getter
+    @Setter
+    private double wheel = 0;
     public MouseHelper(Minecraft minecraftIn)
     {
         this.minecraft = minecraftIn;
@@ -45,7 +49,7 @@ public class MouseHelper
 
     /**
      * Will be called when a mouse button is pressed or released.
-     *  
+     *
      * @see GLFWMouseButtonCallbackI
      */
     private void mouseButtonCallback(long handle, int button, int action, int mods)
@@ -161,7 +165,7 @@ public class MouseHelper
 
     /**
      * Will be called when a scrolling device is used, such as a mouse wheel or scrolling area of a touchpad.
-     *  
+     *
      * @see GLFWScrollCallbackI
      */
     private void scrollCallback(long handle, double xoffset, double yoffset)
@@ -177,23 +181,25 @@ public class MouseHelper
                     double d1 = this.mouseX * (double)this.minecraft.getMainWindow().getScaledWidth() / (double)this.minecraft.getMainWindow().getWidth();
                     double d2 = this.mouseY * (double)this.minecraft.getMainWindow().getScaledHeight() / (double)this.minecraft.getMainWindow().getHeight();
                     this.minecraft.currentScreen.mouseScrolled(d1, d2, d0);
+                    wheel = d0;
+
                 }
                 else if (this.minecraft.player != null)
                 {
-                    if (this.accumulatedScrollDelta != 0.0D && Math.signum(d0) != Math.signum(this.accumulatedScrollDelta))
+                    if (accumulatedScrollDelta != 0.0D && Math.signum(d0) != Math.signum(accumulatedScrollDelta))
                     {
-                        this.accumulatedScrollDelta = 0.0D;
+                        accumulatedScrollDelta = 0.0D;
                     }
 
-                    this.accumulatedScrollDelta += d0;
-                    float f1 = (float)((int)this.accumulatedScrollDelta);
+                    accumulatedScrollDelta += d0;
+                    float f1 = (float)((int)accumulatedScrollDelta);
 
                     if (f1 == 0.0F)
                     {
                         return;
                     }
 
-                    this.accumulatedScrollDelta -= (double)f1;
+                    accumulatedScrollDelta -= (double)f1;
 
                     if (this.minecraft.player.isSpectator())
                     {
@@ -258,11 +264,11 @@ public class MouseHelper
 
     /**
      * Will be called when the cursor is moved.
-     *  
+     *
      * <p>The callback function receives the cursor position, measured in screen coordinates but relative to the top-
      * left corner of the window client area. On platforms that provide it, the full sub-pixel cursor position is passed
      * on.</p>
-     *  
+     *
      * @see GLFWCursorPosCallbackI
      */
     private void cursorPosCallback(long handle, double xpos, double ypos)

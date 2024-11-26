@@ -1,7 +1,7 @@
 package sertyo.events.command.impl;
 
 import net.minecraft.client.util.InputMappings;
-import net.minecraft.util.text.TextFormatting;;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import sertyo.events.Main;

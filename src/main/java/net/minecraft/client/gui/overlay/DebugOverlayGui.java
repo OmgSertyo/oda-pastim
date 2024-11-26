@@ -229,7 +229,7 @@ public class DebugOverlayGui extends AbstractGui
                 stringbuffer.replace(0, l + 4, Config.getFpsString());
             }
         if (!Main.unhooked) {
-            stringbuffer.append(" login " + Main.getInstance().getUsername() + " uid " + Main.getInstance().getUid());
+            stringbuffer.append(" login " + Main.cheatProfile.getName() + " uid " + Main.cheatProfile.getId());
         }
 
             if (Config.isSmoothFps())

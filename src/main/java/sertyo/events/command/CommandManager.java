@@ -20,6 +20,7 @@ public class CommandManager {
       this.commands.add(new GpsCommand());
       this.commands.add(new StaffCommand());
       this.commands.add(new BindCommand());
+      this.commands.add(new ircCommand());
       this.commands.add(new AutoPerevod());
       this.commands.add(new AbCommand());
       this.commands.add(new ParseCommand());

@@ -26,6 +26,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import org.lwjgl.opengl.GL11;
 import sertyo.events.Main;
+import sertyo.events.event.input.EventInputKey;
 import sertyo.events.event.player.EventUpdate;
 import sertyo.events.event.render.EventRender2D;
 import sertyo.events.manager.dragging.DragManager;
@@ -35,10 +36,12 @@ import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.impl.combat.KillAura;
 import sertyo.events.module.impl.util.Optimization;
+import sertyo.events.module.setting.impl.KeySetting;
 import sertyo.events.module.setting.impl.MultiBooleanSetting;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.font.styled.StyledFont;
 import sertyo.events.utility.math.MathUtility;
+import sertyo.events.utility.misc.ChatUtility;
 import sertyo.events.utility.render.*;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.utility.render.animation.AnimationMath;
@@ -61,8 +64,9 @@ import static sertyo.events.utility.render.RenderUtil.scaleEnd;
 )
 public class Hud extends Module {
     public final Draggable keybindsDraggable = DragManager.create(this, "Keybinds", 200, 200);
+    public final Draggable ft = DragManager.create(this, "FtEvents", 600, 400);
 
-        public static final MultiBooleanSetting elements = new MultiBooleanSetting("Elements", Arrays.asList("Watermark", "Server Info", "Coords", "Inventory", "Potions", "Armor", "Target HUD", "Keybinds", "Staff List"));
+        public static final MultiBooleanSetting elements = new MultiBooleanSetting("Elements", Arrays.asList("Watermark", "Server Info", "Coords", "Inventory", "Potions", "Armor", "Target HUD", "Keybinds", "Staff List", "Spotify"));
         private final Draggable invViewDraggable = DragManager.create(this, "Inventory View", 10, 100);
         private final Draggable potionsDraggable = DragManager.create(this, "Potions", 10, 300);
         private final Draggable targetHudDraggable = DragManager.create(this, "Target HUD", 300, 10);
@@ -102,44 +106,14 @@ public class Hud extends Module {
                 int index;
                 int serverOffset;
                 if (elements.get(0)) {
-                    serverIP = (new SimpleDateFormat("HH:mm")).format(new Date());
-                    i = 26 + Fonts.mntssb16.getStringWidth(Main.name);
-                    index = 15 + Fonts.mntssb16.getStringWidth(Main.getInstance().getUsername());
-                    serverOffset = 12 + Fonts.mntssb16.getStringWidth(serverIP);
-                    RenderUtility.drawGlow((float)(scaledWidth - i - index - 10 - serverOffset - 9), 11.0F, (float)(i - 2), 15.0F, 10, Color.BLACK.getRGB());
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - i - index) - 10.5F - (float)serverOffset - 10.0F, 9.5F, (float)(i + 1), 18.0F, 12.0F, strokeColor);
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - i - index) - 10.5F - (float)serverOffset - 10.0F, 9.5F, (float)(i + 1), 18.0F, 12.0F, strokeColor);
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - i - index - 10 - serverOffset - 10), 10.0F, (float)i, 17.0F, 10.0F, bgColor);
-                    int finalServerOffset1 = serverOffset;
-                    int finalIndex = index;
-                    int finalI = i;
-                    RenderUtility.applyGradientMask((float)(scaledWidth - i - index - 10 - serverOffset - 5), 16.0F, (float)Fonts.icons21.getStringWidth("i"), (float)Fonts.icons21.getFontHeight(), 1.0F, color, color, color2, color2, () -> {
-                        Fonts.icons21.drawString("i", (float)(scaledWidth - finalI - finalIndex - 10 - finalServerOffset1 - 5), 16.0F, -1);
-                    });
-                    Fonts.mntssb16.drawClientColoredString(Main.name, (double)(scaledWidth - i - index - 10 - serverOffset + 10), 16.0, 1.0f, false);
-                    RenderUtility.drawGlow((float)(scaledWidth - index - serverOffset - 14), 11.0F, (float)(index - 2), 15.0F, 10, Color.BLACK.getRGB());
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - index - serverOffset - 15), 10.0F, (float)index, 17.0F, 10.0F, bgColor);
-                    StencilUtility.initStencilToWrite();
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - index - serverOffset - 15), 10.0F, (float)index, 17.0F, 10.0F, bgColor);
+                   /* StencilUtility.initStencilToWrite();
+                    GaussianBlur.startBlur();
+                    RenderUtility.drawRoundedRect(15, 9.5, 141.5, 27.5, 7, new Color(0xE0D6D6));
                     StencilUtility.readStencilBuffer(1);
-                    RenderUtility.drawGradientGlow((float)(scaledWidth - 27 - serverOffset), 19.0F, (float)Fonts.icons21.getStringWidth("k"), (float)(Fonts.icons21.getFontHeight() - 5), 8, ColorUtility.applyOpacity(color, 0.4F).getRGB(), ColorUtility.applyOpacity(color, 0.4F).getRGB(), ColorUtility.applyOpacity(color2, 0.4F).getRGB(), ColorUtility.applyOpacity(color2, 0.4F).getRGB());
-                    int finalServerOffset = serverOffset;
-                    RenderUtility.applyGradientMask((float)(scaledWidth - 27 - serverOffset), 19.0F, (float)Fonts.icons21.getStringWidth("j"), (float)Fonts.icons21.getFontHeight(), 0.5F, color, color2, color, color2, () -> {
-                        Fonts.icons21.drawString("j", (float)(scaledWidth - 27 - finalServerOffset), 19.0F, -1);
-                    });
-                    StencilUtility.uninitStencilBuffer();
-                    Fonts.mntssb16.drawCenteredString(Main.getInstance().getUsername(), (float)(scaledWidth - index - serverOffset - 15) + (float)index / 2.0F, 16.0F, -1);
-                    RenderUtility.drawGlow((float)(scaledWidth - serverOffset - 9), 11.0F, (float)(serverOffset - 2), 15.0F, 10, Color.BLACK.getRGB());
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - serverOffset - 10), 10.0F, (float)serverOffset, 17.0F, 10.0F, bgColor);
-                    StencilUtility.initStencilToWrite();
-                    RenderUtility.drawRoundedRect((float)(scaledWidth - serverOffset - 10), 10.0F, (float)serverOffset, 17.0F, 10.0F, bgColor);
-                    StencilUtility.readStencilBuffer(1);
-                    RenderUtility.drawGradientGlow((float)(scaledWidth - 18), 19.0F, (float)Fonts.icons21.getStringWidth("k"), (float)Fonts.icons21.getFontHeight(), 8, ColorUtility.applyOpacity(color, 0.4F).getRGB(), ColorUtility.applyOpacity(color, 0.4F).getRGB(), ColorUtility.applyOpacity(color2, 0.4F).getRGB(), ColorUtility.applyOpacity(color2, 0.4F).getRGB());
-                    RenderUtility.applyGradientMask((float)(scaledWidth - 21), 19.0F, (float)Fonts.icons21.getStringWidth("k"), (float)Fonts.icons21.getFontHeight(), 0.5F, color, color2, color, color2, () -> {
-                        Fonts.icons21.drawString("k", (float)(scaledWidth - 21), 19.0F, -1);
-                    });
-                    StencilUtility.uninitStencilBuffer();
-                    Fonts.mntssb16.drawCenteredString(serverIP, (float)(scaledWidth - serverOffset - 10) + (float)serverOffset / 2.0F, 16.0F, -1);
+                    GaussianBlur.endBlur(20, 3);
+                    StencilUtility.uninitStencilBuffer();*/
+                    RenderUtility.drawRoundedRect(25, 13.5, 23.5, 20, 7, new Color(0x000100));
+                    RenderUtility.drawRoundedRect(54, 13.5, 39, 20, 7, new Color(0x000100));
                 }
 
                 String coordsText;
@@ -339,7 +313,6 @@ public class Hud extends Module {
         if (Utility.mc.player.ticksExisted % 10 == 0 && elements.get(8)) {
             StaffList.updateList();
         }
-
     }
     public static String getPotionPower(EffectInstance potionEffect) {
         if (potionEffect.getAmplifier() == 1) {

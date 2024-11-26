@@ -79,6 +79,7 @@ import net.optifine.util.TimedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sertyo.events.event.render.EventOverlay;
+import sertyo.events.utility.IWrapper;
 
 public class GameRenderer implements IResourceManagerReloadListener, AutoCloseable
 {
@@ -681,7 +682,7 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
             {
                 RenderSystem.viewport(0, 0, this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
             }
-
+            IWrapper.executeQueue(true, true);
             MainWindow mainwindow = this.mc.getMainWindow();
             RenderSystem.clear(256, Minecraft.IS_RUNNING_ON_MAC);
             RenderSystem.matrixMode(5889);

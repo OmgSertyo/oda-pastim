@@ -109,7 +109,7 @@ public class StaffList implements Utility {
    }
 
    public static boolean isStaff(String prefix) {
-      return prefix.contains("helper") || prefix.contains("moder") || prefix.contains("admin") || prefix.contains("owner") || prefix.contains("curator") || prefix.contains("������") || prefix.contains("�����") || prefix.contains("�����") || prefix.contains("�������") || prefix.contains("���������") || prefix.contains("�����") || prefix.contains("������") || prefix.contains("youtube") || prefix.equals("yt");
+      return prefix.contains("helper") || prefix.contains("moder") || prefix.contains("admin") || prefix.contains("owner") || prefix.contains("curator") || prefix.contains("хелпер") || prefix.contains("модер") || prefix.contains("админ") || prefix.contains("стажёр") || prefix.contains("стажер") || prefix.contains("сотрудник") || prefix.contains("помощник") || prefix.contains("youtube") || prefix.equals("yt");
    }
 
    private static ArrayList<Staff> getOnlineStaff() {

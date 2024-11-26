@@ -53,6 +53,9 @@ public final class StyledFont {
     public void drawStringWithShadow(MatrixStack matrixStack, ITextComponent text, double x, double y, int color) {
         StyledFontRenderer.drawShadowedString(matrixStack, this, text, x, y, color);
     }
+    public float getMiddleOfBox(double boxHeight) {
+        return (float) (boxHeight / 2f - getFontHeight() / 2f);
+    }
 
     public void drawString(MatrixStack matrixStack, String text, double x, double y, int color) {
         StyledFontRenderer.drawString(matrixStack, this, text, x, y, color);
@@ -119,15 +122,32 @@ public final class StyledFont {
 
         return (width - regular.getSpacing()) / 2.0f;
     }
+    public float getStringWidth(String text) {
+        float width = 0.0f;
+
+        for (int i = 0; i < text.length(); i++) {
+            char c0 = text.charAt(i);
+            if (c0 == 167 && i + 1 < text.length() &&
+                    StyledFontRenderer.STYLE_CODES.indexOf(text.toLowerCase(Locale.ENGLISH).charAt(i + 1)) != -1) {
+                i++;
+            } else {
+                width += getGlyphPage().getWidth(c0) + regular.getSpacing();
+            }
+        }
+
+        return (width - regular.getSpacing()) / 2.0f;
+    }
 
     private GlyphPage getGlyphPage() {
         return regular;
     }
 
-    public float getFontHeight() {
-        return regular.getFontHeight();
+   // public float getFontHeight() {
+    //    return regular.getFontHeight();
+   // }
+    public int getFontHeight() {
+        return (int) ((this.regular.getFontHeight() - 2));
     }
-
     public float getLifting() {
         return regular.getLifting();
     }

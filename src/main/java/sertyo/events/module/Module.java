@@ -41,7 +41,6 @@ public class Module implements Utility {
    }
 
    public boolean isSearched() {
-    //  return CsGui.search.getText().isEmpty() || this.name.toLowerCase().toLowerCase().contains(CsGui.search.getText());
       return true;
    }
 
@@ -94,6 +93,8 @@ public class Module implements Utility {
             var3.printStackTrace();
             return null;
          }
+
+
       }).filter((field) -> {
          return field instanceof Setting;
       }).map((field) -> {

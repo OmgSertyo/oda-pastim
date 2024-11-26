@@ -24,13 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.CharacterManager;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.LanguageMap;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextProcessing;
+import net.minecraft.util.text.*;
 import net.optifine.render.GlBlendState;
 import net.optifine.util.GlyphAdvanceFixed;
 import net.optifine.util.GuiPoint;
@@ -317,6 +311,12 @@ public class FontRenderer
     public CharacterManager getCharacterManager()
     {
         return this.field_238402_e_;
+    }
+
+    public int renderITextComponent(MatrixStack p_243246_1_, ITextComponent p_243246_2_, float p_243246_3_, float p_243246_4_, int p_243246_5_)
+    {
+        RenderSystem.enableAlphaTest();
+        return this.func_238415_a_(p_243246_2_.func_241878_f(), p_243246_3_, p_243246_4_, p_243246_5_, p_243246_1_.getLast().getMatrix(), true);
     }
 
     class CharacterRenderer implements ICharacterConsumer

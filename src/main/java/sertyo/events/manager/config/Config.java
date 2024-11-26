@@ -2,6 +2,7 @@ package sertyo.events.manager.config;
 
 import com.darkmagician6.eventapi.EventManager;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import sertyo.events.Main;
 import sertyo.events.command.CommandManager;
 import sertyo.events.manager.theme.Themes;
@@ -37,6 +38,7 @@ public class Config implements ConfigUpdater {
          Module module = (Module)var3.next();
          modulesObject.add(module.name, module.save());
       }
+      jsonObject.addProperty("Creator", String.valueOf(new JsonPrimitive(Main.cheatProfile.getName())));
 
       jsonObject.addProperty("Prefix", CommandManager.getPrefix());
       jsonObject.addProperty("GuiTheme", Main.getInstance().getThemeManager().getCurrentGuiTheme().getName());

@@ -14,6 +14,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import java.lang.reflect.Type;
 import javax.annotation.Nullable;
+
+import me.sertyo.cheat.IResourceLoader;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ResourceLocation implements Comparable<ResourceLocation>
@@ -40,7 +42,15 @@ public class ResourceLocation implements Comparable<ResourceLocation>
             }
         }
     }
+    private IResourceLoader resourceLoader;
+    public ResourceLocation(IResourceLoader resourceLoader) {
+        this("", "");
+        this.resourceLoader = resourceLoader;
+    }
 
+    public IResourceLoader getResourceLoader() {
+        return this.resourceLoader;
+    }
     public ResourceLocation(String resourceName)
     {
         this(decompose(resourceName, ':'));

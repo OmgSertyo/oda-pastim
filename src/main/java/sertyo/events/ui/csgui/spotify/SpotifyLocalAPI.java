@@ -5,9 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -19,16 +17,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 import net.minecraft.util.Util;
-import obf.sertyo.nativeobf.Native;
 import sertyo.events.utility.misc.ChatUtility;
 
 import static sertyo.events.ui.csgui.spotify.Spotify.trackInfo;
@@ -67,10 +61,7 @@ public class SpotifyLocalAPI {
         accessToken = getAccessToken(AuthHandler.authorizationCode);
 
         // ���������� ������ � ���� � �����������
-        File directory = new File("C:\\neironclient");
-        if (!directory.exists()) {
-            directory.mkdirs(); // �������� ����������, ���� �� ���
-        }
+
         // ������������� ������ ��� ������� � �������� �����
         if (trackInfo.length > 2) {
             Spotify.isConnected = true;
@@ -155,7 +146,6 @@ public class SpotifyLocalAPI {
         }
     }
 
-    private static final String TOKEN_FILE = "C:\\neironclient\\spotify.txt";
 
     private static String readFromFile(String filename) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
