@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL;
 import sertyo.events.Main;
 import sertyo.events.manager.dragging.Draggable;
 import sertyo.events.module.impl.render.Hud;
+import sertyo.events.utility.Localization;
 import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.RenderUtil;
 import sertyo.events.utility.render.RenderUtility;
@@ -70,7 +71,7 @@ public class Keybinds {
       RenderUtility.applyGradientMask((float)(keybindsDraggable.getX() + width - 5 - Fonts.icons21.getStringWidth("o")), (float)keybindsDraggable.getY() + 6.5F, (float)Fonts.icons21.getStringWidth("o"), (float)Fonts.icons21.getFontHeight(), 0.5F, Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0], Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1], Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0], Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1], () -> {
          Fonts.icons21.drawString("o", (float)(keybindsDraggable.getX() + finalWidth - 5 - Fonts.icons21.getStringWidth("o")), (float)keybindsDraggable.getY() + 6.5F, -1);
       });
-      Fonts.mntssb16.drawString("Keybinds", (float)(keybindsDraggable.getX() + 5), (float)keybindsDraggable.getY() + 6.5F, -1);
+      Fonts.mntssb16.drawString(Localization.get("bind"), (float)(keybindsDraggable.getX() + 5), (float)keybindsDraggable.getY() + 6.5F, -1);
       if (!sortedBinds.isEmpty()) {
          RenderUtility.Render2D.drawRect((float)keybindsDraggable.getX(), (float)(keybindsDraggable.getY() + 16), (float)width, 1.0F, strokeColor);
       }

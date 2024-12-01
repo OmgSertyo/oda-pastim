@@ -3,6 +3,7 @@ package sertyo.events;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import lombok.experimental.NonFinal;
 import me.sertyo.api.profile.CheatProfile;
 import lombok.Getter;
 import net.minecraft.client.resources.I18n;
@@ -34,6 +35,7 @@ import sertyo.events.ui.ab.font.main.IFont;
 import sertyo.events.ui.ab.manager.AutoBuyManager;
 import sertyo.events.ui.ab.manager.IgnoreManager;
 import sertyo.events.ui.testGUI.Panel;
+import sertyo.events.utility.Language;
 import sertyo.events.utility.render.ScaleMath;
 import sertyo.events.utility.render.ShaderUtil;
 import sertyo.events.utility.render.ShaderUtils;
@@ -71,7 +73,8 @@ public class Main {
     public static long startTime;
     public static CheatProfile cheatProfile;
     public static boolean hold_mouse0;
-
+    @NonFinal
+    Language language = Language.RUS;
 
     public void start() {
         cheatProfile = CheatProfile.create();
@@ -162,6 +165,13 @@ public class Main {
         }
         if (eventInputKey.getKey() == GLFW.GLFW_KEY_F6) {
             mc.displayGuiScreen(new Panel());
+        }
+    }
+    public void toggleLanguage() {
+        if (language == Language.RUS) {
+            language = Language.UKR;
+        } else {
+            language = Language.RUS;
         }
     }
     @EventTarget

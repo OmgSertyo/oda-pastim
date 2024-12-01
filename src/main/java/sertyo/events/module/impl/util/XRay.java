@@ -42,6 +42,7 @@ public class XRay extends Module {
                     BlockPos bp = blockPos.add(0,0,0);
                     if (blockState.getBlock().equals(Blocks.ANCIENT_DEBRIS) && !ores.contains(bp)) {
                         ores.add(bp);
+                        System.out.println("SVO");
                     }
                 });
             }

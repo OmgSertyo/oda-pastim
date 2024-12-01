@@ -23,6 +23,7 @@ public class ModuleManager {
       this.registerModule(new ClickGuiModule());
       this.registerModule(new EventConverter());
       this.registerModule(new HWHelper());
+      this.registerModule(new GodModeRW());
       this.registerModule(new TabCompleteCrasher());
       this.registerModule(new PostProcessing());
       this.registerModule(new AhHelper());

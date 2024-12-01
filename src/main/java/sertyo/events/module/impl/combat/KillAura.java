@@ -248,7 +248,7 @@ public class KillAura extends Module {
 
             long currentTime = System.currentTimeMillis();
 
-            if (currentTime >= lastAttackTime + cpsIntervals[attackCycleStep]) {
+            if (currentTime >= lastAttackTime) {
 
                 lastAttackTime = currentTime;
 
@@ -258,12 +258,7 @@ public class KillAura extends Module {
                 mc.player.swingArm(Hand.MAIN_HAND);
 
 
-                if (--cpsCycles[attackCycleStep] <= 0) {
 
-                    attackCycleStep = (attackCycleStep + 1) % cpsIntervals.length; // Цикличность
-
-                    cpsCycles[attackCycleStep] = attackCycleStep == 0 ? 3 : (attackCycleStep == 1 ? 2 : (attackCycleStep == 2 ? 2 : 4));
-                }
 
                 if (target instanceof PlayerEntity playerEntity && settings.get(3)) {
                     breakShieldAndSwapSlot();

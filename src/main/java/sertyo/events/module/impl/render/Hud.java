@@ -76,8 +76,8 @@ public class Hud extends Module {
         public float offset = 0;
         private final Animation animation;
         private float hp;
-
-        public Hud() {
+        public int b_color = new Color(0, 0, 0, 128).getRGB();
+    public Hud() {
             this.animation = new DecelerateAnimation(175, 1.0F, Direction.BACKWARDS);
             this.potionsDraggable.setWidth(105.0F);
             this.invViewDraggable.setWidth(170.0F);
@@ -106,14 +106,18 @@ public class Hud extends Module {
                 int index;
                 int serverOffset;
                 if (elements.get(0)) {
-                   /* StencilUtility.initStencilToWrite();
-                    GaussianBlur.startBlur();
-                    RenderUtility.drawRoundedRect(15, 9.5, 141.5, 27.5, 7, new Color(0xE0D6D6));
-                    StencilUtility.readStencilBuffer(1);
-                    GaussianBlur.endBlur(20, 3);
-                    StencilUtility.uninitStencilBuffer();*/
-                    RenderUtility.drawRoundedRect(25, 13.5, 23.5, 20, 7, new Color(0x000100));
-                    RenderUtility.drawRoundedRect(54, 13.5, 39, 20, 7, new Color(0x000100));
+                    String string = Main.cheatProfile.getRoleName();
+                    float f = 5.0f;
+                    float f2 = 5.0f;
+                    String string2 = !mc.isSingleplayer() ? mc.getCurrentServerData().serverIP.toLowerCase() : "localhost";
+                    float f3 = sertyo.events.utility.font.Fonts.icons1[16].getWidth("O");
+                    float f4 = f3 + Math.max(80.0f, sertyo.events.utility.font.Fonts.msMedium[15].getWidth("   " + Main.cheatProfile.getName() + " | " + string + " | " + string2) + 5.0f);
+                    RenderUtil.Render2D.drawGradientRound(5.0f, 5.0f, f4, 9.0f, 1.0f, new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB());
+                    RenderUtil.Render2D.drawShadow(5.0f, 5.0f, f4, 9.0f, 10, new Color(31, 31, 31).getRGB());
+                    RenderUtil.Render2D.drawRoundedCorner(5.0f, 5.0f, f4, 9.0f, 1.5f, this.b_color);
+                    RenderUtil.Render2D.drawRoundedRect(f + sertyo.events.utility.font.Fonts.gilroyBold[17].getWidth("    ") + 2.0f, f2, 1.0f, 9.0f, 0.0f, new Color(56, 54, 54, 255).getRGB());
+                    sertyo.events.utility.font.Fonts.msMedium[15].drawString(new MatrixStack(), "   " + Main.cheatProfile.getName() + " | " + string + " | " + string2, 14.0, 8.0, -1);
+                    sertyo.events.utility.font.Fonts.msMedium[16].drawString(new MatrixStack(), "n", 7.0, 8.5, -1);
                 }
 
                 String coordsText;
