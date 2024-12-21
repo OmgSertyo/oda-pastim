@@ -21,9 +21,7 @@ public class ircCommand extends CommandAbstract {
 
 
     public void execute(String[] args) throws Exception {
-        if (Main.chatclient != null)
-        Main.chatclient.sendMessage(args[1]);  // Отправляем сообщение
-        else
+
             this.sendMessage("Error");
     }
 }

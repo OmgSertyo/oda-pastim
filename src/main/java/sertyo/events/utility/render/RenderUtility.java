@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.sertyo.cheat.CheatAvatar;
 import jhlabs.image.GaussianFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -92,7 +91,6 @@ public class RenderUtility implements Utility {
         RenderSystem.disableBlend();
     }
     public static void drawProfile(float x, float y, float x2, float y2) {
-        drawImage(CheatAvatar.getAvatarResource(), x, y, x2, y2, 1);
     }
     public static void scale(float f, float f2, double d, Runnable runnable) {
         GL11.glPushMatrix();

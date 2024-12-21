@@ -5,10 +5,7 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import lombok.SneakyThrows;
 import lombok.experimental.NonFinal;
-import me.sertyo.api.IRCClient;
-import me.sertyo.api.profile.CheatProfile;
 import lombok.Getter;
-import me.sertyo.api.profile.CheatRole;
 import me.sertyo.viamcp.ViaMCP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Session;
@@ -45,6 +42,7 @@ import sertyo.events.utility.misc.Language;
 import sertyo.events.utility.math.ScaleMath;
 import sertyo.events.utility.render.ShaderUtil;
 import sertyo.events.utility.render.ShaderUtils;
+import sovokguard.protect.ApiContacts;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -84,16 +82,13 @@ public class Main {
     private DragManager dragManager;
     private AltFileManager altFileManager;
     public static long startTime;
-    public static CheatProfile cheatProfile;
     public static boolean hold_mouse0;
     @NonFinal
     Language language = Language.RUS;
 
-    public static IRCClient chatclient = null;
     @SneakyThrows
     public void start() {
-        cheatProfile = new CheatProfile(-1, "user", CheatRole.DEVELOPER, new Date());
-        cheatProfile.downloadAvatar(true);
+        ApiContacts.start();
         GlowESP.notstarted = false;
         this.dragManager = new DragManager();
             this.dragManager.init();
@@ -112,10 +107,7 @@ public class Main {
         System.out.println("Event inited");
         EventManager.register(this);
         this.moduleManager = new ModuleManager();
-        chatclient = new IRCClient(new URI("ws://23.88.122.49:10051"));
-        chatclient.connectBlocking();
-        chatclient.setUsername(Main.cheatProfile.getName()); // тут имя типа
-        chatclient.setClient(name); // тут название клиента
+
         ItemManager.register();
         this.themeManager = new ThemeManager();
         this.commandManager = new CommandManager();

@@ -1,7 +1,6 @@
 package sertyo.events.module.impl.util;
 
 import com.darkmagician6.eventapi.EventTarget;
-import me.sertyo.api.IRCClient;
 import sertyo.events.Main;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;

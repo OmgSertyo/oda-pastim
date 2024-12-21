@@ -364,7 +364,7 @@ public class CrashReport
 
         try
         {
-            return "Neironclient has been crashed:(";
+            return "Wiksi has been crashed:(";
         }
         catch (Throwable throwable)
         {
