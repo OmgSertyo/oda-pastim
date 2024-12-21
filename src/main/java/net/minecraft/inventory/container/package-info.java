@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.inventory.container;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.server.management;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

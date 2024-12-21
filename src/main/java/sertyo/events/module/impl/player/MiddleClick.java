@@ -3,7 +3,6 @@ package sertyo.events.module.impl.player;
 import com.darkmagician6.eventapi.EventTarget;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.network.play.client.CHeldItemChangePacket;
 import net.minecraft.network.play.client.CPlayerTryUseItemPacket;
@@ -15,7 +14,7 @@ import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.setting.impl.BooleanSetting;
-import sertyo.events.utility.InventoryUtility;
+import sertyo.events.utility.misc.InventoryUtility;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.misc.ChatUtility;
 

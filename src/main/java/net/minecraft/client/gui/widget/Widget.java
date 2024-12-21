@@ -288,7 +288,7 @@ public abstract class Widget extends AbstractGui implements IRenderable, IGuiEve
         return this.focused;
     }
 
-    protected void setFocused(boolean focused)
+    public void setFocused(boolean focused)
     {
         this.focused = focused;
     }

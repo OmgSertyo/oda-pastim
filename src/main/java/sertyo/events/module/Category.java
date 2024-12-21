@@ -14,7 +14,7 @@ public enum Category {
    PLAYER("Player", "c"),
    RENDER("Render", "d"),
    UTIL("Util", "e"),
-   CONFIGS("Configs", "f", true),
+   SCRIPTS("Script", "f", true),
    PROFILE("Profile", "g"),
    THEMES("Themes", "h", true);
 

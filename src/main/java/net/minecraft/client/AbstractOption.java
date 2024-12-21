@@ -501,10 +501,10 @@ public abstract class AbstractOption
     });
     public static final BooleanOption ENTITY_SHADOWS = new BooleanOption("options.entityShadows", (p_lambda$static$95_0_) ->
     {
-        return p_lambda$static$95_0_.entityShadows;
+        return false;
     }, (p_lambda$static$96_0_, p_lambda$static$96_1_) ->
     {
-        p_lambda$static$96_0_.entityShadows = p_lambda$static$96_1_;
+        p_lambda$static$96_0_.entityShadows = false;
     });
     public static final BooleanOption FORCE_UNICODE_FONT = new BooleanOption("options.forceUnicodeFont", (p_lambda$static$97_0_) ->
     {

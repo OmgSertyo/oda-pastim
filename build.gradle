@@ -21,10 +21,15 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.0' // Обновленная версия FG4
     }
 }
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 
+}
 apply plugin: 'eclipse'
 apply plugin: 'net.minecraftforge.gradle.forgedev.patcher'
 apply plugin: 'java'
+
 repositories {
     flatDir {
         dirs 'lib' // Укажите путь к папке с JAR-файлами
@@ -32,6 +37,9 @@ repositories {
 }
 dependencies {
     implementation name: 'lombok' // Укажите имя JAR-файла без расширения
+    implementation name: 'via' // Укажите имя JAR-файла без расширения
+    implementation name: 'back' // Укажите имя JAR-файла без расширения
+    implementation name: 'yml' // Укажите имя JAR-файла без расширения
 }
 
 configurations {
@@ -65,6 +73,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     implementation 'org.json:json:20230618'
     implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
+    implementation 'org.java-websocket:Java-WebSocket:1.3.8'
 
 }
 

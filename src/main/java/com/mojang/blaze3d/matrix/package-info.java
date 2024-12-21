@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package com.mojang.blaze3d.matrix;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

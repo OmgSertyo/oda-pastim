@@ -30,6 +30,7 @@ import org.lwjgl.opengl.GL30;
 
 import sertyo.events.Main;
 import sertyo.events.utility.Utility;
+import sertyo.events.utility.render.blur.GaussianBlur;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -51,8 +52,8 @@ import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.*;
 import static org.lwjgl.opengl.GL11.*;
 import static sertyo.events.utility.render.ColorUtil.injectAlpha;
 import static sertyo.events.utility.render.RenderUtil.IntColor.*;
-import static sertyo.events.utility.render.RenderUtility.Render2D.drawMcRect;
-import static sertyo.events.utility.render.RenderUtility.Render2D.shadowCache;
+import static sertyo.events.utility.render.RenderUtil.Render2D.setupRender;
+import static sertyo.events.utility.render.RenderUtility.Render2D.*;
 import static sertyo.events.utility.render.ShaderUtil.*;
 
 
@@ -61,6 +62,7 @@ public class RenderUtility implements Utility {
     private static final BufferBuilder BUILDER;
     private static final Shader ROUNDED;
     private static final Shader ROUNDED_GRADIENT;
+    private static final Shader BLUR_PROGRAM;
     private static final Shader GRADIENT_MASK;
     private static final Shader BLUR;
     private static final Shader ROUNDED_TEXTURE;
@@ -99,6 +101,31 @@ public class RenderUtility implements Utility {
         GL11.glTranslatef(-f, -f2, 0.0f);
         runnable.run();
         GL11.glPopMatrix();
+    }
+    public static void drawHud(MatrixStack matrices, float x, float y, float width, float height, float radius, float softness, float blur) {
+        Color clr1 = injectAlpha(ColorUtil.getColor2(270), 75);
+        Color clr2 = injectAlpha(ColorUtil.getColor2(0), 75);
+        Color clr3 = injectAlpha(ColorUtil.getColor2(180), 75);
+        Color clr4 = injectAlpha(ColorUtil.getColor2(90), 75);
+ //       drawGradientGlow(matrices, HudEditor.getColor(270), HudEditor.getColor(0), HudEditor.getColor(180), HudEditor.getColor(90), x, y, width, height, radius, softness);
+        //drawGradientRound(x, y, width, height, radius, clr1.getRGB(), clr2.getRGB(), clr3.getRGB(), clr4.getRGB());
+        drawRoundedBlurNL(matrices, x, y, width, height, radius,  new Color(-1727132146, true), blur, 0.5F);
+    }
+    public static void drawRoundedBlurNL(MatrixStack matrices, float x, float y, float width, float height, float radius, Color c1, float blurStrenth, float blurOpacity) {
+        GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableAlphaTest();
+        BLUR_PROGRAM.useProgram();
+        BLUR_PROGRAM.setupUniform2f("uLocation", x, y + (float)mc.getMainWindow().getScaledHeight()  - height);
+        BLUR_PROGRAM.setupUniform1f("radius", radius);
+        BLUR_PROGRAM.setupUniform2f("uSize", width, height);
+        BLUR_PROGRAM.setupUniform1f("brightness",  blurOpacity);
+        BLUR_PROGRAM.setupUniform1f("quality",  blurStrenth);
+        BLUR_PROGRAM.setupUniform4f("color1",  (float)c1.getRed() / 255.0F, (float)c1.getGreen() / 255.0F, (float)c1.getBlue() / 255.0F, 1.0F);
+
+        BLUR_PROGRAM.unloadProgram();
+        GlStateManager.disableBlend();
     }
     public static void applyRound(float width, float height, float round, float alpha, Runnable runnable) {
         GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
@@ -1911,28 +1938,6 @@ public class RenderUtility implements Utility {
             //     drawRoundedGradientRect(x, y, width, height, radius,1, clr1, clr2, clr3, clr4);
             //   drawRoundedBlur(new MatrixStack(), x, y, width, height, radius, Color.BLACK, blur, 0.5F);
         }
-        public static void drawRoundedBlur(MatrixStack matrices, float x, float y, float width, float height, float radius, Color c1, float blurStrength, float blurOpacity) {
-            setupRender();
-            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-            Matrix4f matrix = matrices.getLast().getMatrix();
-            buffer.begin(GL11.GL_QUADS, POSITION);
-
-            buffer.pos(matrix, x, y, 0.0F).color(c1.getRed(), c1.getGreen(), c1.getBlue(), (int)(blurOpacity * 255)).endVertex();
-            buffer.pos(matrix, x, y + height, 0.0F).color(c1.getRed(), c1.getGreen(), c1.getBlue(), (int)(blurOpacity * 255)).endVertex();
-            buffer.pos(matrix, x + width, y + height, 0.0F).color(c1.getRed(), c1.getGreen(), c1.getBlue(), (int)(blurOpacity * 255)).endVertex();
-            buffer.pos(matrix, x + width, y, 0.0F).color(c1.getRed(), c1.getGreen(), c1.getBlue(), (int)(blurOpacity * 255)).endVertex();
-
-            BLUR.setupUniform2f("InputResolution", mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight()); // Разрешение экрана
-            BLUR.setupUniform2f("uSize", (width), (height)); // Размер области
-            BLUR.setupUniform2f("uLocation", x, y); // Позиция
-            BLUR.setupUniform1f("radius", radius); // Радиус размытия
-            BLUR.setupUniform1f("Brightness", 1.0F); // Яркость (настроить при необходимости)
-            BLUR.setupUniform1f("Quality", blurStrength); // Качество размытия (может быть увеличено для сильного размытия)
-            BLUR.setupUniform4f("color1", c1.getRed() / 255.0F, c1.getGreen() / 255.0F, c1.getBlue() / 255.0F, 1.0F); // Основной цвет
-
-            Tessellator.getInstance().draw();
-            endRender();
-        }
         public static void setupRender() {
             RenderSystem.enableBlend();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -2359,6 +2364,7 @@ public class RenderUtility implements Utility {
     static {
         BUILDER = TESSELLATOR.getBuffer();
         ROUNDED = new Shader("rounded.fsh", true);
+        BLUR_PROGRAM = new Shader("blur.fsh", true);
         BLUR = new Shader("blur.fsh", true);
         GRADIENT_MASK = new Shader("gradient_mask.fsh", true);
         ROUNDED_TEXTURE = new Shader("neiron/shaders/rounded_texture.fsh", true);

@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package com.mojang.realmsclient;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

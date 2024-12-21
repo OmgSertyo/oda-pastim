@@ -2,6 +2,7 @@ package sertyo.events.ui.menu.main;
 
 import lombok.Getter;
 import lombok.Setter;
+import sertyo.events.ui.menu.main.CVec4;
 
 @Getter
 @Setter
@@ -73,5 +74,21 @@ public class CVec2 {
 
     public float cm(float value) {
         return Math.max(0.001f, value);
+    }
+
+    public void update(CVec2 xy) {
+        this.x = xy.x;
+        this.y = xy.y;
+    }
+
+    public CVec2 seperate(CVec2 vector) {
+        return new CVec2(this.x - vector.x, this.y - vector.y);
+    }
+
+    public void update(float x, float y) {
+        update(new CVec2(x, y));
+    }
+    public boolean isShit() {
+        return x == -1;
     }
 }

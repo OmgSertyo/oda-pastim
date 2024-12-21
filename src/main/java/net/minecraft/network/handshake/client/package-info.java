@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.network.handshake.client;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

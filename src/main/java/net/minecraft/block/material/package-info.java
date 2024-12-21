@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.block.material;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

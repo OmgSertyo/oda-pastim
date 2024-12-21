@@ -28,12 +28,14 @@ public class ModuleManager {
       this.registerModule(new PostProcessing());
       this.registerModule(new AhHelper());
       this.registerModule(new FtFly());
+      this.registerModule(new ElytraRecast());
       this.registerModule(new AntiAFK());
       this.registerModule(new XRay());
       this.registerModule(new AutoRespawn());
       this.registerModule(new FastBreak());
       this.registerModule(new FreeCam());
       this.registerModule(new InventoryMove());
+      this.registerModule(new Irc());
       this.registerModule(new ItemScroller());
       this.registerModule(new EventHelperFunTime());
       this.registerModule(new ItemSwapFix());

@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.client.particle;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

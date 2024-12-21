@@ -46,6 +46,8 @@ public class ModuleComponent extends Component {
             this.elements.add(new ColorComponent(this, (ColorSetting)setting));
          } else if (setting instanceof KeySetting) {
             this.elements.add(new KeyComponent(this, (KeySetting) setting));
+         } else if (setting instanceof TextSetting) {
+            this.elements.add(new InputObject(this, (TextSetting) setting));
          }
       }
 

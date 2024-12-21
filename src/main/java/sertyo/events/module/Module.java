@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Module implements Utility {
-   protected ModuleAnnotation info = (ModuleAnnotation)this.getClass().getAnnotation(ModuleAnnotation.class);
+   protected ModuleAnnotation info = this.getClass().getAnnotation(ModuleAnnotation.class);
    public String name;
    public Category category;
    public boolean enabled;
@@ -39,7 +39,13 @@ public class Module implements Utility {
       this.enabled = false;
       this.bind = 0;
    }
-
+   public Module(String name, Category category) {
+      this.animation = new DecelerateAnimation(250, 1.0F, Direction.BACKWARDS);
+      this.name = name;
+      this.category = category;
+      this.enabled = false;
+      this.bind = 0;
+   }
    public boolean isSearched() {
       return true;
    }

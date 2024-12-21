@@ -68,13 +68,53 @@ public class CheatConnection extends Connection {
     }
 
     @J2c
-    public String getSession() throws IOException {
+    public static String getSession() throws IOException {
         String path = String.format("%s%s", ApiConstants.TEMP_DIR, ApiConstants.SESSION_FILE_NAME);
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        String session = reader.readLine();
+
+        String username = reader.readLine();
+        String password = reader.readLine();
+
         reader.close();
-        return session;
+
+        if (username != null && password != null) {
+            return "username=" + username + "&password=" + password;
+        }
+
+        return "";
     }
+    @J2c
+    public static String getPassword() throws IOException {
+        String path = String.format("%s%s", ApiConstants.TEMP_DIR, ApiConstants.SESSION_FILE_NAME);
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        String password = reader.readLine();
+
+        reader.close();
+
+        if (password != null) {
+            return password;
+        }
+
+        return "";
+    }
+    public static String getLogin() throws IOException {
+        String path = String.format("%s%s", ApiConstants.TEMP_DIR, ApiConstants.SESSION_FILE_NAME);
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        String username = reader.readLine();
+
+        reader.close();
+
+        if (username != null) {
+            return username;
+        }
+
+        return "";
+    }
+
 
 }

@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.client.gui.chat;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

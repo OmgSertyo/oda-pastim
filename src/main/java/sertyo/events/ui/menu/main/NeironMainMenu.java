@@ -14,11 +14,12 @@ import net.minecraft.client.gui.screen.WorldSelectionScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import sertyo.events.Main;
-import sertyo.events.ui.menu.altmanager.AltManagerScreen;
+import sertyo.events.ui.menu.altmanager.GuiAltManager;
 import sertyo.events.ui.menu.widgets.CustomButton;
+import sertyo.events.ui.roulete.RouletteScreen;
 import sertyo.events.utility.render.RenderUtil;
 import sertyo.events.utility.render.RenderUtility;
-import sertyo.events.utility.render.Vec2i;
+import sertyo.events.utility.math.Vec2i;
 import sertyo.events.utility.render.fonts.Fonts;
 
 
@@ -47,13 +48,13 @@ public class NeironMainMenu extends Screen {
          mc.displayGuiScreen(new MultiplayerScreen(this));
       }));
             this.addButton(new CustomButton(this.width / 2 - 102, this.height / 2 - 9, 100, 22, new StringTextComponent("AltManager"), p_onPress_1_ -> {
-               mc.displayGuiScreen(new AltManagerScreen());
+               mc.displayGuiScreen(new GuiAltManager());
             }));
          this.addButton(new CustomButton(this.width / 2 + 2, this.height / 2 - 9, 100, 22, new StringTextComponent("Setting"), p_onPress_1_ -> {
             mc.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
          }));
-         this.addButton(new CustomButton(this.width / 2 - 102, this.height / 2 + 17, 204, 22, new StringTextComponent("Exit"), p_onPress_1_ -> {
-            mc.shutdownMinecraftApplet();
+         this.addButton(new CustomButton(this.width / 2 - 102, this.height / 2 + 17, 204, 22, new StringTextComponent("Roulette"), p_onPress_1_ -> {
+            mc.displayGuiScreen(new RouletteScreen());
 
          }));
 

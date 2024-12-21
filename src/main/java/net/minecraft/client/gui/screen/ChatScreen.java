@@ -13,11 +13,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import sertyo.events.Main;
 import sertyo.events.manager.dragging.DragManager;
 import sertyo.events.module.impl.util.PasswordHider;
-import sertyo.events.utility.Utility;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.render.GaussianBlur;
+import sertyo.events.utility.render.blur.GaussianBlur;
 import sertyo.events.utility.render.RenderUtil;
-import sertyo.events.utility.render.Vec2i;
+import sertyo.events.utility.math.Vec2i;
 
 import java.awt.*;
 

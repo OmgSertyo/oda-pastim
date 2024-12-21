@@ -5,7 +5,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jhlabs.image.GaussianFilter;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
@@ -13,9 +12,7 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,11 +26,8 @@ import org.lwjgl.opengl.EXTPackedDepthStencil;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import sertyo.events.Main;
-import sertyo.events.manager.theme.Theme;
-import sertyo.events.manager.theme.Themes;
 import sertyo.events.utility.Utility;
-import sertyo.events.utility.font.Fonts;
+import sertyo.events.utility.render.blur.GaussianBlur;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -54,7 +48,6 @@ import static com.mojang.blaze3d.systems.RenderSystem.enableBlend;
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.*;
 import static org.lwjgl.opengl.GL11.*;
 import static sertyo.events.utility.render.ColorUtil.injectAlpha;
-import static sertyo.events.utility.render.RenderUtil.IntColor.*;
 import static sertyo.events.utility.render.RenderUtil.IntColor.*;
 import static sertyo.events.utility.render.ShaderUtil.CORNER_ROUND_SHADER_TEXTURE;
 import static sertyo.events.utility.render.ShaderUtil.GRADIENT_MASK_SHADER;
@@ -1402,20 +1395,7 @@ public class RenderUtil implements Utility {
             GlStateManager.disableBlend();
         }
 
-        public static void drawHud(float x, float y, float width, float height, float radius, float softness, float blur) {
-           /* int clr1 = injectAlpha(ColorUtil.getColor(270), 75);
-            int clr2 = injectAlpha(ColorUtil.getColor(0), 75);
-            int clr3 = injectAlpha(ColorUtil.getColor(180), 75);
-            int clr4 = injectAlpha(ColorUtil.getColor(90), 75);*/
-            int clr1 = ColorUtil.getColor(270);
-            int clr2 = ColorUtil.getColor(0);
-            int clr3 = ColorUtil.getColor(180);
-            int clr4 = ColorUtil.getColor(90);
 
-           // drawShadow(x, y, width, height, (int) radius, ColorUtil.getColor(270), ColorUtil.getColor(0), ColorUtil.getColor(180), ColorUtil.getColor(90));
-       //     drawRoundedGradientRect(x, y, width, height, radius,1, clr1, clr2, clr3, clr4);
-         //   drawRoundedBlur(new MatrixStack(), x, y, width, height, radius, Color.BLACK, blur, 0.5F);
-        }
         public static void drawBlur(float x, float y, float x2, float y2, float round, int color, float blurStrenth, float blurOpacity) {
             // Получение цвета в формате RGBA
 

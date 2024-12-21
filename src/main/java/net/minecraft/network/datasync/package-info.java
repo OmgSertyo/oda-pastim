@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.network.datasync;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

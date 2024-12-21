@@ -6,9 +6,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import jhlabs.vecmath.Vector4f;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.ChatScreen;
@@ -19,14 +16,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.StringUtils;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import org.lwjgl.opengl.GL11;
 import sertyo.events.Main;
-import sertyo.events.event.input.EventInputKey;
 import sertyo.events.event.player.EventUpdate;
 import sertyo.events.event.render.EventRender2D;
 import sertyo.events.manager.dragging.DragManager;
@@ -35,22 +30,18 @@ import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.impl.combat.KillAura;
-import sertyo.events.module.impl.util.Optimization;
-import sertyo.events.module.setting.impl.KeySetting;
 import sertyo.events.module.setting.impl.MultiBooleanSetting;
 import sertyo.events.utility.Utility;
-import sertyo.events.utility.font.styled.StyledFont;
 import sertyo.events.utility.math.MathUtility;
-import sertyo.events.utility.misc.ChatUtility;
 import sertyo.events.utility.render.*;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.utility.render.animation.AnimationMath;
 import sertyo.events.utility.render.animation.Direction;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
+import sertyo.events.utility.render.blur.GaussianBlur;
 import sertyo.events.utility.render.fonts.Fonts;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -63,9 +54,10 @@ import static sertyo.events.utility.render.RenderUtil.scaleEnd;
         category = Category.RENDER
 )
 public class Hud extends Module {
-    public final Draggable keybindsDraggable = DragManager.create(this, "Keybinds", 200, 200);
+    public final Draggable keyBinds = DragManager.create(this, "Keybinds", 200, 200);
     public final Draggable ft = DragManager.create(this, "FtEvents", 600, 400);
-
+    public float heightDynamic;
+    public int activeModules = 0;
         public static final MultiBooleanSetting elements = new MultiBooleanSetting("Elements", Arrays.asList("Watermark", "Server Info", "Coords", "Inventory", "Potions", "Armor", "Target HUD", "Keybinds", "Staff List", "Spotify"));
         private final Draggable invViewDraggable = DragManager.create(this, "Inventory View", 10, 100);
         private final Draggable potionsDraggable = DragManager.create(this, "Potions", 10, 300);
@@ -77,8 +69,12 @@ public class Hud extends Module {
         private final Animation animation;
         private float hp;
         public int b_color = new Color(0, 0, 0, 128).getRGB();
+    public final Vector4f right_vec;
+
     public Hud() {
-            this.animation = new DecelerateAnimation(175, 1.0F, Direction.BACKWARDS);
+        this.right_vec = new Vector4f(0.0f, 0.0f, 3.0f, 3.0f);
+
+        this.animation = new DecelerateAnimation(175, 1.0F, Direction.BACKWARDS);
             this.potionsDraggable.setWidth(105.0F);
             this.invViewDraggable.setWidth(170.0F);
             this.invViewDraggable.setHeight(64.0F);
@@ -112,10 +108,10 @@ public class Hud extends Module {
                     String string2 = !mc.isSingleplayer() ? mc.getCurrentServerData().serverIP.toLowerCase() : "localhost";
                     float f3 = sertyo.events.utility.font.Fonts.icons1[16].getWidth("O");
                     float f4 = f3 + Math.max(80.0f, sertyo.events.utility.font.Fonts.msMedium[15].getWidth("   " + Main.cheatProfile.getName() + " | " + string + " | " + string2) + 5.0f);
-                    RenderUtil.Render2D.drawGradientRound(5.0f, 5.0f, f4, 9.0f, 1.0f, new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB());
-                    RenderUtil.Render2D.drawShadow(5.0f, 5.0f, f4, 9.0f, 10, new Color(31, 31, 31).getRGB());
-                    RenderUtil.Render2D.drawRoundedCorner(5.0f, 5.0f, f4, 9.0f, 1.5f, this.b_color);
-                    RenderUtil.Render2D.drawRoundedRect(f + sertyo.events.utility.font.Fonts.gilroyBold[17].getWidth("    ") + 2.0f, f2, 1.0f, 9.0f, 0.0f, new Color(56, 54, 54, 255).getRGB());
+                    drawGradientRound(5.0f, 5.0f, f4, 9.0f, 1.0f, new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB());
+                    drawShadow(5.0f, 5.0f, f4, 9.0f, 10, new Color(31, 31, 31).getRGB());
+                    drawRoundedCorner(5.0f, 5.0f, f4, 9.0f, 1.5f, this.b_color);
+                    drawRoundedRect(f + sertyo.events.utility.font.Fonts.gilroyBold[17].getWidth("    ") + 2.0f, f2, 1.0f, 9.0f, 0.0f, new Color(56, 54, 54, 255).getRGB());
                     sertyo.events.utility.font.Fonts.msMedium[15].drawString(new MatrixStack(), "   " + Main.cheatProfile.getName() + " | " + string + " | " + string2, 14.0, 8.0, -1);
                     sertyo.events.utility.font.Fonts.msMedium[16].drawString(new MatrixStack(), "n", 7.0, 8.5, -1);
                 }
@@ -155,24 +151,23 @@ public class Hud extends Module {
 
                 int offset;
                 if (elements.get(2)) {
-                    offset = 0;
-                    if (Utility.mc.currentScreen instanceof ChatScreen) {
-                        offset = -13;
+                    String[] stringArray = new String[1];
+                    int n = 1;
+                    Object[] objectArray = new Object[1];
+                    objectArray[0] = Math.hypot(mc.player.getPosX() - mc.player.prevPosX, mc.player.getPosZ() - mc.player.prevPosZ) * 20.0;
+                    stringArray[0] = String.format("%.2f", objectArray) + "BPS";
+                    String[] stringArray2 = stringArray;
+                    float f = 0.0f;
+                    for (String string : stringArray2) {
+                        float f2 = sertyo.events.utility.font.Fonts.msMedium[16].getWidth(Math.floor(mc.player.getPosX()) + ", " + Math.floor(mc.player.getPosY()) + ", " + Math.floor(mc.player.getPosZ())) + 16.0f;
+                        float f3 = 13.0f;
+                        float f4 = (float)mc.getMainWindow().scaledHeight - f3 - (float)n - f;
+                        drawGradientRound(n + 3, f4 - 3.0f, f2, f3, 3.2f, new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB());
+                        drawShadow(n + 3, f4 - 3.0f, f2, f3, 10, new Color(31, 31, 31).getRGB());
+                        RenderUtil.Render2D.drawRoundedCorner((float)(n + 3), f4 - 3.0f, f2, f3, this.right_vec, this.b_color);
+                        sertyo.events.utility.font.Fonts.msMedium[16].drawCenteredString(Math.floor(mc.player.getPosX()) + ", " + Math.floor(mc.player.getPosY()) + ", " + Math.floor(mc.player.getPosZ()), (double)((float)n + 4.0f + f2 / 2.0f - 7.0f), (double)(f4 + 1.0f), Color.WHITE.getRGB());
+                        f += f3 + 3.0f;
                     }
-
-                    Object[] var10001 = new Object[]{Math.hypot(Utility.mc.player.getPosX() - Utility.mc.player.prevPosX, Utility.mc.player.getPosZ() - Utility.mc.player.prevPosZ) * (double) 1 * 20.0};
-                    String bpsText = "BPS: " + String.format("%.2f", var10001);
-                    coordsText = this.getCoordsText();
-                    RenderUtility.drawGlow(2.0F, (float)(scaledHeight - 38 + offset), (float)(Fonts.mntssb16.getStringWidth(bpsText) + Fonts.icons21.getStringWidth("v") + 11), 17.0F, 9, new Color(strokeColor).getRGB());
-                    RenderUtility.drawRoundedRect(2.0F, (float)(scaledHeight - 38 + offset), (float)(Fonts.mntssb16.getStringWidth(bpsText) + Fonts.icons21.getStringWidth("v") + 11), 17.0F, 9.0F, strokeColor);
-                    RenderUtility.drawRoundedRect(3.0F, (float)(scaledHeight - 37 + offset), (float)(Fonts.mntssb16.getStringWidth(bpsText) + Fonts.icons21.getStringWidth("v") + 9), 15.0F, 8.0F, bgColor);
-                    Fonts.icons16.drawString("v", 6.0F, (float)scaledHeight - 30.5F + (float)offset, -1);
-                    Fonts.mntssb16.drawString(bpsText, (float)(9 + Fonts.icons21.getStringWidth("v")), (float)scaledHeight - 31.5F + (float)offset, -1);
-                    RenderUtility.drawGlow(2.0F, (float)(scaledHeight - 19 + offset), (float)(Fonts.mntssb16.getStringWidth(coordsText) + Fonts.icons21.getStringWidth("w") + 1), 17.0F, 9, new Color(strokeColor).getRGB());
-                    RenderUtility.drawRoundedRect(2.0F, (float)(scaledHeight - 19 + offset), (float)(Fonts.mntssb16.getStringWidth(coordsText) + Fonts.icons21.getStringWidth("w") + 11), 17.0F, 9.0F, strokeColor);
-                    RenderUtility.drawRoundedRect(3.0F, (float)(scaledHeight - 18 + offset), (float)(Fonts.mntssb16.getStringWidth(coordsText) + Fonts.icons21.getStringWidth("w") + 9), 15.0F, 8.0F, bgColor);
-                    Fonts.icons16.drawString("w", 6.0F, (float)scaledHeight - 11.5F + (float)offset, -1);
-                    Fonts.mntssb16.drawString(coordsText, (float)(9 + Fonts.icons21.getStringWidth("w")), (float)scaledHeight - 12.5F + (float)offset, -1);
                 }
 
 
@@ -290,7 +285,38 @@ public class Hud extends Module {
 
 
                 if (elements.get(7)) {
-                    Keybinds.render();
+                        float f = keyBinds.getX();
+                        float f2 = keyBinds.getY();
+                        int n2 = 14;
+                        int n3 = 75;
+                        int n4 = 5;
+                        int n = 10;
+                        float f3 = activeModules * n;
+                        heightDynamic = AnimationMath.fast(heightDynamic, f3, 10.0f);
+                        drawGradientRound(f, f2, n3, heightDynamic + (float)n4 / 2.0f + 16.0f, 1.2f, new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB(), new Color(31, 31, 31).getRGB());
+                        drawShadow(f, f2, n3, heightDynamic + (float)n4 / 2.0f + 16.0f, 10, new Color(31, 31, 31).getRGB());
+                    RenderUtility.drawRoundedRect(f, f2, n3, heightDynamic + (float)n4 / 2.0f + 16.0f, 1.7f, new Color(0, 0, 0, 128).getRGB());
+                        sertyo.events.utility.font.Fonts.gilroyBold[14].drawCenteredString("       Keybinds", (double)(keyBinds.getX() + (float)n3 / 2.0f - 6.0f), (double)(f2 + 6.0f), Color.WHITE.getRGB());
+                        // Fonts.icons2[20].drawCenteredString("K", (double)(f + (float)n3 / 2.0f - 22.0f), (double)(f2 + 6.0f), Color.WHITE.getRGB());
+                        drawRoundedRect(f + 2.0f, f2 + 15.0f, (float)n3 - 4.0f, 1.0f, 0.0f, new Color(31, 31, 31).getRGB());
+                        RenderUtil.SmartScissor.push();
+                        RenderUtil.SmartScissor.setFromComponentCoordinates(f, f2, (double)n3, (float)n2 + heightDynamic + (float)n4 / 2.0f);
+                        int n37 = 0;
+                        for (Module function : Main.getInstance().getModuleManager().getModules()) {
+                            String string;
+                            if (function.bind == 0 || !function.enabled || (string = Main.getKey(function.bind)) == null) continue;
+                            String string2 = "[" + string.toUpperCase() + "]";
+                            float f4 = sertyo.events.utility.font.Fonts.msMedium[12].getWidth(string2);
+                            sertyo.events.utility.font.Fonts.msMedium[12].drawString(function.name, (double)(f + (float)n4), (double)(f2 + (float)n2 + (float)n4 + (float)(n37 * n) + 2.0f), Color.WHITE.getRGB());
+                            sertyo.events.utility.font.Fonts.msMedium[12].drawString(string2, (double)(f + (float)n3 - f4 - (float)n4), (double)(f2 + (float)n2 + (float)n4 + (float)(n37 * n) + 2.0f), Color.WHITE.getRGB());
+                            ++n37;
+                        }
+                        RenderUtil.SmartScissor.unset();
+                        RenderUtil.SmartScissor.pop();
+                        activeModules = n37;
+                        keyBinds.setWidth(n3);
+                        keyBinds.setHeight(activeModules * n + n2);
+
                 }
                 if (elements.get(8)) {
                     StaffList.render();
@@ -393,8 +419,8 @@ public class Hud extends Module {
     public static void drawStyledRect(float posX, float posY, float width, float height, float radius) {
           GaussianBlur.startBlur();
           GaussianBlur.endBlur(20, 2);
-          RenderUtil.Render2D.drawRoundedRect(posX, posY, width, height, radius, ColorUtil.rgba(105, 105, 105, 200));
-          RenderUtil.Render2D.drawRoundedRect(posX, posY, width, height, radius, ColorUtil.rgba(25, 25, 25, 170));
+          drawRoundedRect(posX, posY, width, height, radius, ColorUtil.rgba(105, 105, 105, 200));
+          drawRoundedRect(posX, posY, width, height, radius, ColorUtil.rgba(25, 25, 25, 170));
 
     }
     private void drawHead(MatrixStack matrix, final Entity entity, final double x, final double y, final int size) {

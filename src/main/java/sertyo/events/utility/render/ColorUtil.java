@@ -35,6 +35,7 @@ public class ColorUtil implements Utility {
     public static Color injectAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
+
     public static int[] penis(int var0) {
         return new int[]{var0 >> 16 & 255, var0 >> 8 & 255, var0 & 255, var0 >> 24 & 255};
     }
@@ -174,6 +175,12 @@ public class ColorUtil implements Utility {
             Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
             Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
             return ColorUtil.gradient((int)(16.0F - colorSpeed.get()), index * 2, new Color[]{color, color2}).getRGB();
+
+    }
+    public static Color getColor2(int index) {
+            Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
+            Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
+            return ColorUtil.gradient((int)(16.0F - colorSpeed.get()), index * 2, new Color[]{color, color2});
 
     }
 

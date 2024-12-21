@@ -9,7 +9,7 @@ import me.sertyo.j2c.J2c;
 import sertyo.events.ui.csgui.CsGui;
 import sertyo.events.utility.font.Fonts;
 import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.GaussianBlur;
+import sertyo.events.utility.render.blur.GaussianBlur;
 import sertyo.events.utility.render.RenderUtil;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;

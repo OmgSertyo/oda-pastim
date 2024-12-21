@@ -79,7 +79,7 @@ import net.optifine.util.TimedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sertyo.events.event.render.EventOverlay;
-import sertyo.events.utility.IWrapper;
+import sertyo.events.utility.render.IWrapper;
 
 public class GameRenderer implements IResourceManagerReloadListener, AutoCloseable
 {

@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.realms.action;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

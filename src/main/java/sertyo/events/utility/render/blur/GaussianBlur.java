@@ -3,20 +3,20 @@ package sertyo.events.utility.render.blur;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.BufferUtils;
+import sertyo.events.utility.Utility;
 import sertyo.events.utility.render.ShaderUtil;
 import sertyo.events.utility.render.StencilUtil;
 
 import java.nio.FloatBuffer;
 
 import static com.mojang.blaze3d.systems.RenderSystem.glUniform1;
-import static sertyo.events.utility.Utility.mc;
 
 
 /**
- * @author cedo
- * @since 05/13/2022
+ * @author sertyo
+ * @since 10/20/2024
  */
-public class GaussianBlur  {
+public class GaussianBlur implements Utility {
 
     private static final ShaderUtil gaussianBlur = new ShaderUtil("blur");
 

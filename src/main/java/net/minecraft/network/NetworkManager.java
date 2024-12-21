@@ -3,6 +3,8 @@ package net.minecraft.network;
 import com.darkmagician6.eventapi.EventManager;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.viaversion.viaversion.connection.UserConnectionImpl;
+import com.viaversion.viaversion.protocol.ProtocolPipelineImpl;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -32,6 +34,9 @@ import java.net.SocketAddress;
 import java.util.Queue;
 import javax.annotation.Nullable;
 import javax.crypto.Cipher;
+
+import me.sertyo.viamcp.ViaLoadingBase;
+import me.sertyo.viamcp.netty.ViaDecoder;
 import net.minecraft.network.login.ServerLoginNetHandler;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.network.play.server.SDisconnectPacket;
@@ -44,10 +49,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import sertyo.events.Main;
 import sertyo.events.event.packet.EventPacket;
 import sertyo.events.event.packet.EventReceivePacket;
 import sertyo.events.event.packet.EventSendPacket;
-
 public class NetworkManager extends SimpleChannelInboundHandler < IPacket<? >>
 {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -363,41 +368,44 @@ public class NetworkManager extends SimpleChannelInboundHandler < IPacket<? >>
 
     /**
      * Create a new NetworkManager from the server host and connect it to the server
-     */
-    public static NetworkManager createNetworkManagerAndConnect(InetAddress address, int serverPort, boolean useNativeTransport)
-    {
+*/
+    public static NetworkManager createNetworkManagerAndConnect(InetAddress address, int serverPort, boolean useNativeTransport) {
         final NetworkManager networkmanager = new NetworkManager(PacketDirection.CLIENTBOUND);
-        Class <? extends SocketChannel > oclass;
-        LazyValue <? extends EventLoopGroup > lazyvalue;
+        Class<? extends SocketChannel> oclass;
+        LazyValue<? extends EventLoopGroup> lazyvalue;
 
-        if (Epoll.isAvailable() && useNativeTransport)
-        {
+        if (Epoll.isAvailable() && useNativeTransport) {
             oclass = EpollSocketChannel.class;
             lazyvalue = CLIENT_EPOLL_EVENTLOOP;
-        }
-        else
-        {
+        } else {
             oclass = NioSocketChannel.class;
             lazyvalue = CLIENT_NIO_EVENTLOOP;
         }
 
-        (new Bootstrap()).group(lazyvalue.getValue()).handler(new ChannelInitializer<Channel>()
-        {
-            protected void initChannel(Channel p_initChannel_1_) throws Exception
-            {
-                try
-                {
+        new Bootstrap().group(lazyvalue.getValue()).handler(new ChannelInitializer<Channel>() {
+
+            protected void initChannel(Channel p_initChannel_1_) throws Exception {
+                try {
                     p_initChannel_1_.config().setOption(ChannelOption.TCP_NODELAY, true);
-                }
-                catch (ChannelException channelexception)
-                {
+                } catch (ChannelException channelException) {
+                    // empty catch block
                 }
 
                 p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(30)).addLast("splitter", new NettyVarint21FrameDecoder()).addLast("decoder", new NettyPacketDecoder(PacketDirection.CLIENTBOUND)).addLast("prepender", new NettyVarint21FrameEncoder()).addLast("encoder", new NettyPacketEncoder(PacketDirection.SERVERBOUND)).addLast("packet_handler", networkmanager);
+
+                if (p_initChannel_1_ instanceof SocketChannel) {
+                    UserConnectionImpl user = new UserConnectionImpl(p_initChannel_1_, true);
+                    new ProtocolPipelineImpl(user);
+                    if (ViaLoadingBase.getInstance().getTargetVersion().getVersion() != Main.viaMCP.NATIVE_VERSION) {
+                        p_initChannel_1_.pipeline().addBefore("encoder", "via-encoder", new me.sertyo.viamcp.netty.ViaEncoder(user));
+                        p_initChannel_1_.pipeline().addBefore("decoder", "via-decoder", new ViaDecoder(user));
+                    }
+                }
             }
         }).channel(oclass).connect(address, serverPort).syncUninterruptibly();
         return networkmanager;
     }
+
 
     /**
      * Prepares a clientside NetworkManager: establishes a connection to the socket supplied and configures the channel

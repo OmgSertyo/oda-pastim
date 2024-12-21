@@ -123,7 +123,7 @@ public class GameSettings
     public boolean chatLinks = true;
     public boolean chatLinksPrompt = true;
     public boolean vsync = true;
-    public boolean entityShadows = true;
+    public boolean entityShadows = false;
     public boolean forceUnicodeFont;
     public boolean invertMouse;
     public boolean discreteMouseScroll;
@@ -886,7 +886,7 @@ public class GameSettings
                 printwriter.println("chatLinks:" + AbstractOption.CHAT_LINKS.get(this));
                 printwriter.println("chatLinksPrompt:" + AbstractOption.CHAT_LINKS_PROMPT.get(this));
                 printwriter.println("enableVsync:" + AbstractOption.VSYNC.get(this));
-                printwriter.println("entityShadows:" + AbstractOption.ENTITY_SHADOWS.get(this));
+                printwriter.println("entityShadows:false");
                 printwriter.println("forceUnicodeFont:" + AbstractOption.FORCE_UNICODE_FONT.get(this));
                 printwriter.println("discrete_mouse_scroll:" + AbstractOption.DISCRETE_MOUSE_SCROLL.get(this));
                 printwriter.println("invertYMouse:" + AbstractOption.INVERT_MOUSE.get(this));

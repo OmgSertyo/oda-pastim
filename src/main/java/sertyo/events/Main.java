@@ -3,9 +3,13 @@ package sertyo.events;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import lombok.SneakyThrows;
 import lombok.experimental.NonFinal;
+import me.sertyo.api.IRCClient;
 import me.sertyo.api.profile.CheatProfile;
 import lombok.Getter;
+import me.sertyo.api.profile.CheatRole;
+import me.sertyo.viamcp.ViaMCP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Session;
 import me.sertyo.j2c.J2c;
@@ -26,7 +30,10 @@ import sertyo.events.module.Module;
 import sertyo.events.module.ModuleManager;
 import sertyo.events.module.impl.player.GlowESP;
 
+import sertyo.events.module.scripts.ScriptManager;
+import sertyo.events.ui.autobuy.impl.ItemManager;
 import sertyo.events.ui.csgui.CsGui;
+import sertyo.events.ui.menu.altmanager.alt.AltFileManager;
 import sertyo.events.ui.menu.main.NeironMainMenu;
 import sertyo.events.ui.ab.ActivationLogic;
 import sertyo.events.ui.ab.AutoBuy;
@@ -34,15 +41,17 @@ import sertyo.events.ui.ab.AutoBuyGui;
 import sertyo.events.ui.ab.font.main.IFont;
 import sertyo.events.ui.ab.manager.AutoBuyManager;
 import sertyo.events.ui.ab.manager.IgnoreManager;
-import sertyo.events.ui.testGUI.Panel;
-import sertyo.events.utility.Language;
-import sertyo.events.utility.render.ScaleMath;
+import sertyo.events.utility.misc.Language;
+import sertyo.events.utility.math.ScaleMath;
 import sertyo.events.utility.render.ShaderUtil;
 import sertyo.events.utility.render.ShaderUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,8 +68,11 @@ public class Main {
     private final ConfigManager configManager = new ConfigManager();
     private CommandManager commandManager;
     private FriendManager friendManager;
+    private ScriptManager scriptManager;
     public static String username;
     private ScaleMath scaleMath;
+    public static ViaMCP viaMCP;
+
     private ModuleManager moduleManager;
     private NeironMainMenu mainMenu;
     private ThemeManager themeManager;
@@ -70,33 +82,41 @@ public class Main {
     private StaffManager staffManager;
     public static boolean unhooked = false;
     private DragManager dragManager;
+    private AltFileManager altFileManager;
     public static long startTime;
     public static CheatProfile cheatProfile;
     public static boolean hold_mouse0;
     @NonFinal
     Language language = Language.RUS;
 
+    public static IRCClient chatclient = null;
+    @SneakyThrows
     public void start() {
-        cheatProfile = CheatProfile.create();
+        cheatProfile = new CheatProfile(-1, "user", CheatRole.DEVELOPER, new Date());
         cheatProfile.downloadAvatar(true);
-        addstart();
         GlowESP.notstarted = false;
         this.dragManager = new DragManager();
-        try {
             this.dragManager.init();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
         new AutoBuy();
+
         this.activationLogic = new ActivationLogic();
         this.scaleMath = new ScaleMath(2);
+        viaMCP = new ViaMCP();
         new ActivationLogic();
+        altFileManager = new AltFileManager();
+        altFileManager.init();
         mc.session = new Session("SVotestVZVZV", "", "", "mojang");
         ShaderUtil.init();
         ShaderUtils.init();
         System.out.println("Event inited");
         EventManager.register(this);
         this.moduleManager = new ModuleManager();
+        chatclient = new IRCClient(new URI("ws://23.88.122.49:10051"));
+        chatclient.connectBlocking();
+        chatclient.setUsername(Main.cheatProfile.getName()); // тут имя типа
+        chatclient.setClient(name); // тут название клиента
+        ItemManager.register();
         this.themeManager = new ThemeManager();
         this.commandManager = new CommandManager();
         this.mainMenu = new NeironMainMenu();
@@ -105,12 +125,11 @@ public class Main {
         abGui = new AutoBuyGui();
         AutoBuyManager.init();
         this.staffManager = new StaffManager();
-        try {
-            this.staffManager.init();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.staffManager.init();
         AutoBuyManager.load();
+        this.scriptManager = new ScriptManager();
+        this.scriptManager.init();
+        this.scriptManager.parseAllScripts();
         IgnoreManager.load();
         IFont.init();
         startTime = System.currentTimeMillis();
@@ -118,37 +137,9 @@ public class Main {
     }
 
 
-    public void addstart() {
-        String urlString = "http://t981877h.beget.tech/api/counter.php"; // URL до вашей PHP страницы
-
-        try {
-            // Открываем соединение с сервером
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-            connection.setRequestMethod("GET");
-
-            // Устанавливаем таймер на закрытие через 10 секунд
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // Закрываем соединение
-                    connection.disconnect();
-                    System.out.println("Connection closed after 10 seconds.");
-                }
-            }, 10000); // 10 000 миллисекунд = 10 секунд
-
-            // Ожидаем завершения выполнения
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     public void shutdown() {
         this.dragManager.save();
+        this.altFileManager.saveAll();
         this.configManager.saveConfig("autocfg");
         AutoBuyManager.save();
         IgnoreManager.save();
@@ -163,9 +154,8 @@ public class Main {
                 module.toggle();
             }
         }
-        if (eventInputKey.getKey() == GLFW.GLFW_KEY_F6) {
-            mc.displayGuiScreen(new Panel());
-        }
+        if (eventInputKey.getKey() == GLFW.GLFW_KEY_F6) mc.displayGuiScreen(new sertyo.events.ui.autobuy.AutoBuyGui());
+
     }
     public void toggleLanguage() {
         if (language == Language.RUS) {
@@ -184,7 +174,6 @@ public class Main {
                 module.toggle();
             }
         }
-
     }
     @EventTarget
     public void onRender2D(EventRender2D eventMouse) {

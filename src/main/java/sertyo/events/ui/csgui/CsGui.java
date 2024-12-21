@@ -160,9 +160,6 @@ public class CsGui extends Screen {
          this.drawThemes(mouseX, mouseY);
       } else if (selected.equals(Category.PROFILE)){
          this.drawProfile(mouseX, mouseY);
-
-      } else if (selected.equals(Category.CONFIGS)) {
-         this.drawConfigs(mouseX, mouseY);
       } else {
          this.drawComponents(mouseX, mouseY);
       }
@@ -182,7 +179,7 @@ public class CsGui extends Screen {
 
       for(int var16 = 0; var16 < var15; ++var16) {
          Category category = var14[var16];
-         if (!category.equals(Category.CONFIGS) && !category.equals(Category.THEMES)) {
+         if (!category.equals(Category.THEMES)) {
             sertyo.events.utility.font.Fonts.icons[21].drawString(String.valueOf(category.getIcon()), catX + 15.0F + (float)catIndex, catY + 9.0F, selected.equals(category) ? Color.decode("#3A3B65").brighter().getRGB() : (new Color(160, 160, 160)).getRGB());
             catIndex += category.equals(Category.MOVEMENT) ? 30 : (category.equals(Category.PLAYER) ? 22 : 25);
          }
@@ -387,7 +384,7 @@ public class CsGui extends Screen {
 
          for(int var10 = 0; var10 < var9; ++var10) {
             Category category = var8[var10];
-            if (!category.equals(Category.CONFIGS) && !category.equals(Category.THEMES)) {
+            if (!category.equals(Category.THEMES)) {
                boolean hovered = RenderUtility.isHovered((float)mouseX, (float)mouseY, catX + 15.0F + (float)catIndex, catY + 9.0F, (float)Fonts.icons21.getStringWidth(category.getIcon()), (float)Fonts.icons21.getFontHeight());
                if (hovered && !selected.equals(category)) {
                   selected = category;
@@ -399,11 +396,7 @@ public class CsGui extends Screen {
             }
          }
 
-         if (RenderUtility.isHovered((float)mouseX, (float)mouseY, (float)(this.x + 130), (float)(this.y + 5), 60.0F, 20.0F)) {
-            selected = Category.CONFIGS;
-            this.scrollY = 32.5F;
-            moduleAnimation.reset();
-         }
+
 
          if (RenderUtility.isHovered((float)mouseX, (float)mouseY, (float)(this.x + 195), (float)(this.y + 5), 63.0F, 20.0F)) {
             selected = Category.THEMES;
@@ -443,29 +436,10 @@ public class CsGui extends Screen {
                   ThemeComponent themeComponent = (ThemeComponent)var13.next();
                   themeComponent.mouseClicked((double)mouseX, (double)mouseY, mouseButton);
                }
-            }
 
-            if (selected.equals(Category.CONFIGS)) {
-               var13 = configs.iterator();
-
-               ConfigComponent configComponent;
-               while(var13.hasNext()) {
-                  configComponent = (ConfigComponent)var13.next();
-                  if (configComponent.mouseBoolClicked((double)mouseX, (double)mouseY, mouseButton)) {
-                     updateConfigComponents();
-                     break;
-                  }
-               }
 
                var13 = configs2.iterator();
 
-               while(var13.hasNext()) {
-                  configComponent = (ConfigComponent)var13.next();
-                  if (configComponent.mouseBoolClicked((double)mouseX, (double)mouseY, mouseButton)) {
-                     updateConfigComponents();
-                     break;
-                  }
-               }
             }
 
          }

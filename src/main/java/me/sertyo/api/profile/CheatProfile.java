@@ -8,8 +8,13 @@ import lombok.Getter;
 import me.sertyo.j2c.J2c;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import static me.sertyo.api.connection.CheatConnection.*;
+
+@J2c
 @Getter
 public class CheatProfile {
     private final int id;
@@ -27,22 +32,74 @@ public class CheatProfile {
     public File getAvatarFile() {
         return ApiConstants.AVATAR_DIRECTORY;
     }
+    public static String getHwid()
+    {
+        return md5Hex(
+                System.getenv("os") +
+                        System.getProperty("os.arch") +
+                        System.getenv("PROCESSOR_ARCHITEW6432") +
+                        System.getenv("PROCESSOR_LEVEL") +
+                        System.getProperty("os.version") +
+                        System.getProperty("os.name") +
+                        System.getenv("PROCESSOR_REVISION") +
+                        System.getenv("PROCESSOR_IDENTIFIER") +
+                        System.getenv("PROCESSOR_ARCHITECTURE") +
+                        System.getenv("COMPUTERNAME") +
+                        System.getenv("PHYSICAL_MEMORY_SIZE")
+        );
+    }
 
-    @J2c
+    static String md5Hex(String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            byte[] hash = digest.digest(input.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static CheatProfile create() {
         try {
             CheatConnection cheatConnection = new CheatConnection("/api/ClientAuth.php");
-            String response = cheatConnection.sendPost("username=Sertyo&password=X123456ll");
+            String response = cheatConnection.sendPost(getSession());
+            System.out.println(getSession());
             String[] split = response.split("<>");
             int id = parseIntSafe(split[0], "id");
             CheatRole role = CheatRole.values()[Integer.parseInt(split[1])];
             String name = split[2];
-            String ticksString = split[3].trim(); // Убираем пробелы
-            System.out.println("ticksString (after trim): '" + ticksString + "'");
-
+            String hwid = split[3].trim();
+            if (hwid.trim().equals("nema")) {
+                CheatConnection hwidapi = new CheatConnection("/api/sethwid.php");
+                String respone = hwidapi.sendPost(String.format("hwid=%s&login=%s&pw_hash=%s", getHwid(), getLogin(), getPassword()));
+                if (respone.contains("HWID updated successfully"))
+                    System.out.println("[!] Hwid updated");
+                else
+                    System.out.printf("[!] Hwid error contact admin code (%s%n)", respone);
+            }
+            if (!hwid.trim().equals(getHwid())) {
+                System.out.println(hwid);
+                System.out.println(getHwid());
+                System.exit(0);
+            }
             Date expireDate = null;
 
             if (role == CheatRole.NULL || role == CheatRole.VISITOR) {
+
+                System.exit(-1);
+            }
+            if (!System.getProperty("java.version").equals("21-AutistLeak")) {
+                System.out.println("SOSI YAICHA"); //Тут можешь удалить как хоч кароч
+                System.exit(-1); //Тут реализуй бан
+            }
+            if (!System.getProperty("java.runtime.version").equals("21-AutistLeak-adhoc.Sertyo.openjdk")) {
+                //TODO: тут тоже самое
+                System.out.println("SOSI YAICHA");
                 System.exit(-1);
             }
             return new CheatProfile(id, name, role, expireDate);
@@ -60,7 +117,6 @@ public class CheatProfile {
     }
 
 
-    @J2c
     public boolean downloadAvatar(boolean shouldServerCut) {
         try {
             String data = Crypto.encrypt(String.format("%s</>%s", getId(), String.valueOf(!shouldServerCut)));

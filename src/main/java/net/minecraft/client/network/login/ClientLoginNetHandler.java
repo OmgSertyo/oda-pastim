@@ -109,20 +109,38 @@ public class ClientLoginNetHandler implements IClientLoginNetHandler
         }
         catch (AuthenticationUnavailableException authenticationunavailableexception)
         {
-            return new TranslationTextComponent("disconnect.loginFailedInfo", new TranslationTextComponent("disconnect.loginFailedInfo.serversUnavailable"));
+            try {
+                this.getSessionService().joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), serverHash);
+            } catch (AuthenticationException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
         }
         catch (InvalidCredentialsException invalidcredentialsexception)
         {
-            return new TranslationTextComponent("disconnect.loginFailedInfo", new TranslationTextComponent("disconnect.loginFailedInfo.invalidSession"));
+            try {
+                this.getSessionService().joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), serverHash);
+            } catch (AuthenticationException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
         }
         catch (InsufficientPrivilegesException insufficientprivilegesexception)
         {
-            return new TranslationTextComponent("disconnect.loginFailedInfo", new TranslationTextComponent("disconnect.loginFailedInfo.insufficientPrivileges"));
-        }
+            try {
+                this.getSessionService().joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), serverHash);
+            } catch (AuthenticationException e) {
+                throw new RuntimeException(e);
+            }
+            return null;        }
         catch (AuthenticationException authenticationexception)
         {
-            return new TranslationTextComponent("disconnect.loginFailedInfo", authenticationexception.getMessage());
-        }
+            try {
+                this.getSessionService().joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), serverHash);
+            } catch (AuthenticationException e) {
+                throw new RuntimeException(e);
+            }
+            return null;        }
     }
 
     private MinecraftSessionService getSessionService()

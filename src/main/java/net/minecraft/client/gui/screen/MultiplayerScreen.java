@@ -2,6 +2,8 @@ package net.minecraft.client.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import java.util.List;
+
+import me.sertyo.viamcp.VersionSelectScreen;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.multiplayer.ServerData;
@@ -14,9 +16,12 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sertyo.events.Main;
 
 public class MultiplayerScreen extends Screen
 {
+    private final VersionSelectScreen viaScreen = Main.viaMCP.viaScreen;
+
     private static final Logger LOGGER = LogManager.getLogger();
     private final ServerPinger oldServerPinger = new ServerPinger();
     private final Screen parentScreen;
@@ -66,6 +71,7 @@ public class MultiplayerScreen extends Screen
             this.serverListSelector = new ServerSelectionList(this, this.minecraft, this.width, this.height, 32, this.height - 64, 36);
             this.serverListSelector.updateOnlineServers(this.savedServerList);
         }
+        addButton(viaScreen);
 
         this.children.add(this.serverListSelector);
         this.btnSelectServer = this.addButton(new Button(this.width / 2 - 154, this.height - 52, 100, 20, new TranslationTextComponent("selectServer.select"), (p_214293_1_) ->
@@ -122,10 +128,16 @@ public class MultiplayerScreen extends Screen
         }));
         this.func_214295_b();
     }
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.viaScreen.mouseClicked(mouseX, mouseY, button);
 
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
     public void tick()
     {
         super.tick();
+        Main.viaMCP.viaScreen.tick();
 
         if (this.lanServerList.getWasUpdated())
         {
@@ -253,6 +265,8 @@ public class MultiplayerScreen extends Screen
         {
             this.func_243308_b(matrixStack, this.hoveringText, mouseX, mouseY);
         }
+        this.viaScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+
     }
 
     public void connectToSelected()

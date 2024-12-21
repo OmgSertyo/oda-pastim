@@ -2,5 +2,5 @@
 @MethodsReturnNonnullByDefault
 package net.minecraft.entity.ai.controller;
 
-import mcp.MethodsReturnNonnullByDefault;
+import me.sertyo.MethodsReturnNonnullByDefault;
 import javax.annotation.ParametersAreNonnullByDefault;

@@ -239,7 +239,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
         if (this.world.isBlockLoaded(new BlockPos(this.getPosX(), 0.0D, this.getPosZ())))
         {
 
-            EventUpdate eventUpdate = new EventUpdate();
+            EventUpdate eventUpdate = new EventUpdate(getPosX(), getPosY(), getPosZ(), rotationYaw, rotationPitch, onGround);
             EventManager.call(eventUpdate);
             super.tick();
 
@@ -270,7 +270,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
         if (this.world.isBlockLoaded(new BlockPos(this.getPosX(), 0.0D, this.getPosZ())))
         {
 
-            EventUpdate eventUpdate = new EventUpdate();
+            EventUpdate eventUpdate = new EventUpdate(getPosX(), getPosY(), getPosZ(), rotationYaw, rotationPitch, onGround);
             EventManager.call(eventUpdate);
             super.tick();
 
