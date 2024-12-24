@@ -4,7 +4,7 @@ buildscript {
     repositories {
 
         flatDir {
-            dirs 'lib' // Укажите путь к папке с JAR-файлами
+            dirs 'lib'
         }
         mavenLocal()
         maven {
@@ -18,7 +18,7 @@ buildscript {
 
     dependencies {
 
-        classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.0' // Обновленная версия FG4
+        classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.0'
     }
 }
 plugins {
@@ -36,10 +36,10 @@ repositories {
     }
 }
 dependencies {
-    implementation name: 'lombok' // Укажите имя JAR-файла без расширения
-    implementation name: 'via' // Укажите имя JAR-файла без расширения
-    implementation name: 'back' // Укажите имя JAR-файла без расширения
-    implementation name: 'yml' // Укажите имя JAR-файла без расширения
+    implementation name: 'lombok' 
+    implementation name: 'via'
+    implementation name: 'back' 
+    implementation name: 'yml'
 }
 
 configurations {
@@ -64,11 +64,6 @@ repositories {
 
 dependencies {
     shade 'net.minecraftforge:forgespi:3.0.+'
-//    Use the shade to add the lib to the jar
-//    or use compile if you want to load the lib from the version.json
-//    from a maven repo
-//    shade 'package-here'
-//    compile 'package-here'
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     implementation 'org.json:json:20230618'
