@@ -13,7 +13,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import sertyo.events.Main;
 import sertyo.events.utility.Utility;
-import sertyo.events.ui.ab.AutoBuy;
+
 
 public class ChestScreen extends ContainerScreen<ChestContainer> implements IHasContainer<ChestContainer>, Utility {
     /**
@@ -47,7 +47,7 @@ public class ChestScreen extends ContainerScreen<ChestContainer> implements IHas
         boolean accept = title.getString().contains("Покупка предмета");
 
         if (!Main.unhooked) {
-            if (ah || accept) {
+        /*    if (ah || accept) {
                 if (AutoBuy.enabled) {
                     this.addButton(button = new Button(width / 2 - 50, height / 2 - 150, 100, 20, new StringTextComponent(TextFormatting.GREEN + "AutoBuy: ON"), (button) -> {
                         AutoBuy.enabled = false;
@@ -57,13 +57,13 @@ public class ChestScreen extends ContainerScreen<ChestContainer> implements IHas
                         AutoBuy.enabled = true;
                 }));
                 }
-            }
+            }*/
         }
     }
 
     @Override
     public void closeScreen() {
-                AutoBuy.enabled = false;
+               // AutoBuy.enabled = false;
 
         super.closeScreen();
     }
@@ -71,12 +71,12 @@ public class ChestScreen extends ContainerScreen<ChestContainer> implements IHas
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (button != null) {
-            if (AutoBuy.enabled) {
+       /*     if (AutoBuy.enabled) {
                 button.setMessage(new StringTextComponent(TextFormatting.GREEN + "AutoBuy: ON"));
             }
             if (!AutoBuy.enabled) {
                 button.setMessage(new StringTextComponent(TextFormatting.RED + "AutoBuy: OFF"));
-            }
+            }*/
         }
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);

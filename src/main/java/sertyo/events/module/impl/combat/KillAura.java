@@ -28,7 +28,6 @@ import sertyo.events.event.render.EventRender2D;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
-import sertyo.events.module.impl.util.A;
 import sertyo.events.module.setting.impl.BooleanSetting;
 import sertyo.events.module.setting.impl.ModeSetting;
 import sertyo.events.module.setting.impl.MultiBooleanSetting;
@@ -37,6 +36,7 @@ import sertyo.events.utility.math.AuraUtil;
 import sertyo.events.utility.math.GCDUtil;
 import sertyo.events.utility.math.RayTraceUtil;
 import sertyo.events.utility.misc.InventoryUtil;
+import sertyo.events.utility.misc.TimerHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +55,7 @@ public class KillAura extends Module {
 
     private long lerpStartTime = 0;
     private float rotationSpeed = 0.7f;//0.7f
-    A timer = new A();
+    TimerHelper timer = new TimerHelper();
 
     public Vector2f rotate = new Vector2f(0, 0);
 
