@@ -19,7 +19,7 @@ public class AutoLoot extends Module {
 
 
     @EventTarget
-    private void onTickEvent(EventUpdate event) {
+    private void onUpdate(EventUpdate event) {
         for (Entity entity : mc.world.getAllEntities()) {
             if (entity instanceof VillagerEntity || entity instanceof WanderingTraderEntity) {
                 if (!((AbstractVillagerEntity) entity).getHeldItemMainhand().isEmpty() && mc.player.getDistance(entity) <= mc.playerController.getBlockReachDistance()) {

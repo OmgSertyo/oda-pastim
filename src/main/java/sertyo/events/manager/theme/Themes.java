@@ -5,7 +5,7 @@ import sertyo.events.Main;
 import java.awt.*;
 import java.util.HashMap;
 
-import static sertyo.events.utility.render.ColorUtil.gradient;
+import static sertyo.events.utility.render.ColorUtility.gradient;
 
 public enum Themes {
    WHITE(new Theme("White", Theme.ThemeType.GUI, new Color[]{new Color(234, 234, 234), new Color(239, 239, 239), new Color(195, 195, 195), new Color(225, 225, 225), new Color(215, 215, 215), new Color(205, 205, 205, 200)})),

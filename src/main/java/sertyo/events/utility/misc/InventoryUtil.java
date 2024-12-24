@@ -2,7 +2,6 @@ package sertyo.events.utility.misc;
 
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.item.*;
-import net.minecraft.network.play.client.CEntityActionPacket;
 import sertyo.events.utility.Utility;
 
 public class InventoryUtil implements Utility {
@@ -41,14 +40,12 @@ public class InventoryUtil implements Utility {
         }
         return -1;
     }
+    public static int getItemSlot(Item item, boolean isHotbar) {
+        return getItem(item, isHotbar);
+    }
 
     public static int getSlotInHotBar(Item item) {
-        for (int i = 0; i < 9; i++) {
-            if (mc.player.inventory.getStackInSlot(i).getItem() == item) {
-                return i;
-            }
-        }
-        return -1;
+        return getHotBarSlot(item);
     }
 
     public static int getItemSlot(Item input) {

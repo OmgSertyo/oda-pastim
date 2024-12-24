@@ -39,30 +39,22 @@ public class SpotifyLocalAPI {
     public static boolean isPlaying = false;
 
     public static void initiateAuthorizationProcess() throws IOException {
-        // ������ ���������� �������
         HttpServer server = HttpServer.create(new InetSocketAddress(8888), 0);
         server.createContext("/callback", new AuthHandler());
-        server.setExecutor(null); // creates a default executor
+        server.setExecutor(null);
         server.start();
         System.out.println("Server started on port 8888");
-        // �������� ������ ����������� � ��������
         openAuthorizationUrl();
-
-        // �������� ��������� ���� �����������
         while (AuthHandler.authorizationCode == null) {
             try {
-                Thread.sleep(1000);  // �������� ������ �������
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-            // ����� ���� ����������� �� ����� �������
         accessToken = getAccessToken(AuthHandler.authorizationCode);
 
-        // ���������� ������ � ���� � �����������
-
-        // ������������� ������ ��� ������� � �������� �����
         if (trackInfo.length > 2) {
             Spotify.isConnected = true;
         } else {
@@ -78,7 +70,6 @@ public class SpotifyLocalAPI {
         String scopes = "user-read-currently-playing user-read-playback-state";
 
         try {
-            // ����������� ���������� URL
             String encodedScopes = URLEncoder.encode(scopes, StandardCharsets.UTF_8.toString());
             String url = String.format("https://accounts.spotify.com/authorize?client_id=%s&response_type=code&redirect_uri=%s&scope=%s",
                     clientId, redirectUri, encodedScopes);
@@ -100,7 +91,6 @@ public class SpotifyLocalAPI {
             os.write(response.getBytes());
             os.close();
 
-            // ���������� ���� ����������� �� URL
             String[] params = query.split("&");
             for (String param : params) {
                 if (param.startsWith("code=")) {
@@ -138,7 +128,6 @@ public class SpotifyLocalAPI {
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
-            // �������������� ������ � JsonObject
             JsonParser parser = new JsonParser();
             JsonElement jsonElement = parser.parse(content.toString());
             JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -146,20 +135,6 @@ public class SpotifyLocalAPI {
         }
     }
 
-
-    private static String readFromFile(String filename) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-            return stringBuilder.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
     public static String[] getCurrentTrack(String accessToken) throws IOException {
         String url = "https://api.spotify.com/v1/me/player/currently-playing";
@@ -216,7 +191,6 @@ public class SpotifyLocalAPI {
 
                     String albumReleaseDate = album.has("release_date") ? album.get("release_date").getAsString() : "N/A";
 
-                    // ���������� ������ ������ � ������������� ����������
                     return new String[]{trackName, artistNamesString, coverUrl, trackProgress, trackEndTime, albumReleaseDate};
                 } else {
                     return new String[]{"No track currently playing", "N/A", "", "0:00", "0:00", "N/A"};
@@ -246,62 +220,5 @@ public class SpotifyLocalAPI {
         return String.format("%d:%02d", minutes, seconds);
     }
 
-    public static String getPlayPauseIcon() {
-        return isPlaying ? "Pause" : "Play"; // Замените на пути к вашим иконкам
-    }
-    public static boolean getPlayPausestatus() {
-        return isPlaying ? true : false; // Замените на пути к вашим иконкам
-    }
-    public static void resumePlayback(String accessToken) throws IOException {
-        String url = "https://api.spotify.com/v1/me/player/play";
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Authorization", "Bearer " + accessToken);
-        connection.setRequestProperty("Content-Length", "0");  // Добавляем Content-Length
 
-        int responseCode = connection.getResponseCode();
-        if (responseCode == 204) {
-            System.out.println("Playback resumed successfully.");
-        } else {
-            System.out.println("Failed to resume playback: " + responseCode);
-        }
-    }
-    public static void pausePlayback() throws IOException, InterruptedException {
-        String url = "https://api.spotify.com/v1/me/player/pause";
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Authorization", "Bearer " + accessToken)
-                .header("Content-Type", "application/json") // Убедитесь, что Content-Type установлен
-
-                .header("Content-Length", "0")
-
-                .POST(HttpRequest.BodyPublishers.noBody())  // PUT-запрос без тела
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if (response.statusCode() == 204) {
-            System.out.println("Playback paused successfully.");
-        } else {
-            System.out.println("Failed to pause playback: " + response.statusCode());
-        }
-    }
-    private static String encrypt(String data, String key) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        return Base64.getEncoder().encodeToString(encrypted);
-    }
-
-    public static String decrypt(String encryptedData, String key) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decoded = Base64.getDecoder().decode(encryptedData);
-        byte[] decrypted = cipher.doFinal(decoded);
-        return new String(decrypted, StandardCharsets.UTF_8);
-    }
 }

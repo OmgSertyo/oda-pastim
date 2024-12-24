@@ -8,8 +8,8 @@ import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import sertyo.events.module.impl.render.Arraylist;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.font.Wrapper;
 
 import java.awt.*;
@@ -99,7 +99,7 @@ public final class StyledFontRenderer implements Wrapper {
         float posX = startPos;
         float posY = (float) y * 2.0f;
 
-        float[] rgb = RenderUtil.IntColor.rgb(color);
+        float[] rgb = RenderUtility.IntColor.rgb(color);
         float red = rgb[0];
         float green = rgb[1];
         float blue = rgb[2];
@@ -151,8 +151,8 @@ public final class StyledFontRenderer implements Wrapper {
         float posX = startPos;
         float posY = (float) y * 2.0f;
 
-        Color color = ColorUtil.gradient(7, 10 - Arraylist.colorSpeed.getInt(), color1, color2);
-        float[] rgb = RenderUtil.IntColor.rgb(color.getRGB());
+        Color color = ColorUtility.gradient(7, 10 - Arraylist.colorSpeed.getInt(), color1, color2);
+        float[] rgb = RenderUtility.IntColor.rgb(color.getRGB());
         float red = rgb[0];
         float green = rgb[1];
         float blue = rgb[2];
@@ -205,7 +205,7 @@ public final class StyledFontRenderer implements Wrapper {
         float posX = startPos;
         float posY = (float) y * 2.0f;
 
-        float[] rgb = RenderUtil.IntColor.rgb(color);
+        float[] rgb = RenderUtility.IntColor.rgb(color);
 
 
 
@@ -263,7 +263,7 @@ public final class StyledFontRenderer implements Wrapper {
                 char c0 = textComponent1.getString().charAt(0);
                 float r1 = 1,r2 = 1,r3 = 1,r4 = 1;
                 if (textComponent1.getStyle().getColor() != null) {
-                    rgb = RenderUtil.IntColor.rgb(textComponent1.getStyle().getColor().getColor());
+                    rgb = RenderUtility.IntColor.rgb(textComponent1.getStyle().getColor().getColor());
                     r1 = rgb[0];
                     r2 = rgb[1];
                     r3 = rgb[2];

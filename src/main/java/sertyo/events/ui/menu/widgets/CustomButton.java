@@ -10,8 +10,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import sertyo.events.Main;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.animation.Direction;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
 
@@ -40,11 +40,11 @@ public class CustomButton extends Button {
          this.animation.setDirection(this.hovered ? Direction.FORWARDS : Direction.BACKWARDS);
          //GlStateManager.enableBlend();
         // RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-         RenderUtil.Render2D.drawRoundedRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 5.0F, (new Color(30, 30, 30)).getRGB());
+         RenderUtility.Render2D.drawRoundedRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 5.0F, (new Color(30, 30, 30)).getRGB());
          if (this.hovered) {
-            RenderUtil.Render2D.drawRoundedGradientRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 5.0F, 1.0F, ColorUtil.setAlpha(color, this.animation.getOutput()), ColorUtil.setAlpha(color, this.animation.getOutput()), ColorUtil.setAlpha(color2, this.animation.getOutput()), ColorUtil.setAlpha(color2, this.animation.getOutput()));
-            RenderUtil.Render2D.drawRoundedRect((float)(this.x + 1), (float)(this.y + 1), (float)(this.width - 2), (float)(this.height - 2), 4.0F, (new Color(30, 30, 30)).getRGB());
-            Fonts.msBold[16].drawCenteredString(ms, ColorUtil.gradient(this.getMessage().getString(), color, color2), (float)this.x + (float)this.width / 2.0F, (float)this.y + (float)(this.height - 8) / 2.0F + 1.0F, Color.white.getRGB());
+            RenderUtility.Render2D.drawRoundedGradientRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 5.0F, 1.0F, ColorUtility.setAlpha(color, this.animation.getOutput()), ColorUtility.setAlpha(color, this.animation.getOutput()), ColorUtility.setAlpha(color2, this.animation.getOutput()), ColorUtility.setAlpha(color2, this.animation.getOutput()));
+            RenderUtility.Render2D.drawRoundedRect((float)(this.x + 1), (float)(this.y + 1), (float)(this.width - 2), (float)(this.height - 2), 4.0F, (new Color(30, 30, 30)).getRGB());
+            Fonts.msBold[16].drawCenteredString(ms, ColorUtility.gradient(this.getMessage().getString(), color, color2), (float)this.x + (float)this.width / 2.0F, (float)this.y + (float)(this.height - 8) / 2.0F + 1.0F, Color.white.getRGB());
          } else {
             Fonts.msBold[16].drawCenteredString(this.getMessage().getString(), (float)this.x + (float)this.width / 2.0F, (float)this.y + (float)(this.height - 8) / 2.0F + 1.0F, Color.white.getRGB());
          }

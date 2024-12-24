@@ -5,7 +5,7 @@ import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.ITextComponent;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 
 public class VersionSelectScreen extends TextFieldWidget {
 
@@ -19,7 +19,7 @@ public class VersionSelectScreen extends TextFieldWidget {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (ProtocolVersion.getClosest(getText()) == null) {
-            setTextColor(ColorUtil.rgba(200, 20, 20, 255));
+            setTextColor(ColorUtility.rgba(200, 20, 20, 255));
         } else {
             ViaLoadingBase.getInstance().reload(ProtocolVersion.getClosest(getText()));
             setTextColor(-1);

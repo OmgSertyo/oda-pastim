@@ -29,7 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
 import sertyo.events.Main;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.fonts.Fonts;
 
@@ -554,8 +554,8 @@ public class PasswordField extends Widget implements IRenderable, IGuiEventListe
         {
             if (this.getEnableBackgroundDrawing())
             {
-                int i = ColorUtil.getColor(0);
-                int j = ColorUtil.getColor(500);
+                int i = ColorUtility.getColor(0);
+                int j = ColorUtility.getColor(500);
                 RenderUtility.drawGradientGlow((float)this.x - 1, (float)this.y - 1, (float)this.x + this.width + 1, (float)this.y + this.height + 1, 5, i, i, j, j);
                 RenderUtility.drawRoundedRect((float)this.x, (float)this.y, (float)this.x + this.width, (float)this.y + this.height, 5.0F, (new Color(30, 30, 30)).getRGB());
             }

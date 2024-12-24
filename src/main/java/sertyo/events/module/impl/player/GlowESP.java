@@ -1,8 +1,10 @@
 package sertyo.events.module.impl.player;
 
 import com.darkmagician6.eventapi.EventTarget;
-import com.google.common.eventbus.Subscribe;
+
 import java.util.Iterator;
+
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import sertyo.events.event.player.EventUpdate;
 import sertyo.events.module.Category;
@@ -18,24 +20,22 @@ public class GlowESP extends Module {
     }
     public static boolean notstarted = true;
     @EventTarget
-    public void onUpdate(EventUpdate var1) {
-        Iterator player = mc.world.getPlayers().iterator();
+    public void onUpdate(EventUpdate update) {
+        Iterator<AbstractClientPlayerEntity> player = mc.world.getPlayers().iterator();
 
         while(player.hasNext()) {
             Entity entity = (Entity) player;
-            if (entity != null) {
-                entity.setGlowing(true);
-            }
+            entity.setGlowing(true);
         }
         notstarted = true;
     }
     @Override
     public void onEnable() {
         super.onEnable();
-            Iterator var1 = mc.world.getPlayers().iterator();
+            Iterator<AbstractClientPlayerEntity> svo = mc.world.getPlayers().iterator();
 
-            while (var1.hasNext()) {
-                Entity var2 = (Entity) var1.next();
+            while (svo.hasNext()) {
+                Entity var2 = (Entity) svo.next();
                 if (var2 != null) {
                     var2.setGlowing(true);
                 }
@@ -46,10 +46,10 @@ public class GlowESP extends Module {
     public void onDisable() {
         super.onDisable();
         if (notstarted) {
-            Iterator var1 = mc.world.getPlayers().iterator();
+            Iterator<AbstractClientPlayerEntity> svo = mc.world.getPlayers().iterator();
 
-            while (var1.hasNext()) {
-                Entity var2 = (Entity) var1.next();
+            while (svo.hasNext()) {
+                Entity var2 =  svo.next();
                 if (var2 != null) {
                     var2.setGlowing(false);
                 }

@@ -30,20 +30,6 @@ public final class StyledFont {
         this.regular = new GlyphPage(AbstractFont.getFont(fileName, Font.PLAIN, size), chars, stretching, spacing, lifting, antialiasing);
     }
 
-    public StyledFont(String fileName, int size, float stretching, float spacing, float lifting, boolean antialiasing, Lang lang, boolean wind) {
-        int[] codes = lang.getCharCodes();
-        char[] chars = new char[(codes[1] - codes[0] + codes[3] - codes[2])];
-
-        int c = 0;
-        for (int d = 0; d <= 2; d += 2) {
-            for (int i = codes[d]; i <= codes[d + 1] - 1; i++) {
-                chars[c] = (char) i;
-                c++;
-            }
-        }
-
-        this.regular = new GlyphPage(AbstractFont.getFontWindows(fileName, Font.PLAIN, size), chars, stretching, spacing, lifting, antialiasing);
-    }
 
 
     public float renderGlyph(Matrix4f matrix, char c, float x, float y, boolean bold, boolean italic, float red, float green, float blue, float alpha) {
@@ -52,9 +38,6 @@ public final class StyledFont {
 
     public void drawStringWithShadow(MatrixStack matrixStack, ITextComponent text, double x, double y, int color) {
         StyledFontRenderer.drawShadowedString(matrixStack, this, text, x, y, color);
-    }
-    public float getMiddleOfBox(double boxHeight) {
-        return (float) (boxHeight / 2f - getFontHeight() / 2f);
     }
 
     public void drawString(MatrixStack matrixStack, String text, double x, double y, int color) {
@@ -65,10 +48,6 @@ public final class StyledFont {
     }
     public void drawString(String text, double x, double y, int color) {
         StyledFontRenderer.drawString(new MatrixStack(), this, text, x, y, color);
-    }
-
-    public void drawStringTest(MatrixStack matrixStack, ITextComponent text, double x, double y, int color) {
-        StyledFontRenderer.renderStringGradient(matrixStack, this, text, x, y, false, color);
     }
 
 
@@ -142,9 +121,7 @@ public final class StyledFont {
         return regular;
     }
 
-   // public float getFontHeight() {
-    //    return regular.getFontHeight();
-   // }
+
     public int getFontHeight() {
         return (int) ((this.regular.getFontHeight() - 2));
     }
@@ -152,8 +129,6 @@ public final class StyledFont {
         return regular.getLifting();
     }
 
-    public void drawGradientString(MatrixStack ms, String text2, double x, double y, Color color1, Color color2) {
-         drawString(ms, text2, x, y, color1, color2);
-    }
+
 
 }

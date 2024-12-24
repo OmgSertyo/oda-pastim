@@ -21,10 +21,8 @@ public class ElytraRecast extends Module {
 
         if (mc.player.isOnGround() && mc.player.isElytraFlying()) {
             if (mc.gameSettings.keyBindJump.isKeyDown()) {
-                // rotate pitch -45 (10 тиков)
                 mc.player.setRotationYawHead(-45);
             } else {
-                // rotate pitch 90 (2 тика)
                 mc.player.setRotationYawHead(90);
                 mc.player.jump();
                 mc.player.motion.y = 0.08;

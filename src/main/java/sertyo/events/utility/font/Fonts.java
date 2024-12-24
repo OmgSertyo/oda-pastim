@@ -22,7 +22,6 @@ public class Fonts {
 
     public static volatile StyledFont[] gilroy = new StyledFont[24];
     public static volatile StyledFont[] sora = new StyledFont[24];
-    public static volatile StyledFont[] woveline = new StyledFont[24];
     public static volatile StyledFont[] icons = new StyledFont[24];
     public static volatile StyledFont[] configIcon = new StyledFont[24];
 
@@ -30,11 +29,6 @@ public class Fonts {
 
     @SneakyThrows
     public static void init() {
-        long time = System.currentTimeMillis();
-
-        minecraft[8] = new StyledFont("mc.ttf", 8, 0.0f, 0.0f, 0.0f, false, Lang.ENG_RU);
-        woveline[19] = new StyledFont("woveline.otf", 19, 0.0f, 0.0f, 0.0f, true, Lang.ENG_RU);
-        icons1[130] = new StyledFont("guiicon.ttf", 130, 0.0f, 0.0f, 0.0f, true, Lang.ENG_RU);
         for (int i = 8; i < 24;i++) {
             icons1[i] = new StyledFont("guiicon.ttf", i, 0.0f, 0.0f, 0.0f, true, Lang.ENG_RU);
         }
@@ -78,8 +72,5 @@ public class Fonts {
         for (int i = 8; i < 31;i++) {
             msSemiBold[i] = new StyledFont("Montserrat-SemiBold.ttf", i, 0.0f, 0.0f, 0.0f, true, Lang.ENG_RU);
         }
-        System.out.println("Шрифты загрузились за: " + (System.currentTimeMillis() - time) + " миллисекунды!");
-
-        //fontThread.shutdown();
     }
 }

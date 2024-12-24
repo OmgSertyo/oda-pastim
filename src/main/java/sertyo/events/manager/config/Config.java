@@ -7,6 +7,7 @@ import sertyo.events.Main;
 import sertyo.events.command.CommandManager;
 import sertyo.events.manager.theme.Themes;
 import sertyo.events.module.Module;
+import sovokguard.protect.ApiContacts;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class Config implements ConfigUpdater {
          Module module = (Module)var3.next();
          modulesObject.add(module.name, module.save());
       }
-      jsonObject.addProperty("Creator", String.valueOf(new JsonPrimitive(Main.cheatProfile.getName())));
+      jsonObject.addProperty("Creator", String.valueOf(new JsonPrimitive(ApiContacts.username)));
 
       jsonObject.addProperty("Prefix", CommandManager.getPrefix());
       jsonObject.addProperty("GuiTheme", Main.getInstance().getThemeManager().getCurrentGuiTheme().getName());

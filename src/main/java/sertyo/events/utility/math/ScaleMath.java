@@ -11,7 +11,7 @@ public class ScaleMath {
 
     public void pushScale() {
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            Minecraft.getInstance().gameRenderer.setupOverlayRendering(2);
+            Minecraft.getInstance().gameRenderer.setupOverlayRendering(2); //Мне похуй на это я очень пиздатый пац
         } else {
             Minecraft.getInstance().gameRenderer.setupOverlayRendering(2);
 

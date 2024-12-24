@@ -4,9 +4,9 @@ import sertyo.events.Main;
 import sertyo.events.manager.theme.Themes;
 import sertyo.events.module.setting.impl.BooleanSetting;
 import sertyo.events.ui.csgui.component.Component;
-import sertyo.events.utility.render.ColorUtil;
 import sertyo.events.utility.render.ColorUtility;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.animation.AnimationMath;
 import sertyo.events.utility.font.Fonts;
@@ -37,7 +37,7 @@ public class BooleanComponent extends Component {
 
    public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
       super.mouseClicked(mouseX, mouseY, mouseButton);
-      boolean isHovered = RenderUtil.isHovered(mouseX, mouseY, (double)this.x, (double)this.y, (double)this.width, (double)this.height);
+      boolean isHovered = RenderUtility.isHovered(mouseX, mouseY, (double)this.x, (double)this.y, (double)this.width, (double)this.height);
       if (isHovered && mouseButton == 0) {
          this.setting.state = !this.setting.get();
       }

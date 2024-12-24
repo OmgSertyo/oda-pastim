@@ -4,27 +4,21 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.client.util.ClientRecipeBook;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.FreeCamera;
 import net.minecraft.network.play.client.CPlayerPacket;
-import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.math.vector.Vector3d;
 import sertyo.events.event.packet.EventPacket;
 import sertyo.events.event.player.EventLivingUpdate;
-import sertyo.events.event.player.EventMotion;
 import sertyo.events.event.render.EventRender2D;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.setting.impl.NumberSetting;
-import sertyo.events.utility.Utility;
 import sertyo.events.utility.font.Fonts;
 import sertyo.events.utility.move.MovementUtility;
-;
+
 
 @ModuleAnnotation(
    name = "FreeCam",
@@ -118,36 +112,6 @@ public class FreeCam extends Module {
       mc.player.movementInput = new MovementInputFromOptions(mc.gameSettings);
 
    }
-
-   /**
-    * Обработчик события EventLivingUpdate.
-    * Устанавливает необходимые значения и состояния для игрока.
-    */
-   private void handleLivingUpdate() {
-      player.noClip = true;
-      player.setOnGround(false);
-      MovementUtility.setMotion(speed.get());
-
-      if (mc.gameSettings.keyBindJump.isKeyDown()) {
-         player.motion.y = motionY.get();
-      }
-      if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-         player.motion.y = -motionY.get();
-      }
-
-      oldIsFlying = player.abilities.isFlying;
-      player.abilities.isFlying = true;
-   }
-
-   /**
-    * Обработчик события EventMotion.
-    * Отправляет пакет CPlayerPacket на сервер(если игрок находится на Sunrise) и отменяет событие.
-    */
-
-   /**
-    * Обработчик события EventRender.
-    * Отображает информацию о перемещении игрока в 2D рендере.
-    */
    private void handleRender2DEvent(EventRender2D renderEvent) {
       MainWindow resolution = mc.getMainWindow();
 

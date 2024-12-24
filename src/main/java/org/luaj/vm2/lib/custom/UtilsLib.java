@@ -14,21 +14,21 @@ public class UtilsLib extends TwoArgFunction {
         library.set("getName", new ZeroArgFunction() {
             @Override
             public LuaValue call() {
-                return LuaValue.valueOf(Main.cheatProfile.getName());
+                return null;
             }
         });
 
         library.set("getUid", new ZeroArgFunction() {
             @Override
             public LuaValue call() {
-                return LuaValue.valueOf(Main.cheatProfile.getId());
+                return null;
             }
         });
 
         library.set("getRole", new ZeroArgFunction() {
             @Override
             public LuaValue call() {
-                return LuaValue.valueOf(Main.cheatProfile.getRoleName());
+                return null;
             }
         });
 

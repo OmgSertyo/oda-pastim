@@ -6,8 +6,8 @@ import sertyo.events.Main;
 import sertyo.events.module.setting.impl.KeySetting;
 import sertyo.events.ui.csgui.component.Component;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 
 import java.awt.*;
 
@@ -30,7 +30,7 @@ public class KeyComponent extends Component {
         super.render(mouseX, mouseY);
         setHeight(18);
         float max = Math.max(11, Fonts.msBold[14].getWidth(Main.getKey(set.get()) == null ? "" : Main.getKey(set.get()).toUpperCase()) + 6);
-        RenderUtil.Render2D.drawRoundedRect(x + width - max - 5, y + 5, max, 8, 3, Color.decode("#2B2C44").getRGB());
+        RenderUtility.Render2D.drawRoundedRect(x + width - max - 5, y + 5, max, 8, 3, Color.decode("#2B2C44").getRGB());
         if (binding) {
             Fonts.msBold[14].drawCenteredString(System.currentTimeMillis() % 1000 > 500 ? "_" : "", x + width - max - 5 + max / 2f, y + 7, (new Color(149, 149, 161)).getRGB());
         } else {

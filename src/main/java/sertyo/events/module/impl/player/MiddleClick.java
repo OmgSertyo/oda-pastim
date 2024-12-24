@@ -14,7 +14,7 @@ import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.setting.impl.BooleanSetting;
-import sertyo.events.utility.misc.InventoryUtility;
+import sertyo.events.utility.misc.InventoryUtil;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.misc.ChatUtility;
 
@@ -30,13 +30,13 @@ public class MiddleClick extends Module {
    @EventTarget
    public void onMouse(EventMouse event) {
       if (this.pearl.get() && event.getButton() == 2 && !Utility.mc.player.getCooldownTracker().hasCooldown(Items.ENDER_PEARL)) {
-         int hotbarPearls = InventoryUtility.getItemSlot(Items.ENDER_PEARL, true);
+         int hotbarPearls = InventoryUtil.getItemSlot(Items.ENDER_PEARL, true);
          if (hotbarPearls != -1) {
             Utility.mc.player.connection.sendPacket(new CHeldItemChangePacket(hotbarPearls));
             Utility.mc.player.connection.sendPacket(new CPlayerTryUseItemPacket(Hand.MAIN_HAND));
             Utility.mc.player.connection.sendPacket(new CHeldItemChangePacket(Utility.mc.player.inventory.currentItem));
          } else {
-            int invPearls = InventoryUtility.getItemSlot(Items.ENDER_PEARL, false);
+            int invPearls = InventoryUtil.getItemSlot(Items.ENDER_PEARL, false);
             if (invPearls != -1) {
                Utility.mc.playerController.pickItem(invPearls);
                Utility.mc.player.connection.sendPacket(new CPlayerTryUseItemPacket(Hand.MAIN_HAND));

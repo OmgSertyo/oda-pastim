@@ -37,6 +37,7 @@ import sertyo.events.utility.render.animation.Direction;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
 import sertyo.events.utility.render.animation.impl.EaseInOutQuad;
 import sertyo.events.utility.render.fonts.Fonts;
+import sovokguard.protect.ApiContacts;
 
 import static sertyo.events.utility.Utility.mc;
 
@@ -152,7 +153,7 @@ public class CsGui extends Screen {
       RenderUtility.applyRound(25.0F, 25.0F, 12.0F, 1.0F, () -> {
          RenderUtility.drawProfile((float)this.x + this.windowWidth - 40.0F - 20.0F, (float)this.y + 3.5F, 25, 25);
       });
-      Fonts.mntsb13.drawString(Main.cheatProfile.getName(), this.x + this.windowWidth - 40.0F + 6, (float)this.y + 10.5F, (new Color(160, 160, 160)).getRGB());
+      Fonts.mntsb13.drawString(ApiContacts.username, this.x + this.windowWidth - 40.0F + 6, (float)this.y + 10.5F, (new Color(160, 160, 160)).getRGB());
       StencilUtility.initStencilToWrite();
       RenderUtility.drawRect((float)(this.x + 15), (float)(this.y + 29), 320.0F, this.windowHeight - 29.0F, -1);
       StencilUtility.readStencilBuffer(1);

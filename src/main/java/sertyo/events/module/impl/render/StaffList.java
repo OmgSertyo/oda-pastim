@@ -21,7 +21,7 @@ import sertyo.events.manager.dragging.Draggable;
 import sertyo.events.manager.staff.Staff;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.render.ColorUtility;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.animation.AnimationMath;
 import sertyo.events.utility.render.fonts.Fonts;
@@ -78,8 +78,8 @@ public class StaffList implements Utility {
          RenderUtility.Render2D.drawRect((float)staffListDraggable.getX(), (float)(staffListDraggable.getY() + 16), (float)width, 1.0F, strokeColor);
       }
 
-      RenderUtil.SmartScissor.push();
-      RenderUtil.SmartScissor.setFromComponentCoordinates((double)staffListDraggable.getX(), (double)staffListDraggable.getY(), (double)width, (double)(19.0F + realOffset));
+      RenderUtility.SmartScissor.push();
+      RenderUtility.SmartScissor.setFromComponentCoordinates((double)staffListDraggable.getX(), (double)staffListDraggable.getY(), (double)width, (double)(19.0F + realOffset));
       offset = 0;
 
       for(Iterator var9 = sortedStaff.iterator(); var9.hasNext(); offset += 11) {
@@ -98,8 +98,8 @@ public class StaffList implements Utility {
          }
       }
 
-      RenderUtil.SmartScissor.unset();
-      RenderUtil.SmartScissor.pop();
+      RenderUtility.SmartScissor.unset();
+      RenderUtility.SmartScissor.pop();
       Main.getInstance().getScaleMath().popScale();
    }
 

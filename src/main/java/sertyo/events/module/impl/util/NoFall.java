@@ -10,13 +10,6 @@ import sertyo.events.module.ModuleAnnotation;
 
 @ModuleAnnotation(name = "NoFall", category = Category.PLAYER)
 public class NoFall extends Module {
-
-
-        @EventTarget
-    public void onEventmotion(EventUpdate e) {
-            if (mc.player.ticksExisted % 3 == 0 && mc.player.fallDistance > 3) {
-            //    mc.player.setpositionY(e.getPosY() + 0.2f);
-            }
-        }
-    }
+    //FIMOZIK 1337
+}
 

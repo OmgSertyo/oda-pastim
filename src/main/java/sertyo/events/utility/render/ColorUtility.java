@@ -6,6 +6,8 @@ import java.awt.Color;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import org.lwjgl.opengl.GL11;
 import sertyo.events.Main;
 import sertyo.events.module.impl.render.Arraylist;
@@ -83,7 +85,16 @@ public class ColorUtility implements Utility {
    public static Double interpolate(double oldValue, double newValue, double interpolationValue) {
       return oldValue + (newValue - oldValue) * interpolationValue;
    }
+   public static StringTextComponent gradient(String message, int first, int end) {
 
+      StringTextComponent text = new StringTextComponent("");
+      for (int i = 0; i < message.length(); i++) {
+         text.append(new StringTextComponent(String.valueOf(message.charAt(i))).setStyle(Style.EMPTY.setColor(new net.minecraft.util.text.Color(interpolateInt(first, end, (float) i / message.length())))));
+      }
+
+      return text;
+
+   }
    public static Color applyOpacity(Color color, float opacity) {
       opacity = Math.min(1.0F, Math.max(0.0F, opacity));
       return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int)((float)color.getAlpha() * opacity));
@@ -128,10 +139,10 @@ public class ColorUtility implements Utility {
       return Color.HSBtoRGB(hue, 1.0F, 1.0F);
    }
 
-   public static Color getColor(int index) {
+   public static int getColor(int index) {
       Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
       Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
-      return gradient((int)(10.0F - Arraylist.colorSpeed.get()), index, color, color2);
+      return gradient((int)(10.0F - Arraylist.colorSpeed.get()), index, color, color2).getRGB();
    }
    public static int getColor3(int index, float aPC) {
       return ColorUtility.swapAlpha(Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[index].getRGB(), (float)ColorUtility.getAlphaFromColor(Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[index].getRGB()) * aPC);

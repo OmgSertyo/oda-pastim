@@ -10,11 +10,13 @@ import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.setting.impl.KeySetting;
 import sertyo.events.utility.misc.ChatUtility;
+import sertyo.events.utility.misc.TimerHelper;
+
 @J2c
 @ModuleAnnotation(name = "KtLeave", category = Category.COMBAT)
 public class GodModeRW extends Module {
-    private final A stopWatch = new A();
-    private final A warpDelay = new A();
+    private final TimerHelper stopWatch = new TimerHelper();
+    private final TimerHelper warpDelay = new TimerHelper();
     private boolean menuClosed = false;
     private Thread updateThread;
     private final KeySetting key = new KeySetting("Кнопка лива", -1);
@@ -82,7 +84,7 @@ public class GodModeRW extends Module {
             try {
                 Thread.sleep(50);
 
-                if (!menuClosed && warpDelay.hasTimeElapsed(1000L)) {
+                if (!menuClosed && warpDelay.hasReached(1000L)) {
                     forceCloseMenu();
                 }
 

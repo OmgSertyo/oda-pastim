@@ -1,7 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
+
 
 package sertyo.events.utility.render.fonts;
 
@@ -21,6 +18,7 @@ import sertyo.events.Main;
 import sertyo.events.module.impl.util.NameProtect;
 import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.Shader;
+import sovokguard.protect.ApiContacts;
 
 public class FontRenderer extends CFont {
    private static final Shader FONT_SUBSTRING = new Shader("neiron/shaders/font_substring.fsh", true);
@@ -165,7 +163,7 @@ public class FontRenderer extends CFont {
          }
 
          if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text2.equalsIgnoreCase(Minecraft.getInstance().session.getUsername())) {
-            text2 = Main.cheatProfile.getName();
+            text2 = ApiContacts.username;
          }
 
          if (color == 553648127) {
@@ -500,7 +498,7 @@ public class FontRenderer extends CFont {
          return 0;
       } else {
          if (Main.getInstance().getModuleManager() != null && Main.getInstance().getModuleManager().getModule(NameProtect.class).isEnabled() && text.equalsIgnoreCase(Minecraft.getInstance().session.getUsername())) {
-            text = Main.cheatProfile.getName();
+            text = ApiContacts.username;
          }
 
          int width = 0;
@@ -721,7 +719,7 @@ public class FontRenderer extends CFont {
 
       for (int var11 = 0; var11 < var10; ++var11) {
          char c = var9[var11];
-         int col1 = ColorUtility.getOverallColorFrom(ColorUtility.getColor((int) index * 5).getRGB(), ColorUtility.getColor((int) index * 5).getRGB(), index / (float) this.getStringWidth(text));
+         int col1 = ColorUtility.getOverallColorFrom(ColorUtility.getColor((int) index * 5), ColorUtility.getColor((int) index * 5), index / (float) this.getStringWidth(text));
          col1 = ColorUtility.swapAlpha(col1, (float) ColorUtility.getAlphaFromColor(col1) * alphaPC);
          if (ColorUtility.getAlphaFromColor(col1) >= 32) {
             if (shadow) {

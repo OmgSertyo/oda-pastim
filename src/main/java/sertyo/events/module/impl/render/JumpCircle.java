@@ -13,7 +13,7 @@ import java.util.Iterator;
 import org.lwjgl.opengl.GL11;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.utility.Utility;
-import sertyo.events.utility.render.AntiAliasingUtility;
+import sertyo.events.utility.math.AntiAliasingUtility;
 import sertyo.events.utility.render.animation.AnimationMath;
 
 @ModuleAnnotation(

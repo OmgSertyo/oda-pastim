@@ -27,7 +27,7 @@ public class ChestStealer extends Module {
 
 
     @EventTarget
-    private void onTickEvent(EventUpdate event) {
+    private void onUpdate(EventUpdate event) {
         if (mc.player.openContainer == null) return;
 
         if (mc.currentScreen != null && (mc.currentScreen.getTitle().equals(new TranslationTextComponent("container.enderchest")) || mc.currentScreen.getTitle().getString().contains("Аукцион") || mc.currentScreen.getTitle().getString().contains("Аукционы") || mc.currentScreen.getTitle().getString().contains("Покупка предмета"))) return;

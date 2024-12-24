@@ -49,9 +49,8 @@ import static com.mojang.blaze3d.platform.GlStateManager.*;
 import static com.mojang.blaze3d.systems.RenderSystem.enableBlend;
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.*;
 import static org.lwjgl.opengl.GL11.*;
-import static sertyo.events.utility.render.ColorUtil.injectAlpha;
-import static sertyo.events.utility.render.RenderUtil.IntColor.*;
-import static sertyo.events.utility.render.RenderUtil.Render2D.setupRender;
+import static sertyo.events.utility.render.RenderUtility.IntColor.*;
+import static sertyo.events.utility.render.RenderUtility.Render2D.setupRender;
 import static sertyo.events.utility.render.RenderUtility.Render2D.*;
 import static sertyo.events.utility.render.ShaderUtil.*;
 
@@ -101,10 +100,7 @@ public class RenderUtility implements Utility {
         GL11.glPopMatrix();
     }
     public static void drawHud(MatrixStack matrices, float x, float y, float width, float height, float radius, float softness, float blur) {
-        Color clr1 = injectAlpha(ColorUtil.getColor2(270), 75);
-        Color clr2 = injectAlpha(ColorUtil.getColor2(0), 75);
-        Color clr3 = injectAlpha(ColorUtil.getColor2(180), 75);
-        Color clr4 = injectAlpha(ColorUtil.getColor2(90), 75);
+
  //       drawGradientGlow(matrices, HudEditor.getColor(270), HudEditor.getColor(0), HudEditor.getColor(180), HudEditor.getColor(90), x, y, width, height, radius, softness);
         //drawGradientRound(x, y, width, height, radius, clr1.getRGB(), clr2.getRGB(), clr3.getRGB(), clr4.getRGB());
         drawRoundedBlurNL(matrices, x, y, width, height, radius,  new Color(-1727132146, true), blur, 0.5F);
@@ -650,10 +646,10 @@ public class RenderUtility implements Utility {
         GlStateManager.disableBlend();
     }
     public static void drawRoundedGradientRect(float x, float y, float x2, float y2, float round1, float round2, float round3, float round4, float value, int color1, int color2, int color3, int color4) {
-        float[] c1 = ColorUtil.getRGBAf(color1);
-        float[] c2 = ColorUtil.getRGBAf(color2);
-        float[] c3 = ColorUtil.getRGBAf(color3);
-        float[] c4 = ColorUtil.getRGBAf(color4);
+        float[] c1 = ColorUtility.getRGBAf(color1);
+        float[] c2 = ColorUtility.getRGBAf(color2);
+        float[] c3 = ColorUtility.getRGBAf(color3);
+        float[] c4 = ColorUtility.getRGBAf(color4);
         GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -688,10 +684,10 @@ public class RenderUtility implements Utility {
         drawRoundedGradientRect((float) x, (float) y, (float) x2, (float) y2, round * 2, 1.0F, color.getRGB(), color.getRGB(), color.getRGB(), color.getRGB());
     }
     public static void drawRoundedGradientRect(float x, float y, float x2, float y2, float round, float value, int color1, int color2, int color3, int color4) {
-        float[] c1 = ColorUtil.getRGBAf(color1);
-        float[] c2 = ColorUtil.getRGBAf(color2);
-        float[] c3 = ColorUtil.getRGBAf(color3);
-        float[] c4 = ColorUtil.getRGBAf(color4);
+        float[] c1 = ColorUtility.getRGBAf(color1);
+        float[] c2 = ColorUtility.getRGBAf(color2);
+        float[] c3 = ColorUtility.getRGBAf(color3);
+        float[] c4 = ColorUtility.getRGBAf(color4);
         GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
         GlStateManager.enableBlend();
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -743,10 +739,10 @@ public class RenderUtility implements Utility {
             GlStateManager.disableBlend();
         }
         public static void drawRoundedGradientRect(float x, float y, float x2, float y2, float round1, float round2, float round3, float round4, float value, int color1, int color2, int color3, int color4) {
-            float[] c1 = ColorUtil.getRGBAf(color1);
-            float[] c2 = ColorUtil.getRGBAf(color2);
-            float[] c3 = ColorUtil.getRGBAf(color3);
-            float[] c4 = ColorUtil.getRGBAf(color4);
+            float[] c1 = ColorUtility.getRGBAf(color1);
+            float[] c2 = ColorUtility.getRGBAf(color2);
+            float[] c3 = ColorUtility.getRGBAf(color3);
+            float[] c4 = ColorUtility.getRGBAf(color4);
             GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -813,7 +809,7 @@ public class RenderUtility implements Utility {
 
             // fill.
             GL11.glBegin(9);
-            ColorUtil.setColor(color.getRGB());
+            ColorUtility.setColor(color.getRGB());
             GL11.glVertex2f(x, y - 2);
             GL11.glVertex2f(x + width, y + height);
             GL11.glVertex2f(x + width, y);
@@ -821,7 +817,7 @@ public class RenderUtility implements Utility {
             GL11.glEnd();
 
             GL11.glBegin(9);
-            ColorUtil.setColor(color.brighter().getRGB());
+            ColorUtility.setColor(color.brighter().getRGB());
             GL11.glVertex2f(x + width, y);
             GL11.glVertex2f(x + width, y + height);
             GL11.glVertex2f(x + width * 2, y - 2);
@@ -830,7 +826,7 @@ public class RenderUtility implements Utility {
 
             // line.
             GL11.glBegin(3);
-            ColorUtil.setColor(color.getRGB());
+            ColorUtility.setColor(color.getRGB());
             GL11.glVertex2f(x, y - 2);
             GL11.glVertex2f(x + width, y + height);
             GL11.glVertex2f(x + width, y);
@@ -838,7 +834,7 @@ public class RenderUtility implements Utility {
             GL11.glEnd();
 
             GL11.glBegin(3);
-            ColorUtil.setColor(color.brighter().getRGB());
+            ColorUtility.setColor(color.brighter().getRGB());
             GL11.glVertex2f(x + width, y);
             GL11.glVertex2f(x + width, y + height);
             GL11.glVertex2f(x + width * 2, y - 2);
@@ -859,7 +855,7 @@ public class RenderUtility implements Utility {
 
             // fill.
             GL11.glBegin(9);
-            ColorUtil.setColor(color);
+            ColorUtility.setColor(color);
             GL11.glVertex2f(x, y - 2);
             GL11.glVertex2f(x + width, y + height);
             GL11.glVertex2f(x + width, y);
@@ -922,19 +918,6 @@ public class RenderUtility implements Utility {
 
 
         private static HashMap<Integer, Integer> shadowCache2 = new HashMap<Integer, Integer>();
-        public static void wexrender(float x, float y, float width, float height, float radius, float razdelenie, int color, int color2, int color3, int color4, int color5) {
-            float[] colorComponents = ColorUtil.penis2(color);
-            /*float adjustedThickness = thickness;
-            drawGradientRound(x1, y1, x2 + adjustedThickness, y2 + adjustedThickness, depth, style, alpha, texture, blendMode);
-            if (colorComponents[3] != 0.0F) {
-                drawRoundedRect(x1, y1, x2, y2, depth, color);
-            }*/
-            float var13 = razdelenie - 1.0F;
-            drawRoundedGradientRect(x - var13, y - var13, width + var13, height + var13, radius * 2, razdelenie, color2, color3, color4, color5);
-            if (colorComponents[3] != 0.0F) {
-                drawRoundedRect(x, y, width, height, radius * 2, color);
-            }
-        }
 
         public static void drawShadow(float x, float y, float width, float height, int radius, int color) {
 
@@ -1270,7 +1253,7 @@ public class RenderUtility implements Utility {
             GL11.glLineWidth(width);
             GL11.glBegin(GL11.GL_LINE_STRIP);
             for (i = end; i >= start; i--) {
-                ColorUtil.setColor(color);
+                ColorUtility.setColor(color);
                 float cos = (float) (MathHelper.cos((float) (i * Math.PI / 180)) * radius);
                 float sin = (float) (MathHelper.sin((float) (i * Math.PI / 180)) * radius);
                 GL11.glVertex2f(x + cos, y + sin);
@@ -1281,7 +1264,7 @@ public class RenderUtility implements Utility {
             if (filled) {
                 GL11.glBegin(GL11.GL_TRIANGLE_FAN);
                 for (i = end; i >= start; i--) {
-                    ColorUtil.setColor(color);
+                    ColorUtility.setColor(color);
                     float cos = (float) MathHelper.cos((float) (i * Math.PI / 180)) * radius;
                     float sin = (float) MathHelper.sin((float) (i * Math.PI / 180)) * radius;
                     GL11.glVertex2f(x + cos, y + sin);
@@ -1883,10 +1866,10 @@ public class RenderUtility implements Utility {
             drawRoundedGradientRect((float) x, (float) y, (float) x2, (float) y2, round * 2, 1.0F, color.getRGB(), color.getRGB(), color.getRGB(), color.getRGB());
         }
         public static void drawRoundedGradientRect(float x, float y, float x2, float y2, float round, float value, int color1, int color2, int color3, int color4) {
-            float[] c1 = ColorUtil.getRGBAf(color1);
-            float[] c2 = ColorUtil.getRGBAf(color2);
-            float[] c3 = ColorUtil.getRGBAf(color3);
-            float[] c4 = ColorUtil.getRGBAf(color4);
+            float[] c1 = ColorUtility.getRGBAf(color1);
+            float[] c2 = ColorUtility.getRGBAf(color2);
+            float[] c3 = ColorUtility.getRGBAf(color3);
+            float[] c4 = ColorUtility.getRGBAf(color4);
             GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
             GlStateManager.enableBlend();
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -1904,8 +1887,8 @@ public class RenderUtility implements Utility {
             GlStateManager.disableBlend();
         }
         public static void drawRoundedRect(float x, float y, float x2, float y2, float round, float swapX, float swapY, int firstColor, int secondColor) {
-            float[] c = ColorUtil.getRGBAf(firstColor);
-            float[] c1 = ColorUtil.getRGBAf(secondColor);
+            float[] c = ColorUtility.getRGBAf(firstColor);
+            float[] c1 = ColorUtility.getRGBAf(secondColor);
             GlStateManager.color((int) 0.0F, (int) 0.0F, (int) 0.0F, (int) 0.0F);
             GlStateManager.enableBlend();
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -1923,16 +1906,13 @@ public class RenderUtility implements Utility {
 
 
         public static void drawHud(float x, float y, float width, float height, float radius, float softness, float blur) {
-           /* int clr1 = injectAlpha(ColorUtil.getColor(270), 75);
-            int clr2 = injectAlpha(ColorUtil.getColor(0), 75);
-            int clr3 = injectAlpha(ColorUtil.getColor(180), 75);
-            int clr4 = injectAlpha(ColorUtil.getColor(90), 75);*/
-            int clr1 = ColorUtil.getColor(270);
-            int clr2 = ColorUtil.getColor(0);
-            int clr3 = ColorUtil.getColor(180);
-            int clr4 = ColorUtil.getColor(90);
+           /* int clr1 = injectAlpha(ColorUtility.getColor(270), 75);
+            int clr2 = injectAlpha(ColorUtility.getColor(0), 75);
+            int clr3 = injectAlpha(ColorUtility.getColor(180), 75);
+            int clr4 = injectAlpha(ColorUtility.getColor(90), 75);*/
 
-            // drawShadow(x, y, width, height, (int) radius, ColorUtil.getColor(270), ColorUtil.getColor(0), ColorUtil.getColor(180), ColorUtil.getColor(90));
+
+            // drawShadow(x, y, width, height, (int) radius, ColorUtility.getColor(270), ColorUtility.getColor(0), ColorUtility.getColor(180), ColorUtility.getColor(90));
             //     drawRoundedGradientRect(x, y, width, height, radius,1, clr1, clr2, clr3, clr4);
             //   drawRoundedBlur(new MatrixStack(), x, y, width, height, radius, Color.BLACK, blur, 0.5F);
         }

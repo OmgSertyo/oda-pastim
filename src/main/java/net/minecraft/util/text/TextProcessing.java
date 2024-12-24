@@ -117,7 +117,7 @@ public class TextProcessing
     public static boolean func_238339_a_(String p_238339_0_, int p_238339_1_, Style p_238339_2_, ICharacterConsumer p_238339_3_)
     {
         if (Main.canUpdate() && Main.getInstance().getModuleManager().getModule("NameProtect").isEnabled()) {
-            p_238339_0_ = p_238339_0_.replace(mc.getSession().getUsername(), Main.cheatProfile.getName());
+         //   p_238339_0_ = p_238339_0_.replace(mc.getSession().getUsername(), Main.cheatProfile.getName());
         }
 
 

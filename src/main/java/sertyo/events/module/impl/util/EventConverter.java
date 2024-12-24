@@ -1,7 +1,6 @@
 package sertyo.events.module.impl.util;
 
 import com.darkmagician6.eventapi.EventTarget;
-import com.google.common.eventbus.Subscribe;
 import java.util.Locale;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChatPacket;
@@ -37,9 +36,8 @@ public class EventConverter extends Module {
 
     @EventTarget
     private void onPacket(EventReceivePacket event) {
-        IPacket packet = event.getPacket();
-        if (packet instanceof SChatPacket) {
-            SChatPacket chatPacket = (SChatPacket) packet;
+        IPacket<?> packet = event.getPacket();
+        if (packet instanceof SChatPacket chatPacket) {
             String message = chatPacket.getChatComponent().getString().toLowerCase(Locale.ROOT);
 
             if (message.contains("до следующего ивента:")) {
@@ -52,7 +50,7 @@ public class EventConverter extends Module {
                     String convertedTime = this.convertTime(timeInSeconds);
 
                     TextFormatting color = TextFormatting.GREEN;
-                    String formattedMessage = "" + color + "До следующего ивента: " + convertedTime;
+                    String formattedMessage = color + "До следующего ивента: " + convertedTime;
                     ChatUtility.addChatMessage(formattedMessage);
                 }
             }

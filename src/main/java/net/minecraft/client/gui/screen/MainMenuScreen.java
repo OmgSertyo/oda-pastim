@@ -36,8 +36,8 @@ import net.optifine.reflect.ReflectorForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sertyo.events.Main;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.animation.Direction;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
 import sertyo.events.utility.font.Fonts;
@@ -102,10 +102,10 @@ public class MainMenuScreen extends Screen {
             int bgColor = Color.decode("#1B1C2C").getRGB();
             int elementsColor = Color.decode("#1E1F30").getRGB();
             int strokeColor = Color.decode("#26273B").getRGB();
-            RenderUtil.Render2D.drawRoundedRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 5, bgColor);
+            RenderUtility.Render2D.drawRoundedRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 5, bgColor);
             if (this.isFocused()) {
-                RenderUtil.Render2D.drawRoundedRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 6, ColorUtil.setAlpha(strokeColor, (int) this.animation.getOutput()));
-                RenderUtil.Render2D.drawRoundedRect((float)(this.x + 1), (float)(this.y + 1), (float)(this.width - 2), (float)(this.height - 2), 5, elementsColor);
+                RenderUtility.Render2D.drawRoundedRect((float)this.x, (float)this.y, (float)this.width, (float)this.height, 6, ColorUtility.setAlpha(strokeColor, (int) this.animation.getOutput()));
+                RenderUtility.Render2D.drawRoundedRect((float)(this.x + 1), (float)(this.y + 1), (float)(this.width - 2), (float)(this.height - 2), 5, elementsColor);
             }
 
             Fonts.msBold[17].drawCenteredString(matrixStack, this.getMessage().getString(), (float)this.x + (float)this.width / 2.0F, (float)this.y + (float)(this.height - 8) / 2.0F + 1.0F, -1);
@@ -393,12 +393,12 @@ public class MainMenuScreen extends Screen {
         float heigthPerc = (float) mc.getMainWindow().scaledHeight / 505;
 
 
-        RenderUtil.Render2D.drawRect(0, 0, mc.getMainWindow().scaledWidth, mc.getMainWindow().scaledHeight, Color.decode("#1B1C2C").darker().getRGB());
+        RenderUtility.Render2D.drawRect(0, 0, mc.getMainWindow().scaledWidth, mc.getMainWindow().scaledHeight, Color.decode("#1B1C2C").darker().getRGB());
         Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
         Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        Fonts.msBold[24].drawString(matrixStack, ColorUtil.gradient("Neiron dlc", color.getRGB(), color2.getRGB()), (float)width / 2.0F - 32.0F, (float)height / 2.0F - 80.0F, -1);
+        Fonts.msBold[24].drawString(matrixStack, ColorUtility.gradient("Neiron dlc", color.getRGB(), color2.getRGB()), (float)width / 2.0F - 32.0F, (float)height / 2.0F - 80.0F, -1);
 
 
     }

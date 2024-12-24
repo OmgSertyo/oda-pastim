@@ -16,7 +16,6 @@ import sertyo.events.utility.Utility;
 )
 public class ClickGuiModule extends Module {
    public static BooleanSetting blur = new BooleanSetting("Blur", true);
-   public static NumberSetting blurRadius;
 
    public ClickGuiModule() {
       this.bind = GLFW.GLFW_KEY_RIGHT_SHIFT;
@@ -28,9 +27,4 @@ public class ClickGuiModule extends Module {
       Main.getInstance().getModuleManager().getModule(ClickGuiModule.class).setToggled(false);
    }
 
-   static {
-      BooleanSetting var10007 = blur;
-      var10007.getClass();
-      blurRadius = new NumberSetting("Blur Iterations", 5.0F, 1.0F, 15.0F, 1.0F, var10007::get);
-   }
 }

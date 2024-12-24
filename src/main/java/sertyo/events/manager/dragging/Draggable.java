@@ -3,7 +3,7 @@ package sertyo.events.manager.dragging;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import sertyo.events.module.Module;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.RenderUtility;
 
 
 public class Draggable {
@@ -43,7 +43,7 @@ public class Draggable {
    }
 
    public final void onClick(int mouseX, int mouseY, int button) {
-      if (button == 0 && RenderUtil.isHovered((float)mouseX, (float)mouseY, (float)this.x, (float)this.y, this.width, this.height)) {
+      if (button == 0 && RenderUtility.isHovered((float)mouseX, (float)mouseY, (float)this.x, (float)this.y, this.width, this.height)) {
          this.dragging = true;
          this.startX = mouseX - this.x;
          this.startY = mouseY - this.y;

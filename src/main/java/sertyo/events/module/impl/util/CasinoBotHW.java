@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SChatPacket;
 import me.sertyo.j2c.J2c;
-import sertyo.events.Main;
 import sertyo.events.command.impl.AutoPerevod;
 import sertyo.events.event.packet.EventReceivePacket;
 import sertyo.events.event.player.EventUpdate;
@@ -17,6 +16,7 @@ import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.setting.impl.BooleanSetting;
 import sertyo.events.utility.misc.ChatUtility;
 import sertyo.events.utility.misc.TimerHelper;
+import sovokguard.protect.ApiContacts;
 
 import java.util.Locale;
 import java.util.Random;
@@ -37,7 +37,7 @@ public class CasinoBotHW extends Module  {
             if (perevodeee.get()) {
                 if (AutoPerevod.command == null) {
                     if (Minecraft.getInstance().getCurrentServerData() != null) {
-                        ChatUtility.addChatMessage("Вам необходимо добавть комманду для перевода P.s например .cmh " + Main.cheatProfile.getName() + " потом после установки и если игрок проиграет будет выполнена комманда /pay (никнейм который вы указали) 60% от пройгрыша например /pay " + Main.cheatProfile.getName() + " 1488");
+                        ChatUtility.addChatMessage("Вам необходимо добавть комманду для перевода P.s например .cmh " + ApiContacts.username + " потом после установки и если игрок проиграет будет выполнена комманда /pay (никнейм который вы указали) 60% от пройгрыша например /pay " + ApiContacts.username + " 1488");
                     }
                     toggle();
                 } else {
@@ -50,7 +50,7 @@ public class CasinoBotHW extends Module  {
     }
 
     @EventTarget
-    public void onUpdate(EventUpdate e) {
+    public void onUpdate(EventUpdate update) {
         if (timer.hasReached(30000L)) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             String playerName = player.getScoreboardName();
@@ -60,7 +60,7 @@ public class CasinoBotHW extends Module  {
     }
     @EventTarget
     public void onpacket(EventReceivePacket eventPacket) {
-        IPacket packet = eventPacket.getPacket();
+        IPacket<?> packet = eventPacket.getPacket();
         if (packet instanceof SChatPacket chatPacket) {
             String messageContent = chatPacket.getChatComponent().getString();
 
@@ -68,7 +68,7 @@ public class CasinoBotHW extends Module  {
             if (messageContent.contains("отправил вам") && messageContent.startsWith("▶")) {
                 Pattern senderPattern = Pattern.compile("Игрок(?:\\s|\\W)+([\\w_]+)", Pattern.CASE_INSENSITIVE);
                 Matcher senderMatcher = senderPattern.matcher(messageContent);
-                String sender = "";
+                String sender;
                 if (senderMatcher.find()) {
                     sender = senderMatcher.group(1);
                 } else {
@@ -78,7 +78,7 @@ public class CasinoBotHW extends Module  {
                 Pattern amountPattern = Pattern.compile("отправил вам(?:\\s|\\W)+(\\d+(?:\\.\\d+)?)", Pattern.CASE_INSENSITIVE);
                 Matcher amountMatcher = amountPattern.matcher(messageContent.toLowerCase(Locale.ROOT));
 
-                int sum = 0;
+                int sum;
                 if (amountMatcher.find()) {
                     String extractedAmount = amountMatcher.group(1);
                     try {
@@ -117,8 +117,6 @@ public class CasinoBotHW extends Module  {
 
                             mc.player.sendChatMessage(pankiXoy);
                         }
-                    } else {
-
                     }
                     played++;
                         if (gamesPlayed % 10 == 0) {
@@ -126,7 +124,6 @@ public class CasinoBotHW extends Module  {
 
                     }
                 }
-            } else {
             }
         }
     }

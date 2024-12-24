@@ -15,7 +15,7 @@ import sertyo.events.manager.dragging.DragManager;
 import sertyo.events.module.impl.util.PasswordHider;
 import sertyo.events.utility.font.Fonts;
 import sertyo.events.utility.render.blur.GaussianBlur;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.math.Vec2i;
 
 import java.awt.*;
@@ -289,7 +289,7 @@ public class ChatScreen extends Screen
         if (Main.getInstance().getModuleManager().getModule(PasswordHider.class).isEnabled() && (this.inputField.getText().startsWith("/l") && this.inputField.getText().split(" ")[0].length() <= 6 || this.inputField.getText().startsWith("/reg") && this.inputField.getText().split(" ")[0].length() <= 9 || this.inputField.getText().startsWith("/warp") && this.inputField.getText().split(" ")[0].length() <= 9) && this.inputField.getText().split(" ").length != 1) {
         GaussianBlur.startBlur();
         GaussianBlur.endBlur(20, 2);
-        RenderUtil.Render2D.drawRect((float) (mc.fontRenderer.getStringWidth(this.inputField.getText().split(" ")[0]) + 7), (float) (this.height - 14), (float) (mc.fontRenderer.getStringWidth(this.inputField.getText().split(" ")[0]) + 6 + mc.fontRenderer.getStringWidth(this.inputField.getText().substring(this.inputField.getText().split(" ")[0].length()))), (float) (this.height - 26), new Color(0, 0,0).getRGB());
+        RenderUtility.Render2D.drawRect((float) (mc.fontRenderer.getStringWidth(this.inputField.getText().split(" ")[0]) + 7), (float) (this.height - 14), (float) (mc.fontRenderer.getStringWidth(this.inputField.getText().split(" ")[0]) + 6 + mc.fontRenderer.getStringWidth(this.inputField.getText().substring(this.inputField.getText().split(" ")[0].length()))), (float) (this.height - 26), new Color(0, 0,0).getRGB());
             Fonts.msBold[14].drawString(new MatrixStack(), "жди докс жди сват жди деанон спортиков",  (mc.fontRenderer.getStringWidth(this.inputField.getText().split(" ")[0]) + 7), (float) (this.height - 14 + 4), -1);
         }
         Vec2i scale = Main.getInstance().getScaleMath().getMouse(mouseX, mouseY, mc.getMainWindow());

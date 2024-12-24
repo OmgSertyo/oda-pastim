@@ -12,8 +12,8 @@ import sertyo.events.module.impl.render.Arraylist;
 import sertyo.events.ui.menu.widgets.CustomButton;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.RenderUtility;
 
 import java.awt.*;
@@ -53,12 +53,12 @@ public class RouletteScreen extends Screen implements Utility {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        RenderUtil.Render2D.drawRect(0.0F, 0.0F, (float)sr.getScaledWidth(), (float)sr.getScaledHeight(), (new Color(20, 20, 20)).getRGB());
+        RenderUtility.Render2D.drawRect(0.0F, 0.0F, (float)sr.getScaledWidth(), (float)sr.getScaledHeight(), (new Color(20, 20, 20)).getRGB());
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        RenderUtil.Render2D.drawRoundedRect(this.width / 2 - 140, 200, 300, 150, 5.0F, (new Color(30, 30, 30)).getRGB());
+        RenderUtility.Render2D.drawRoundedRect(this.width / 2 - 140, 200, 300, 150, 5.0F, (new Color(30, 30, 30)).getRGB());
         if (won != null)
-            Fonts.msBold[15].drawString(matrixStack, ColorUtil.gradient(String.format("You won %s", won), Arraylist.getColor(0).getRGB(), Arraylist.getColor(90).getRGB()), this.width / 2 - 50, 370, -1);
+            Fonts.msBold[15].drawString(matrixStack, ColorUtility.gradient(String.format("You won %s", won), Arraylist.getColor(0).getRGB(), Arraylist.getColor(90).getRGB()), this.width / 2 - 50, 370, -1);
 
         if (!spinning) {
             int x = 30;

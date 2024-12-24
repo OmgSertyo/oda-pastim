@@ -1,7 +1,7 @@
 package sertyo.events.manager.theme;
 
 import sertyo.events.Main;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 
 import java.awt.*;
 

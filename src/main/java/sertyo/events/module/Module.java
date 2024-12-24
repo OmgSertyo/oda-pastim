@@ -1,29 +1,20 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package sertyo.events.module;
 
 import com.darkmagician6.eventapi.EventManager;
 import com.google.gson.JsonObject;
-
-import net.minecraft.util.text.TextFormatting;
-import sertyo.events.manager.notification.NotificationManager;
-import sertyo.events.manager.notification.NotificationType;
-import sertyo.events.module.impl.render.ClickGuiModule;
+import lombok.Getter;
 import sertyo.events.module.setting.Setting;
 import sertyo.events.module.setting.impl.*;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.utility.render.animation.Direction;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public class Module implements Utility {
    protected ModuleAnnotation info = this.getClass().getAnnotation(ModuleAnnotation.class);
    public String name;
@@ -76,22 +67,19 @@ public class Module implements Utility {
 
    public void onEnable() {
       EventManager.register(this);
-      if (!(this instanceof ClickGuiModule)) {
-         //NotificationManager.notify(NotificationType.SUCCESS, "Module was " + TextFormatting.GREEN + "enabled", TextFormatting.GRAY + this.name, 1000.0F);
-      }
+       //NotificationManager.notify(NotificationType.SUCCESS, "Module was " + TextFormatting.GREEN + "enabled", TextFormatting.GRAY + this.name, 1000.0F);
 
    }
 
    public void onDisable() {
       EventManager.unregister(this);
-      if (!(this instanceof ClickGuiModule)) {
      //    NotificationManager.notify(NotificationType.ERROR, "Module was " + TextFormatting.RED + "disabled", TextFormatting.GRAY + this.name, 1000.0F);
-      }
+
 
    }
 
-   public List<Setting> getSettings() {
-      return (List)Arrays.stream(this.getClass().getDeclaredFields()).map((field) -> {
+   public List getSettings() {
+      return Arrays.stream(this.getClass().getDeclaredFields()).map((field) -> {
          try {
             field.setAccessible(true);
             return field.get(this);
@@ -113,11 +101,11 @@ public class Module implements Utility {
       object.addProperty("enabled", this.enabled);
       object.addProperty("bind", this.bind);
       JsonObject propertiesObject = new JsonObject();
-      Iterator var3 = this.getSettings().iterator();
+      Iterator iterator = this.getSettings().iterator();
 
       while(true) {
-         while(var3.hasNext()) {
-            Setting setting = (Setting)var3.next();
+         while(iterator.hasNext()) {
+            Setting setting = (Setting)iterator.next();
             if (setting instanceof BooleanSetting) {
                propertiesObject.addProperty(setting.getName(), ((BooleanSetting)setting).get());
             } else if (setting instanceof ModeSetting) {
@@ -130,9 +118,9 @@ public class Module implements Utility {
                StringBuilder builder = new StringBuilder();
                int i = 0;
 
-               for(Iterator var7 = ((MultiBooleanSetting)setting).values.iterator(); var7.hasNext(); ++i) {
-                  String s = (String)var7.next();
-                  if ((Boolean)((MultiBooleanSetting)setting).selectedValues.get(i)) {
+               for(Iterator<String> iterator2 = ((MultiBooleanSetting)setting).values.iterator(); iterator.hasNext(); ++i) {
+                  String s = iterator2.next();
+                  if (((MultiBooleanSetting)setting).selectedValues.get(i)) {
                      builder.append(s).append("\n");
                   }
                }
@@ -156,7 +144,7 @@ public class Module implements Utility {
             this.bind = object.get("bind").getAsInt();
          }
 
-         Iterator var2 = this.getSettings().iterator();
+         Iterator iterator = this.getSettings().iterator();
 
          while(true) {
             while(true) {
@@ -165,11 +153,11 @@ public class Module implements Utility {
                do {
                   do {
                      do {
-                        if (!var2.hasNext()) {
+                        if (!iterator.hasNext()) {
                            return;
                         }
 
-                        setting = (Setting)var2.next();
+                        setting = (Setting)iterator.next();
                         propertiesObject = object.getAsJsonObject("Settings");
                      } while(setting == null);
                   } while(propertiesObject == null);
@@ -192,17 +180,14 @@ public class Module implements Utility {
                   i = 0;
                   String[] strs = propertiesObject.get(setting.getName()).getAsString().split("\n");
 
-                  for(Iterator var7 = ((MultiBooleanSetting)setting).values.iterator(); var7.hasNext(); ++i) {
-                     String s = (String)var7.next();
-                     String[] var9 = strs;
-                     int var10 = strs.length;
+                  for(Iterator<String> iterator2 = ((MultiBooleanSetting)setting).values.iterator(); iterator2.hasNext(); ++i) {
+                     String s = iterator2.next();
 
-                     for(int var11 = 0; var11 < var10; ++var11) {
-                        String str = var9[var11];
-                        if (str.equalsIgnoreCase(s)) {
-                           ((MultiBooleanSetting)setting).selectedValues.set(i, true);
-                        }
-                     }
+                      for (String str : strs) {
+                          if (str.equalsIgnoreCase(s)) {
+                              ((MultiBooleanSetting) setting).selectedValues.set(i, true);
+                          }
+                      }
                   }
                }
             }
@@ -210,23 +195,4 @@ public class Module implements Utility {
       }
    }
 
-   public String getName() {
-      return this.name;
-   }
-
-   public Category getCategory() {
-      return this.category;
-   }
-
-   public boolean isEnabled() {
-      return this.enabled;
-   }
-
-   public int getBind() {
-      return this.bind;
-   }
-
-   public Animation getAnimation() {
-      return this.animation;
-   }
 }

@@ -11,6 +11,7 @@ import sertyo.events.Main;
 import sertyo.events.ui.csgui.component.Component;
 import sertyo.events.utility.font.Fonts;
 import sertyo.events.utility.render.RenderUtility;
+import sovokguard.protect.ApiContacts;
 
 import java.awt.Color;
 import java.time.Duration;
@@ -36,8 +37,8 @@ public class ProfileComponent extends Component {
         if (subString.equalsIgnoreCase("00:HH")
                 || Float.parseFloat(subSplit[0]) > 1000) subExpiration = "Никогда";
         RenderUtility.drawRoundedRect((float)(this.x), (float)(this.y), 300, 50, 10, elementsColor);
-        Fonts.msBold[17].drawString(TextFormatting.GRAY + "[" + Main.cheatProfile.getRoleName() + "] " + TextFormatting.WHITE + Main.cheatProfile.getName(), this.x + 54, this.y + 20, -1);
-        Fonts.msBold[17].drawString("UID: " + Main.cheatProfile.getId(), this.x + 54, this.y + 30, -1);
+        Fonts.msBold[17].drawString(TextFormatting.GRAY + "[" + ApiContacts.role + "] " + TextFormatting.WHITE + ApiContacts.username, this.x + 54, this.y + 20, -1);
+        Fonts.msBold[17].drawString("UID: " + ApiContacts.uid, this.x + 54, this.y + 30, -1);
         Fonts.msBold[17].drawString("Ваша подписка закончиться: " + subExpiration, this.x + 54, this.y + 38, -1);
         RenderUtility.applyRound(45, 45, 12.0F, 1.0F, () -> {
             RenderUtility.drawProfile((float)this.x + 4, (float)this.y + 3, 45, 45);

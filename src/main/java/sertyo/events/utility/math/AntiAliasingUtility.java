@@ -1,4 +1,4 @@
-package sertyo.events.utility.render;
+package sertyo.events.utility.math;
 
 import org.lwjgl.opengl.GL11;
 

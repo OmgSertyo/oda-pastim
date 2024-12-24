@@ -21,14 +21,8 @@ import java.util.HashMap;
 import static org.lwjgl.opengl.ARBShaderObjects.*;
 import static org.lwjgl.opengl.GL20.*;
 
-/**
- * @author Jefferson
- * @since 30/11/2022
- */
-
 public class ShaderUtil implements Utility {
     private final int programID;
-    // Шейдеры, используемые в приложении
     public static ShaderUtil
             CORNER_ROUND_SHADER,
             CORNER_ROUND_SHADER_TEXTURE,
@@ -62,7 +56,6 @@ public class ShaderUtil implements Utility {
                         void main() {
                             vec2 st = gl_TexCoord[0].st;
                          
-                            // Получение цвета из входной текстуры
                             vec4 color = texture2D(u_texture, st);
                            
                             float noise = (sin(st.x) * cos(st.y)) * random(st);
@@ -308,18 +301,9 @@ public class ShaderUtil implements Utility {
         return ARBShaderObjects.glGetUniformLocationARB(programID, name);
     }
 
-    public static float calculateGaussianValue(float x, float sigma) {
-        double PI = 3.141592653;
-        double output = 1.0 / Math.sqrt(2.0 * PI * (sigma * sigma));
-        return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
-    }
 
     private static final HashMap<Integer, FloatBuffer> kernelCache = new HashMap<>();
 
-
-    public void setUniformfb(String name, FloatBuffer buffer) {
-        ARBShaderObjects.glUniform1fvARB(GL30.glGetUniformLocation(programID, name), buffer);
-    }
 
     /**
      * Подключение шейдера к контексту OpenGL
@@ -408,7 +392,7 @@ public class ShaderUtil implements Utility {
                           final float width,
                           final float height) {
 
-        RenderUtil.Render2D.quadsBegin(x, y, width, height, GL_QUADS);
+        RenderUtility.Render2D.quadsBegin(x, y, width, height, GL_QUADS);
     }
 
     public static void drawQuads() {

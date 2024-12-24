@@ -1,6 +1,7 @@
 package sertyo.events.utility.font.styled;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
 import net.minecraft.util.math.vector.Matrix4f;
 import sertyo.events.utility.font.common.AbstractFont;
 
@@ -13,7 +14,8 @@ import java.util.Locale;
 public final class GlyphPage extends AbstractFont {
 	
 	private final int italicSpacing;
-	private final float stretching, spacing, lifting;
+	@Getter
+    private final float stretching, spacing, lifting;
 
 	public GlyphPage(Font font, char[] chars, float stretching, float spacing, float lifting, boolean antialiasing) {
 		FontRenderContext fontRenderContext = new FontRenderContext(font.getTransform(), true, true);
@@ -74,12 +76,8 @@ public final class GlyphPage extends AbstractFont {
 		
 		return w;
 	}
-	
-	public float getStretching() {
-		return stretching;
-	}
 
-	public float getSpacing() {
+    public float getSpacing() {
 		return spacing;
 	}
 

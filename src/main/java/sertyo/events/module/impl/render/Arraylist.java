@@ -12,8 +12,8 @@ import sertyo.events.module.Category;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.module.setting.impl.BooleanSetting;
 import sertyo.events.module.setting.impl.NumberSetting;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.module.Module;
 import sertyo.events.utility.render.animation.Direction;
@@ -90,14 +90,14 @@ public class Arraylist extends sertyo.events.module.Module {
                                  } while(!module.isEnabled() && moduleAnimation.finished(Direction.BACKWARDS));
 
                                  if (!moduleAnimation.isDone()) {
-                                    RenderUtil.Render2D.scaleStart(x - stringWidth + stringWidth / 2.0F, y + (float)offset + 7.5F, moduleAnimation.getOutput());
+                                    RenderUtility.Render2D.scaleStart(x - stringWidth + stringWidth / 2.0F, y + (float)offset + 7.5F, moduleAnimation.getOutput());
                                  }
 
                                  alphaAnimation = moduleAnimation.getOutput();
-                                 RenderUtil.Render2D.drawCRoundedRect(x - stringWidth, y + (float)offset, stringWidth, 11.0F, !module.getName().equals(first) ? 0.0F : 10.0F, 10.0F, module.getName().equals(first) ? 10.0F : 0.0F, module.getName().equals(last) ? 10.0F : 0.0F, ColorUtil.applyOpacity(bgColor, alphaAnimation).getRGB());
+                                 RenderUtility.Render2D.drawCRoundedRect(x - stringWidth, y + (float)offset, stringWidth, 11.0F, !module.getName().equals(first) ? 0.0F : 10.0F, 10.0F, module.getName().equals(first) ? 10.0F : 0.0F, module.getName().equals(last) ? 10.0F : 0.0F, ColorUtility.applyOpacity(bgColor, alphaAnimation).getRGB());
                                  Fonts.msBold[15].drawString(moduleName, x - stringWidth + 3.0F, y + (float)offset + (14.0F - (float)Fonts.msBold[15].getFontHeight()) / 2.0F + 0.5F, this.colored.get() ? getArrayColor(count).getRGB() : -1);
                                  if (!moduleAnimation.isDone()) {
-                                    RenderUtil.scaleEnd();
+                                    RenderUtility.scaleEnd();
                                  }
 
                                  offset = (int)((float)offset + moduleAnimation.getOutput() * 10.0F);
@@ -114,13 +114,13 @@ public class Arraylist extends sertyo.events.module.Module {
                      } while(!module.isEnabled() && moduleAnimation.finished(Direction.BACKWARDS));
 
                      if (!moduleAnimation.isDone()) {
-                        RenderUtil.Render2D.scaleStart(x - stringWidth + stringWidth / 2.0F, y + (float)offset + 7.5F, moduleAnimation.getOutput());
+                        RenderUtility.Render2D.scaleStart(x - stringWidth + stringWidth / 2.0F, y + (float)offset + 7.5F, moduleAnimation.getOutput());
                      }
 
                      alphaAnimation = moduleAnimation.getOutput();
-                     RenderUtil.Render2D.drawCRoundedRect(x - stringWidth - 1.0F, y + (float)offset - 1.0F, stringWidth + 2.0F, 13.0F, !module.getName().equals(first) ? 0.0F : 10.0F, 10.0F, module.getName().equals(first) ? 10.0F : 0.0F, module.getName().equals(last) ? 10.0F : 0.0F, ColorUtil.applyOpacity(strokeColor, alphaAnimation).getRGB());
+                     RenderUtility.Render2D.drawCRoundedRect(x - stringWidth - 1.0F, y + (float)offset - 1.0F, stringWidth + 2.0F, 13.0F, !module.getName().equals(first) ? 0.0F : 10.0F, 10.0F, module.getName().equals(first) ? 10.0F : 0.0F, module.getName().equals(last) ? 10.0F : 0.0F, ColorUtility.applyOpacity(strokeColor, alphaAnimation).getRGB());
                      if (!moduleAnimation.isDone()) {
-                        RenderUtil.scaleEnd();
+                        RenderUtility.scaleEnd();
                      }
 
                      offset = (int)((float)offset + moduleAnimation.getOutput() * 10.0F);
@@ -153,12 +153,12 @@ public class Arraylist extends sertyo.events.module.Module {
    public static Color getColor(int index) {
       Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
       Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
-      return ColorUtil.gradient((int)(10.0F - colorSpeed.get()), index * 2, new Color[]{color, color2});
+      return ColorUtility.gradient((int)(10.0F - colorSpeed.get()), index * 2, new Color[]{color, color2});
    }
 
    public static Color getArrayColor(int index) {
       Color color = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[0];
       Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
-      return ColorUtil.gradient((int)(10.0F - colorSpeed.get()), index * 20, new Color[]{color, color2});
+      return ColorUtility.gradient((int)(10.0F - colorSpeed.get()), index * 20, new Color[]{color, color2});
    }
 }

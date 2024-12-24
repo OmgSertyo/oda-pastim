@@ -8,9 +8,9 @@ import net.minecraft.util.text.StringTextComponent;
 import me.sertyo.j2c.J2c;
 import sertyo.events.ui.csgui.CsGui;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.blur.GaussianBlur;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.animation.Animation;
 import sertyo.events.utility.render.animation.impl.DecelerateAnimation;
 
@@ -62,7 +62,7 @@ public class Spotify extends Screen {
                 String coverUrl = trackInfo[2]; // URL ???????
 
                 // ???????? ????????
-                textureId = RenderUtil.Render2D.downloadImage(coverUrl);
+                textureId = RenderUtility.Render2D.downloadImage(coverUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,11 +73,11 @@ public class Spotify extends Screen {
     private void render0(int n, MatrixStack matrixStack, int x, int y, int width, int height) {
         //???? ????
         GaussianBlur.startBlur();
-        RenderUtil.Render2D.drawRoundedRect(x, y, width, height, 6.5f, ColorUtil.rgba(20, 20, 20, 200));
+        RenderUtility.Render2D.drawRoundedRect(x, y, width, height, 6.5f, ColorUtility.rgba(20, 20, 20, 200));
         GaussianBlur.endBlur(20, 2);
-        RenderUtil.Render2D.drawRoundedRect(x, y, width, height, 8.5f, n);
+        RenderUtility.Render2D.drawRoundedRect(x, y, width, height, 8.5f, n);
     }
-    int n3 = ColorUtil.rgba(11, 11, 11, 130);
+    int n3 = ColorUtility.rgba(11, 11, 11, 130);
     @Override
     public boolean isPauseScreen() {
         return false;
@@ -86,39 +86,37 @@ public class Spotify extends Screen {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         if (!isConnected) {
-            RenderUtil.scale(position.x - 20, position.y + 20, this.animation.getOutput(), () -> this.render0(n3, matrixStack, (int) position.x - 20, (int) position.y + 20, (int) size.x + 13, (int) size.y - 100));
-            RenderUtil.Render2D.drawRoundedRect(position.x - 20 + 50, position.y + 215, size.x - 100, size.y - 300, 4, ColorUtil.rgba(11, 11, 11, 255));
+            RenderUtility.scale(position.x - 20, position.y + 20, this.animation.getOutput(), () -> this.render0(n3, matrixStack, (int) position.x - 20, (int) position.y + 20, (int) size.x + 13, (int) size.y - 100));
+            RenderUtility.Render2D.drawRoundedRect(position.x - 20 + 50, position.y + 215, size.x - 100, size.y - 300, 4, ColorUtility.rgba(11, 11, 11, 255));
             Fonts.gilroy[16].drawString(matrixStack, "Привет если ты зашёл сюда случайно нажми кнопку " + "ESC а если нет то следуй инструкциям 1 нажми на", position.x - 20 + 4, position.y + 24, -1);
-            Fonts.gilroy[16].drawString(matrixStack, " кнопку внизу дальше у тебя откроется сайт там подтверди авторизацию в приложение PS это безопастно", position.x - 20 + 2, position.y + 35, -1);
+            Fonts.gilroy[16].drawString(matrixStack, " кнопку внизу дальше у тебя откроется сайт там подтверди авторизацию в приложение PS это безопасно", position.x - 20 + 2, position.y + 35, -1);
             Fonts.gilroy[16].drawString(matrixStack, " ибо без этого не будет работать апи если у тебя открылся не основной браузер выполни вход в аккаунт", position.x - 20 + 2, position.y + 45, -1);
             Fonts.gilroy[16].drawString(matrixStack, " спотифая в браузере который открылся далее тебя ????????? ?? ???????? ? ??? ????? ???????? Authori-", position.x - 20 + 2, position.y + 55, -1);
             Fonts.gilroy[16].drawString(matrixStack, " zation code received. You can close this window. закрываешь браузер и перезаходишь в эту гуи и всё", position.x - 20 + 2, position.y + 66, -1);
             Fonts.msSemiBold[30].drawString(matrixStack, "Начать подключение spotify", position.x - 20 + 107, position.y + 77 + 158, -1);
         } else {
-                int n2 = ColorUtil.rgba(11, 11, 11, 130);
+                int n2 = ColorUtility.rgba(11, 11, 11, 130);
 
-                RenderUtil.scale(position.x - 20, position.y + 20, this.animation.getOutput(), () -> this.render0(n3, matrixStack, (int) position.x - 20, (int) position.y + 20, (int) size.x + 13, (int) size.y - 100));
+                RenderUtility.scale(position.x - 20, position.y + 20, this.animation.getOutput(), () -> this.render0(n3, matrixStack, (int) position.x - 20, (int) position.y + 20, (int) size.x + 13, (int) size.y - 100));
                 Fonts.gilroy[16].drawString(matrixStack, "???????? ??????? ????????? ??? ????????? ?????? ?????? ?????? ????????? ??????? ?????????? ???????", position.x - 20 + 4, position.y + 24, -1);
-                RenderUtil.Render2D.drawRoundedCorner(position.x - 21, position.y + 214, size.x + 13, 55, 10.0f, n2, RenderUtil.Render2D.Corner.TOP);
+                RenderUtility.Render2D.drawRoundedCorner(position.x - 21, position.y + 214, size.x + 13, 55, 10.0f, n2, RenderUtility.Render2D.Corner.TOP);
                 Fonts.gilroy[18].drawString(matrixStack, "Название песни: " + trackInfo[0], position.x + 28, position.y + 230, -1);
                 Fonts.gilroy[18].drawString(matrixStack, "Автор(ы): " + trackInfo[1], position.x + 28, position.y + 240, -1);
                 Fonts.gilroy[18].drawString(matrixStack, "Дата выхода: " + trackInfo[5], position.x + 28, position.y + 250, -1);
                 Fonts.gilroy[16].drawString(matrixStack, trackInfo[3], position.x + 28, position.y + 260, -1);
                 Fonts.gilroy[16].drawString(matrixStack, trackInfo[4], position.x + 32 + Fonts.gilroy[16].getWidth(trackInfo[3]) + size.x - 250, position.y + 260, -1);
-                RenderUtil.Render2D.drawRoundedRect(position.x + 30 + Fonts.gilroy[16].getWidth(trackInfo[3]), position.y + 260, size.x - 250, 4, 2, new Color(241, 235, 235).getRGB());
+                RenderUtility.Render2D.drawRoundedRect(position.x + 30 + Fonts.gilroy[16].getWidth(trackInfo[3]), position.y + 260, size.x - 250, 4, 2, new Color(241, 235, 235).getRGB());
            // Fonts.gilroy[20].drawString(matrixStack, SpotifyLocalAPI.getPlayPauseIcon(), position.x + 30 + Fonts.gilroy[16].getWidth(trackInfo[3]) + size.x - 250 + 30, position.y + 258, -1);
 
             GlStateManager.color4f(0, 0, 0, 0);
                 GlStateManager.bindTexture(textureId);
-                RenderUtil.Render2D.drawTexture(position.x - 14, position.y + 225, 40 - 2, 40, 4f, 1);
+                RenderUtility.Render2D.drawTexture(position.x - 14, position.y + 225, 40 - 2, 40, 4f, 1);
         }
     }
-    private String trackProgress = "0:00";
-    private String trackEndTime = "0:00";
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isConnected) {
-            if (RenderUtil.isInRegion(mouseX, mouseY, position.x - 20 + 50, position.y + 215, size.x - 100, size.y - 300)) {
+            if (RenderUtility.isInRegion(mouseX, mouseY, position.x - 20 + 50, position.y + 215, size.x - 100, size.y - 300)) {
                 try {
                     SpotifyLocalAPI.main(new String[]{});
                 } catch (IOException e) {
@@ -129,7 +127,6 @@ public class Spotify extends Screen {
                     System.out.println("Exception occurred: " + e.getMessage());
                 }
             }
-        } else {
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }

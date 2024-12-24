@@ -1,11 +1,11 @@
 package sertyo.events.manager.theme;
 
 import sertyo.events.Main;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 
 import java.awt.*;
 
-import static sertyo.events.utility.render.ColorUtil.gradient;
+import static sertyo.events.utility.render.ColorUtility.gradient;
 
 public class ThemeManager {
    private Theme currentGuiTheme;

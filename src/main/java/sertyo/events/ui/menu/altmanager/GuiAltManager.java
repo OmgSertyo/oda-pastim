@@ -32,7 +32,7 @@ import sertyo.events.ui.menu.altmanager.alt.AltLoginThread;
 import sertyo.events.ui.menu.altmanager.alt.AltManager;
 import sertyo.events.ui.menu.main.NeironMainMenu;
 import sertyo.events.ui.menu.widgets.CustomButton;
-import sertyo.events.utility.render.ColorUtil;
+import sertyo.events.utility.render.ColorUtility;
 import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.StencilUtility;
 import sertyo.events.utility.render.fonts.Fonts;
@@ -83,8 +83,8 @@ public class GuiAltManager extends Screen {
       MainWindow scaledResolution = mc.getMainWindow();
       int scaledWidth = scaledResolution.getScaledWidth();
       int scaledHeight = scaledResolution.getScaledHeight();
-      int color = ColorUtil.getColor(0);
-      int color2 = ColorUtil.getColor(500);
+      int color = ColorUtility.getColor(0);
+      int color2 = ColorUtility.getColor(500);
       GlStateManager.pushMatrix();
       RenderUtility.drawRect(0.0F, 0.0F, (float)scaledWidth, (float)scaledHeight, (new Color(20, 20, 20)).getRGB());
       GLFW.glfwSetScrollCallback(GLFW.glfwGetCurrentContext(), new GLFWScrollCallback() {

@@ -1,7 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package sertyo.events.ui.menu.main;
 
@@ -17,10 +13,11 @@ import sertyo.events.Main;
 import sertyo.events.ui.menu.altmanager.GuiAltManager;
 import sertyo.events.ui.menu.widgets.CustomButton;
 import sertyo.events.ui.roulete.RouletteScreen;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.render.RenderUtility;
 import sertyo.events.utility.math.Vec2i;
 import sertyo.events.utility.render.fonts.Fonts;
+import sovokguard.protect.ApiContacts;
 
 
 import java.awt.*;
@@ -68,13 +65,13 @@ public class NeironMainMenu extends Screen {
       Color color2 = Main.getInstance().getThemeManager().getCurrentStyleTheme().getColors()[1];
       Vec2i mouse = Main.getInstance().getScaleMath().getMouse(mouseX, mouseY, scaledResolution);
       Main.getInstance().getScaleMath().pushScale();
-      RenderUtil.Render2D.drawRect(0.0F, 0.0F, (float)scaledWidth, (float)scaledHeight, (new Color(20, 20, 20)).getRGB());
+      RenderUtility.Render2D.drawRect(0.0F, 0.0F, (float)scaledWidth, (float)scaledHeight, (new Color(20, 20, 20)).getRGB());
       RenderUtility.applyRound(35.0F, 35.0F, 17.0F, 1.0F, () -> {
          RenderUtility.drawProfile((float)(scaledWidth - 45), 10.0F, 35.0F, 35.0F);
       });
 
-      sertyo.events.utility.font.Fonts.msBold[17].drawString(Main.cheatProfile.getName(), (float)(scaledWidth - 50 - sertyo.events.utility.font.Fonts.msBold[17].getWidth(Main.cheatProfile.getName())), 20.0F, -1);
-      sertyo.events.utility.font.Fonts.msBold[16].drawString("UID: " + Main.cheatProfile.getId(), (float)(scaledWidth - 50 - sertyo.events.utility.font.Fonts.msBold[16].getWidth("UID: " + Main.cheatProfile.getId())), 30.0F, (new Color(120, 120, 120)).getRGB());
+      sertyo.events.utility.font.Fonts.msBold[17].drawString(ApiContacts.username, (float)(scaledWidth - 50 - sertyo.events.utility.font.Fonts.msBold[17].getWidth(ApiContacts.username)), 20.0F, -1);
+      sertyo.events.utility.font.Fonts.msBold[16].drawString("UID: " + ApiContacts.uid, (float)(scaledWidth - 50 - sertyo.events.utility.font.Fonts.msBold[16].getWidth("UID: " + ApiContacts.uid)), 30.0F, (new Color(120, 120, 120)).getRGB());
       Fonts.tenacityBold35.drawGradientString(Main.name, (double)((float)scaledWidth / 2.0F - 14.0F), (double)((float)scaledHeight / 2.0F - 65.0F), color, color2);
       super.render(ms, mouse.getX(), mouse.getY(), partialTicks);
       Main.getInstance().getScaleMath().popScale();

@@ -16,9 +16,9 @@ import sertyo.events.event.player.EventUpdate;
 import sertyo.events.module.Category;
 import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
-import sertyo.events.module.impl.util.A;
 import sertyo.events.module.setting.impl.BooleanSetting;
 import sertyo.events.utility.Utility;
+import sertyo.events.utility.misc.TimerHelper;
 import sertyo.events.utility.move.MovementUtility;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.List;
 )
 public class InventoryMove extends Module {
    public static BooleanSetting safe = new BooleanSetting("Ft обход", false);
-   public A wait = new A();
+   public TimerHelper wait = new TimerHelper();
    private final List<IPacket<?>> packet = new ArrayList<>();
    public void onUpdate() {
       if (mc.player != null) {
@@ -39,7 +39,7 @@ public class InventoryMove extends Module {
          final KeyBinding[] pressedKeys = {mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack,
                  mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindJump,
                  mc.gameSettings.keyBindSprint};
-         if (!wait.hasTimeElapsed(400L)) {
+         if (!wait.hasReached(400)) {
             for (KeyBinding keyBinding : pressedKeys) {
                keyBinding.setPressed(false);
             }

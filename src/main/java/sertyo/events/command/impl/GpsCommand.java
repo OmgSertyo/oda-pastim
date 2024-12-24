@@ -14,8 +14,8 @@ import sertyo.events.utility.font.Fonts;
 import java.awt.*;
 
 import static sertyo.events.utility.Utility.mc;
-import static sertyo.events.utility.render.RenderUtil.Render2D.drawShadow;
-import static sertyo.events.utility.render.RenderUtil.Render2D.drawTriangle;
+import static sertyo.events.utility.render.RenderUtility.Render2D.drawShadow;
+import static sertyo.events.utility.render.RenderUtility.Render2D.drawTriangle;
 
 @Command(
         name = "gps",

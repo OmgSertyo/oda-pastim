@@ -1,5 +1,8 @@
 package sertyo.events.utility.misc;
 
+import lombok.Getter;
+
+@Getter
 public class TimerHelper {
    private long lastMS = -1L;
 
@@ -15,11 +18,7 @@ public class TimerHelper {
       return active || this.hasReached(delay);
    }
 
-   public long getLastMS() {
-      return this.lastMS;
-   }
-
-   public void reset() {
+    public void reset() {
       this.lastMS = System.currentTimeMillis();
    }
 

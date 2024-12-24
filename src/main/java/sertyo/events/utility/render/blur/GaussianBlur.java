@@ -5,7 +5,7 @@ import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.BufferUtils;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.render.ShaderUtil;
-import sertyo.events.utility.render.StencilUtil;
+import sertyo.events.utility.render.StencilUtility;
 
 import java.nio.FloatBuffer;
 
@@ -38,10 +38,10 @@ public class GaussianBlur implements Utility {
     }
 
     public static void startBlur(){
-        StencilUtil.initStencilToWrite();
+        StencilUtility.initStencilToWrite();
     }
     public static void endBlur(float radius, float compression) {
-        StencilUtil.readStencilBuffer(1);
+        StencilUtility.readStencilBuffer(1);
 
         framebuffer = ShaderUtil.createFrameBuffer(framebuffer);
 
@@ -63,7 +63,7 @@ public class GaussianBlur implements Utility {
         ShaderUtil.drawQuads();
         gaussianBlur.detach();
 
-        StencilUtil.uninitStencilBuffer();
+        StencilUtility.uninitStencilBuffer();
         GlStateManager.color4f(-1,-1,1,-1);
         GlStateManager.bindTexture(0);
 

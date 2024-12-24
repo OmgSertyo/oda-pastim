@@ -32,26 +32,10 @@ import sertyo.events.ui.autobuy.impl.ItemManager;
 import sertyo.events.ui.csgui.CsGui;
 import sertyo.events.ui.menu.altmanager.alt.AltFileManager;
 import sertyo.events.ui.menu.main.NeironMainMenu;
-import sertyo.events.ui.ab.ActivationLogic;
-import sertyo.events.ui.ab.AutoBuy;
-import sertyo.events.ui.ab.AutoBuyGui;
-import sertyo.events.ui.ab.font.main.IFont;
-import sertyo.events.ui.ab.manager.AutoBuyManager;
-import sertyo.events.ui.ab.manager.IgnoreManager;
 import sertyo.events.utility.misc.Language;
 import sertyo.events.utility.math.ScaleMath;
 import sertyo.events.utility.render.ShaderUtil;
-import sertyo.events.utility.render.ShaderUtils;
 import sovokguard.protect.ApiContacts;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static sertyo.events.utility.Utility.mc;
 @Getter
@@ -74,15 +58,12 @@ public class Main {
     private ModuleManager moduleManager;
     private NeironMainMenu mainMenu;
     private ThemeManager themeManager;
-    private ActivationLogic activationLogic;
     private CsGui csGui;
-    public static AutoBuyGui abGui;
     private StaffManager staffManager;
     public static boolean unhooked = false;
     private DragManager dragManager;
     private AltFileManager altFileManager;
     public static long startTime;
-    public static boolean hold_mouse0;
     @NonFinal
     Language language = Language.RUS;
 
@@ -93,37 +74,26 @@ public class Main {
         this.dragManager = new DragManager();
             this.dragManager.init();
 
-        new AutoBuy();
 
-        this.activationLogic = new ActivationLogic();
         this.scaleMath = new ScaleMath(2);
         viaMCP = new ViaMCP();
-        new ActivationLogic();
         altFileManager = new AltFileManager();
         altFileManager.init();
         mc.session = new Session("SVotestVZVZV", "", "", "mojang");
         ShaderUtil.init();
-        ShaderUtils.init();
-        System.out.println("Event inited");
         EventManager.register(this);
         this.moduleManager = new ModuleManager();
-
         ItemManager.register();
         this.themeManager = new ThemeManager();
         this.commandManager = new CommandManager();
         this.mainMenu = new NeironMainMenu();
         csGui = new CsGui();
         this.friendManager = new FriendManager();
-        abGui = new AutoBuyGui();
-        AutoBuyManager.init();
         this.staffManager = new StaffManager();
         this.staffManager.init();
-        AutoBuyManager.load();
         this.scriptManager = new ScriptManager();
         this.scriptManager.init();
         this.scriptManager.parseAllScripts();
-        IgnoreManager.load();
-        IFont.init();
         startTime = System.currentTimeMillis();
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
@@ -133,11 +103,14 @@ public class Main {
         this.dragManager.save();
         this.altFileManager.saveAll();
         this.configManager.saveConfig("autocfg");
-        AutoBuyManager.save();
-        IgnoreManager.save();
     }
-    public static boolean canUpdate() {
-        return mc.player != null && mc.world != null;
+    //For change language
+    public void toggleLanguage() {
+        if (language == Language.RUS) {
+            language = Language.UKR;
+        } else {
+            language = Language.RUS;
+        }
     }
     @EventTarget
     public void onInputKey(EventInputKey eventInputKey) {
@@ -149,18 +122,8 @@ public class Main {
         if (eventInputKey.getKey() == GLFW.GLFW_KEY_F6) mc.displayGuiScreen(new sertyo.events.ui.autobuy.AutoBuyGui());
 
     }
-    public void toggleLanguage() {
-        if (language == Language.RUS) {
-            language = Language.UKR;
-        } else {
-            language = Language.RUS;
-        }
-    }
     @EventTarget
     public void onMouse(EventMouse eventMouse) {
-        if (eventMouse.getButton() == 0) hold_mouse0 = false;
-        if (eventMouse.getButton() == 1) hold_mouse0 = true;
-
         for (Module module : this.moduleManager.getModules()) {
             if (module.getMouseBind() == eventMouse.getButton() && eventMouse.getButton() > 2) {
                 module.toggle();
@@ -185,5 +148,8 @@ public class Main {
         } else {
             return (GLFW.glfwGetKeyName(integer, -1) == null ? KeyMappings.reverseKeyMap.get(integer) : GLFW.glfwGetKeyName(integer, -1)) ;
         }
+    }
+    public static boolean canUpdate() {
+        return mc.player != null && mc.world != null;
     }
 }

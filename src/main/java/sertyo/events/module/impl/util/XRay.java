@@ -21,7 +21,7 @@ import sertyo.events.module.Module;
 import sertyo.events.module.ModuleAnnotation;
 import sertyo.events.utility.Utility;
 import sertyo.events.utility.render.ColorUtility;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.RenderUtility;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -51,6 +51,6 @@ public class XRay extends Module {
         @EventTarget
         public void onRender3D(EventRender3D e) {
             ores.removeIf(pos -> !mc.world.getBlockState(pos).getBlock().equals(Blocks.ANCIENT_DEBRIS));
-            ores.forEach(pos -> RenderUtil.Render3D.drawBlockBox(pos, new Color(0xC3A278).getRGB()));
+            ores.forEach(pos -> RenderUtility.Render3D.drawBlockBox(pos, new Color(0xC3A278).getRGB()));
         }
 }

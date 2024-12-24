@@ -9,8 +9,8 @@ import sertyo.events.module.setting.impl.KeySetting;
 import sertyo.events.module.setting.impl.TextSetting;
 import sertyo.events.ui.csgui.component.Component;
 import sertyo.events.utility.font.Fonts;
-import sertyo.events.utility.render.ColorUtil;
-import sertyo.events.utility.render.RenderUtil;
+import sertyo.events.utility.render.ColorUtility;
+import sertyo.events.utility.render.RenderUtility;
 
 public class InputObject extends Component {
 
@@ -34,18 +34,18 @@ public class InputObject extends Component {
 
     public void render(int mouseX, int mouseY) {
         super.render(mouseX, mouseY);
-        sertyo.events.utility.font.Fonts.msLight[13].drawString(new MatrixStack(), set.getName(), x + 5, y + height / 2f - Fonts.msLight[13].getFontHeight() / 2f + 2, ColorUtil.rgba(161, 166, 179, 255));
+        sertyo.events.utility.font.Fonts.msLight[13].drawString(new MatrixStack(), set.getName(), x + 5, y + height / 2f - Fonts.msLight[13].getFontHeight() / 2f + 2, ColorUtility.rgba(161, 166, 179, 255));
 
-        RenderUtil.Render2D.drawRoundedRect(x + 5, y + 12, width - 10, 10, 4, sertyo.events.utility.render.ColorUtil.rgba(20, 21, 24, 255));
+        RenderUtility.Render2D.drawRoundedRect(x + 5, y + 12, width - 10, 10, 4, sertyo.events.utility.render.ColorUtility.rgba(20, 21, 24, 255));
 
-        Fonts.msLight[13].drawString(new MatrixStack(), set.text, x + 7 + (focused ? 1 : 0), y + 10 + height / 2f - Fonts.msLight[13].getFontHeight() / 2f + 2, ColorUtil.rgba(255, 255, 255, 255));
+        Fonts.msLight[13].drawString(new MatrixStack(), set.text, x + 7 + (focused ? 1 : 0), y + 10 + height / 2f - Fonts.msLight[13].getFontHeight() / 2f + 2, ColorUtility.rgba(255, 255, 255, 255));
         this.height = 27;
     }
 
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         {
-            if (RenderUtil.isInRegion(mouseX, mouseY, x + 5, y + 12, width - 10, 10)) {
+            if (RenderUtility.isInRegion(mouseX, mouseY, x + 5, y + 12, width - 10, 10)) {
                 focused = true;
             } else {
                 focused = false;

@@ -1,4 +1,4 @@
-package sertyo.events.module.impl.player;
+package net.minecraft.entity;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.entity.player.ClientPlayerEntity;

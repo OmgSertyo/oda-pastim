@@ -15,10 +15,8 @@ import java.awt.Color;
    category = Category.RENDER
 )
 public class Glint extends Module {
-   public static ModeSetting mode = new ModeSetting("Color Mode", "Theme", new String[]{"Theme", "Custom"});
-   public static ColorSetting color = new ColorSetting("Color", (new Color(68, 205, 205)).getRGB(), () -> {
-      return mode.get().equals("Custom");
-   });
+   public static ModeSetting mode = new ModeSetting("Color Mode", "Theme", "Theme", "Custom");
+   public static ColorSetting color = new ColorSetting("Color", (new Color(68, 205, 205)).getRGB(), () -> mode.get().equals("Custom"));
 
    public static Color getColor() {
       Color customColor = Color.WHITE;
@@ -36,13 +34,11 @@ public class Glint extends Module {
          }
       }
 
-      switch(var2) {
-      case 0:
-         customColor = Arraylist.getArrayColor(1);
-         break;
-      case 1:
-         customColor = color.getColor();
-      }
+       customColor = switch (var2) {
+           case 0 -> Arraylist.getArrayColor(1);
+           case 1 -> color.getColor();
+           default -> customColor;
+       };
 
       return customColor;
    }

@@ -2,6 +2,7 @@ package sertyo.events.utility.font.common;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import lombok.Getter;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.vector.Matrix4f;
 import sertyo.events.utility.font.Fonts;
@@ -10,9 +11,7 @@ import sertyo.events.utility.font.Wrapper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,6 +20,7 @@ public abstract class AbstractFont implements Wrapper {
 
     protected final Map<Character, Glyph> glyphs = new HashMap<>();
     protected int texId, imgWidth, imgHeight;
+    @Getter
     protected float fontHeight;
     protected String fontName;
     protected boolean antialiasing;
@@ -31,13 +31,6 @@ public abstract class AbstractFont implements Wrapper {
 
     public abstract float getLifting();
 
-    public float getFontHeight() {
-        return fontHeight;
-    }
-
-    public final String getFontName() {
-        return fontName;
-    }
 
     protected final void setTexture(BufferedImage img) {
         texId = TextureHelper.loadTexture(img);
@@ -51,7 +44,7 @@ public abstract class AbstractFont implements Wrapper {
         GlStateManager.bindTexture(0);
     }
 
-    public static final Font getFont(String fileName, int style, int size) {
+    public static Font getFont(String fileName, int style, int size) {
         String path = Fonts.FONT_DIR.concat(fileName);
         Font font = null;
 
@@ -65,19 +58,6 @@ public abstract class AbstractFont implements Wrapper {
         return font;
     }
 
-    public static final Font getFontWindows(String fileName, int style, int size) {
-        String path = Fonts.FONT_DIR.concat(fileName);
-        Font font = null;
-
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, Files.newInputStream(new File("C:/Windows/Fonts/" + fileName).toPath()))
-                    .deriveFont(style, size);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
-
-        return font;
-    }
 
 
     public final Graphics2D setupGraphics(BufferedImage img, Font font) {
@@ -139,7 +119,7 @@ public abstract class AbstractFont implements Wrapper {
 
         return (width - sp) / 2f;
     }
-    public class Glyph {
+    public static class Glyph {
 
         public int x;
         public int y;
