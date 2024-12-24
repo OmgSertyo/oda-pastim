@@ -80,7 +80,6 @@ import net.optifine.TextureAnimations;
 import net.optifine.reflect.Reflector;
 import sertyo.events.event.render.EventOverlay;
 import sertyo.events.event.render.EventRender2D;
-import sertyo.events.ui.ab.AutoBuy;
 
 public class IngameGui extends AbstractGui
 {
@@ -923,10 +922,7 @@ public class IngameGui extends AbstractGui
                                 stringBuilder.append(c);
                             }
                         }
-                        try {
-                            AutoBuy.balance = Integer.parseInt(stringBuilder.toString());
-                        } catch (Exception ignore) {
-                        }
+
                     }
                 }
             } catch (Exception ignore) {
