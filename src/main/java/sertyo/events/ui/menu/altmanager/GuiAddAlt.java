@@ -59,9 +59,7 @@ public class GuiAddAlt extends Screen {
       int scaledHeight = scaledResolution.getScaledHeight();
       GlStateManager.pushMatrix();
       RenderUtility.drawRect(0.0F, 0.0F, (float)scaledWidth, (float)scaledHeight, (new Color(20, 20, 20)).getRGB());
-//      Fonts.mntsb17.drawStringWithShadow("Ник / E-Mail", (float)scaledWidth / 2.0F - 100.0F, (float)scaledHeight / 2.0F - 52.0F, -7829368);
       this.nameField.setText("Никнейм");
-   //   Fonts.mntsb17.drawStringWithShadow("Пароль", (float)scaledWidth / 2.0F - 100.0F, (float)scaledHeight / 2.0F - 7.0F, -7829368);
       Fonts.mntsb17.drawCenteredString(this.status, (float)scaledWidth / 2.0F, 10.0F, -1);
       super.render(ms, mouseX, mouseY, partialTicks);
       GlStateManager.popMatrix();
